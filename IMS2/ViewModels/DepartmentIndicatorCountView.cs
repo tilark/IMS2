@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using IMS2.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+namespace IMS2.ViewModels
+{
+    public class DepartmentIndicatorCountView
+    {
+        //public List<Department> Departments{ get; set; }
+       public  Department Department { get; set; }
+        public List<Indicator> Indicators { get; set; }
+        public int IndicatorCount { get; set; }
+        public DateTime? SearchTime { get; set; }
+        public List<DepartmentIndicatorValue> DepartmentIndicatorValues { get; set; }
+
+    }
+}

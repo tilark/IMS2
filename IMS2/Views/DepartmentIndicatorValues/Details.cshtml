@@ -1,0 +1,45 @@
+﻿@model IMS2.ViewModels.DepartmentIndicatorCountView
+
+@{
+    ViewBag.Title = "详情";
+}
+
+<h2>详情</h2>
+
+<div>
+    <h4>科室指标详情</h4>
+    <hr />
+    <dl class="dl-horizontal" style="border:solid thin">
+        <dt>
+            @Html.DisplayNameFor(model => model.Department.DepartmentName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Department.DepartmentName)
+        </dd>
+        <dt>
+            时间
+        </dt>
+        <dd>
+            @Html.Label(String.Format("{0:Y}", Model.SearchTime))
+        </dd>
+       @if(Model.DepartmentIndicatorValues.Count > 0)
+       {
+           foreach (var item in Model.DepartmentIndicatorValues)
+           {
+            <dt>
+                @Html.DisplayFor(model => item.Indicator.IndicatorName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => item.Value)
+            </dd>
+           }
+
+       }
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Department.DepartmentId, time=Model.SearchTime }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

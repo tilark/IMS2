@@ -1,0 +1,86 @@
+﻿@model IEnumerable<IMS2.Models.Indicator>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.IndicatorName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsAutoGetData)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DataSourceSystem.DataSourceSystemName)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Department.DepartmentName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Unit)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Duration.DurationName)
+        </th>
+        <th>
+            责任科室
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Priority)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Remarks)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.IndicatorName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsAutoGetData)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DataSourceSystem.DataSourceSystemName)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.Department.DepartmentName)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.Unit)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Duration.DurationName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Department1.DepartmentName)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.Priority)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Remarks)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IndicatorId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IndicatorId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IndicatorId })
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,53 @@
+﻿@model IEnumerable<IMS2.Models.IndicatorGroupMapIndicator>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.IndicatorGroup.IndicatorGroupName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Indicator.IndicatorName)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Priority)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Remarks)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.IndicatorGroup.IndicatorGroupName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Indicator.IndicatorName)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.Priority)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Remarks)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IndicatorGroupMapIndicatorId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IndicatorGroupMapIndicatorId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IndicatorGroupMapIndicatorId })
+        </td>
+    </tr>
+}
+
+</table>

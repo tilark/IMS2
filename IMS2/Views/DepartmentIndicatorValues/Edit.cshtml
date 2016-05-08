@@ -1,0 +1,79 @@
+﻿@model IMS2.ViewModels.DepartmentIndicatorCountView
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>编辑</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>更改科室指标值</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Department.DepartmentId)
+
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Department.DepartmentName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Department.DepartmentName)
+            </dd>
+            <dt>
+                时间
+            </dt>
+            <dd>
+                @*@Html.Label(String.Format("{0:Y}", Model.SearchTime))*@
+               
+                <input name="searchTime" readonly="readonly" value="@String.Format("{0:Y}",Model.SearchTime)" />
+            </dd>
+        </dl>
+            @if (Model.DepartmentIndicatorValues != null)
+            {
+                    int i = 0;
+                <table class="table table-hover">
+                    <tr>
+                        <th>指标</th>
+                        <th>值</th>
+                        <th>时段</th>
+                    </tr>
+                    @foreach (var item in Model.DepartmentIndicatorValues)
+                    {
+                    <tr>
+                        <td >
+                            @Html.Hidden(String.Format("departmentIndicatorValues[{0}].DepartmentIndicatorValueId", i), item.DepartmentIndicatorValueId)
+                            @Html.DisplayFor(model => item.Indicator.IndicatorName)
+                        </td>
+                        <td>
+                            @Html.TextBox(String.Format("departmentIndicatorValues[{0}].Value", i), item.Value)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.Indicator.Duration.DurationName)
+                        </td>
+                    </tr>
+                    i++;
+                    }
+                </table>
+            }       
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="保存" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
