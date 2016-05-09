@@ -18,7 +18,7 @@ namespace IMS2.Controllers
         // GET: Indicators
         public async Task<ActionResult> Index()
         {
-            var indicators = db.Indicators.Include(i => i.DataSourceSystem).Include(i => i.Department).Include(i => i.Department1).Include(i => i.Duration).OrderBy(i=>i.Priority);
+            var indicators = db.Indicators.Include(i => i.DataSourceSystem).Include(i => i.Department).Include(i => i.ProvidingDepartment).Include(i => i.Duration).OrderBy(i=>i.Priority);
             return View(await indicators.ToListAsync());
         }
 

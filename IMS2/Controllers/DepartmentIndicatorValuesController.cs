@@ -50,7 +50,6 @@ namespace IMS2.Controllers
                         viewModel.Add(view);
                     }
 
-                    //viewModel.IndicatorCount = db.DepartmentIndicatorValues.Where(d=>d.DepartmentId==departmentCategory.Value).Count();
                     return View(viewModel);
                 }
             }
@@ -65,21 +64,59 @@ namespace IMS2.Controllers
                 return;
             }
             var indicatorCollection = department.DepartmentCategory.DepartmentCategoryMapIndicatorGroups
-                           .SelectMany(c => c.IndicatorGroup.IndicatorGroupMapIndicators).Select(c => c.Indicator).Distinct();
+                           .SelectMany(c => c.IndicatorGroup.IndicatorGroupMapIndicators).Select(c => c.Indicator).OrderBy(d=>d.Priority).Distinct();
             foreach (var indicator in indicatorCollection)
             {
-                count++;
-                DepartmentIndicatorValue departmentIndicatorValue = new DepartmentIndicatorValue();
-                departmentIndicatorValue.DepartmentId = department.DepartmentId;
-                departmentIndicatorValue.IndicatorId = indicator.IndicatorId;
-                departmentIndicatorValue.DepartmentIndicatorValueId = System.Guid.NewGuid();
-                departmentIndicatorValue.Time = searchTime.Value;
-                var standardValue = db.DepartmentIndicatorStandards.Where(d => d.DepartmentId == department.DepartmentId && d.IndicatorId == indicator.IndicatorId).FirstOrDefault();
-                departmentIndicatorValue.IndicatorStandardId = standardValue?.DepartmentIndicatorStandardId;
-                departmentIndicatorValue.IsLocked = false;
-                departmentIndicatorValue.UpdateTime = DateTime.Now;
-                //将科室、项目、时间添加到科室值表中
-                AddDepartmentIndicatorValue(departmentIndicatorValue);
+                //根据时段的名称来判断是否添加到该月，如季不会出现在1、2月份中，半年不会出现在1、2、3、4、5月中，全年只会在12月时出现。
+                bool canAdd = false;
+                switch (indicator.Duration.DurationName)
+                {
+                    case "季":
+                        if (searchTime.Value.Month == 3 || searchTime.Value.Month == 6 || searchTime.Value.Month == 9 || searchTime.Value.Month == 12)
+                        {
+                            canAdd = true;
+                        }
+                        break;
+                    case "半年":
+                        if(searchTime.Value.Month == 6)
+                        {
+                            canAdd = true;
+                        }
+                        break;
+                    case "全年":
+                        if(searchTime.Value.Month == 12)
+                        {
+                            canAdd = true;
+                        }
+                        break;
+                    default:
+                        canAdd = true;
+                        break;
+                }
+                if (canAdd)
+                {
+                    count++;
+                    DepartmentIndicatorValue departmentIndicatorValue = new DepartmentIndicatorValue();
+                    departmentIndicatorValue.DepartmentId = department.DepartmentId;
+                    departmentIndicatorValue.IndicatorId = indicator.IndicatorId;
+                    departmentIndicatorValue.DepartmentIndicatorValueId = System.Guid.NewGuid();
+                    departmentIndicatorValue.Time = searchTime.Value;
+                    //需找到最新的版本号
+                    //var standardValue = db.DepartmentIndicatorStandards.Where(d => d.DepartmentId == department.DepartmentId && d.IndicatorId == indicator.IndicatorId);
+                    //var standardValue = from i in db.DepartmentIndicatorStandards
+                    //                    let maxVersion = db.DepartmentIndicatorStandards.Where(d => d.DepartmentId == department.DepartmentId && d.IndicatorId == indicator.IndicatorId).Max(d => d.Version)
+                    //                    where i.DepartmentId == department.DepartmentId && i.IndicatorId == indicator.IndicatorId && i.Version == maxVersion
+                    //                    select i.DepartmentIndicatorStandardId;
+                    var standardValue = db.DepartmentIndicatorStandards.Where(d => d.DepartmentId == department.DepartmentId && d.IndicatorId == indicator.IndicatorId
+                            && d.Version == db.DepartmentIndicatorStandards.Where(i => i.DepartmentId == department.DepartmentId && i.IndicatorId == indicator.IndicatorId).Max(v => v.Version))
+                            .FirstOrDefault();
+                    departmentIndicatorValue.IndicatorStandardId = standardValue?.DepartmentIndicatorStandardId;
+                    departmentIndicatorValue.IsLocked = false;
+                    departmentIndicatorValue.UpdateTime = DateTime.Now;
+                    //将科室、项目、时间添加到科室值表中
+                    AddDepartmentIndicatorValue(departmentIndicatorValue);
+                }
+                
             }
         }
 
@@ -121,8 +158,8 @@ namespace IMS2.Controllers
             viewModel.Department = department;
             //从DepartmentIndicatorValue找值
             viewModel.SearchTime = time;
-            var departmentIndicatorValues = await db.Departments.SelectMany(c => c.DepartmentIndicatorValues).Include(d => d.Indicator)
-                                                .Where(d => d.DepartmentId == department.DepartmentId && d.Time.Year == time.Value.Year && d.Time.Month == time.Value.Month).ToArrayAsync();
+            var departmentIndicatorValues = await db.Departments.SelectMany(c => c.DepartmentIndicatorValues).Include(d => d.Indicator.Duration)
+                                                .Where(d => d.DepartmentId == department.DepartmentId && d.Time.Year == time.Value.Year && d.Time.Month == time.Value.Month).ToListAsync();
             foreach (var departmentIndicatorValue in departmentIndicatorValues)
             {
                 viewModel.DepartmentIndicatorValues.Add(departmentIndicatorValue);

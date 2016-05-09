@@ -22,7 +22,7 @@
         </th>
 
         <th>
-            @Html.DisplayNameFor(model => model.Department.DepartmentName)
+            @Html.DisplayNameFor(model => model.ProvidingDepartment.DepartmentName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Unit)
@@ -54,9 +54,8 @@
         <td>
             @Html.DisplayFor(modelItem => item.DataSourceSystem.DataSourceSystemName)
         </td>
-
         <td>
-            @Html.DisplayFor(modelItem => item.Department.DepartmentName)
+            @Html.DisplayFor(modelItem => item.ProvidingDepartment.DepartmentName)
         </td>
 
         <td>
@@ -66,7 +65,7 @@
             @Html.DisplayFor(modelItem => item.Duration.DurationName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Department1.DepartmentName)
+            @Html.DisplayFor(modelItem => item.Department.DepartmentName)
         </td>
 
         <td>

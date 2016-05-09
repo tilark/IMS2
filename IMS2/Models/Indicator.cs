@@ -57,10 +57,10 @@ namespace IMS2.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DepartmentIndicatorValue> DepartmentIndicatorValues { get; set; }
-        //数据来源科室
-        public virtual Department Department { get; set; }
         //责任科室
-        public virtual Department Department1 { get; set; }
+        public virtual Department Department { get; set; }
+        //数据来源科室
+        public virtual Department ProvidingDepartment { get; set; }
 
         public virtual Duration Duration { get; set; }
 

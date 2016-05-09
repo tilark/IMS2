@@ -180,6 +180,7 @@
     <Compile Include="Controllers\IndicatorGroupsController.cs" />
     <Compile Include="Controllers\IndicatorsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ProvidingDepartmentIndicatorController.cs" />
     <Compile Include="DAL\BaseRepository.cs" />
     <Compile Include="DAL\IBaseRepository.cs" />
     <Compile Include="DAL\InitialItemData.cs" />
@@ -335,6 +336,11 @@
     <Content Include="Views\DepartmentIndicatorValues\Details.cshtml" />
     <Content Include="Views\DepartmentIndicatorValues\Edit.cshtml" />
     <Content Include="Views\DepartmentIndicatorValues\Index.cshtml" />
+    <Content Include="Views\ProvidingDepartmentIndicator\Create.cshtml" />
+    <Content Include="Views\ProvidingDepartmentIndicator\Delete.cshtml" />
+    <Content Include="Views\ProvidingDepartmentIndicator\Details.cshtml" />
+    <Content Include="Views\ProvidingDepartmentIndicator\Edit.cshtml" />
+    <Content Include="Views\ProvidingDepartmentIndicator\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

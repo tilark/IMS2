@@ -97,8 +97,8 @@ namespace IMS2.Models
                 .HasForeignKey(e => e.DutyDepartmentId);
 
             modelBuilder.Entity<Department>()
-                .HasMany(e => e.Indicators1)
-                .WithOptional(e => e.Department1)
+                .HasMany(e => e.ProvidingIndicators)
+                .WithOptional(e => e.ProvidingDepartment)
                 .HasForeignKey(e => e.ProvidingDepartmentId);
 
             modelBuilder.Entity<IndicatorGroupMapIndicator>()

@@ -1,0 +1,69 @@
+﻿@model IEnumerable<IMS2.ViewModels.DepartmentIndicatorCountView>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@using (Html.BeginForm("Index", "DepartmentIndicatorValues", FormMethod.Get))
+{
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="dl-horizontal">
+        <div class="form-group">
+            @Html.Label("选择时间", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input name="searchTime" id="searchTimeID" type="date" class="form-control" data-val="true" data-val-date="字段 '选择时间' 是必须的"
+                       data-val-required="选择时间 字段是必需的。" value="@DateTime.Now" />
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("科室类别", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("departmentCategory", null, htmlAttributes: new { @class = "form-control" })
+
+            </div>
+
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                <input type="submit" value="查询" class="btn btn-info" />
+
+            </div>
+        </div>
+
+    </div>
+}
+
+@if (Model != null)
+{
+    <table class="table table-hover">
+
+        <tr>
+            <td>@Html.Label("数据来源科室")</td>
+            <td>@Html.Label("项目总数")</td>
+            <td></td>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Department.DepartmentName</td>
+                <td>@item.IndicatorCount</td>
+                <td>
+
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Department.DepartmentId, time = item.SearchTime }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Department.DepartmentId, time = item.SearchTime }) |
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+
+@section Scripts{
+
+    @Scripts.Render("~/bundles/datetimepicker")
+}
+
+

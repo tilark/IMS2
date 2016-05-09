@@ -29,7 +29,6 @@
                 时间
             </dt>
             <dd>
-                @*@Html.Label(String.Format("{0:Y}", Model.SearchTime))*@
                
                 <input name="searchTime" readonly="readonly" value="@String.Format("{0:Y}",Model.SearchTime)" />
             </dd>
@@ -41,6 +40,7 @@
                     <tr>
                         <th>指标</th>
                         <th>值</th>
+                        <th>审核</th>
                         <th>时段</th>
                     </tr>
                     @foreach (var item in Model.DepartmentIndicatorValues)
@@ -51,8 +51,11 @@
                             @Html.DisplayFor(model => item.Indicator.IndicatorName)
                         </td>
                         <td>
+                            @*如果已审核，不能更改*@
                             @Html.TextBox(String.Format("departmentIndicatorValues[{0}].Value", i), item.Value)
                         </td>
+                        @*审核状态*@
+                        <td></td>
                         <td>
                             @Html.DisplayFor(model => item.Indicator.Duration.DurationName)
                         </td>

@@ -46,6 +46,6 @@ namespace IMS2.Models
 
         public virtual ICollection<Indicator> Indicators { get; set; }
 
-        public virtual ICollection<Indicator> Indicators1 { get; set; }
+        public virtual ICollection<Indicator> ProvidingIndicators { get; set; }
     }
 }
