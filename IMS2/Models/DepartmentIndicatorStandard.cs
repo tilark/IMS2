@@ -52,5 +52,12 @@ namespace IMS2.Models
         public virtual Indicator Indicator { get; set; }
 
         public virtual ICollection<DepartmentIndicatorValue> DepartmentIndicatorValues { get; set; }
+        public string Range
+        {
+            get
+            {
+                return "[" + LowerBound.ToString() + "-" + UpperBound.ToString() + "]";
+            }
+        }
     }
 }

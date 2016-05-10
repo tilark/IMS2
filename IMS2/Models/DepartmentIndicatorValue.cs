@@ -17,7 +17,7 @@ namespace IMS2.Models
         [Display(Name = "记录时间")]
 
         public DateTime Time { get; set; }
-        [Display(Name = "数据")]
+        [Display(Name = "值")]
 
         public decimal? Value { get; set; }
 

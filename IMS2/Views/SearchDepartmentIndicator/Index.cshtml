@@ -42,65 +42,90 @@
 
     </div>
 }
-
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Department.DepartmentName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DepartmentIndicatorStandard.Remarks)
-        </th>
-        <th>
-
-            @Html.DisplayNameFor(model => model.Indicator.IndicatorName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Time)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Value)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsLocked)
-        </th>
-        <th>
-            时段
-        </th>
-        <th></th>
-    </tr>
-    @if (Model != null)
+@if (Model != null)
+{
+    int i = 0;
+    using (Html.BeginForm())
     {
-        foreach (var item in Model)
-        {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="保存" class="btn btn-default" />
+            </div>
+        </div>
+
+        <table class="table table-hover">
+            @*<tr>
+                <th></th><th></th><th></th><th></th>
+                <th>全选</th>
+                <th></th><th></th><th></th>
+            </tr>*@
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Department.DepartmentName)
+                </th>
+                <th>
+
+                    @Html.DisplayNameFor(model => model.Indicator.IndicatorName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Time)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Value)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsLocked)
+                </th>
+                <th>
+                    时段
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DepartmentIndicatorStandard.Remarks)
+                </th>
+
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
             <tr>
                 <td>
+                    @Html.Hidden(String.Format("departmentIndicatorValue[{0}].DepartmentIndicatorValueId", i), item.DepartmentIndicatorValueId)
                     @Html.DisplayFor(modelItem => item.Department.DepartmentName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DepartmentIndicatorStandard.Remarks)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Indicator.IndicatorName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Time)
+                    
+                    @Html.Label(String.Format("departmentIndicatorValue[{0}].Time", i), String.Format("{0:Y}", item.Time))
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Value)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.IsLocked)
+                    @*@Html.DisplayFor(modelItem => item.IsLocked)*@
+                    @Html.CheckBox(String.Format("departmentIndicatorValue[{0}].IsLocked", i), item.IsLocked ? true : false)
                 </td>
+
                 <td>
                     @Html.DisplayFor(modelItem => item.Indicator.Duration.DurationName)
                 </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DepartmentIndicatorStandard.Remarks)
+                </td>
+
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.DepartmentIndicatorValueId }) |
                     @Html.ActionLink("Details", "Details", new { id = item.DepartmentIndicatorValueId }) |
                     @Html.ActionLink("Delete", "Delete", new { id = item.DepartmentIndicatorValueId })
                 </td>
             </tr>
-        }
+                i++;
+            }
+
+        </table>
     }
-</table>
+}

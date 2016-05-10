@@ -10,34 +10,31 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>DepartmentIndicatorValue</h4>
+        <h4>修改科室指标值</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.DepartmentIndicatorValueId)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.DepartmentId, "DepartmentId", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Department.DepartmentName, "科室", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("DepartmentId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.DepartmentId, "", new { @class = "text-danger" })
+                @Html.DisplayFor(model => model.Department.DepartmentName)
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.IndicatorId, "IndicatorId", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Indicator.IndicatorName, "指标", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("IndicatorId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.IndicatorId, "", new { @class = "text-danger" })
+                @Html.DisplayFor(model => model.Indicator.IndicatorName)
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Time, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.Label("showTime", "时间", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Time, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Time, "", new { @class = "text-danger" })
+                @Html.DisplayFor(model => model.Time.GetDateTimeFormats('y')[0])
             </div>
         </div>
 
@@ -50,7 +47,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.IndicatorStandardId, "IndicatorStandardId", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.IndicatorStandardId, "标准值范围", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("IndicatorStandardId", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.IndicatorStandardId, "", new { @class = "text-danger" })
@@ -70,8 +67,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.UpdateTime, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.UpdateTime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.UpdateTime, "", new { @class = "text-danger" })
+                @Html.DisplayFor(model => model.UpdateTime)
             </div>
         </div>
 
@@ -84,7 +80,14 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index",
+     new
+     {
+         startTime=Model.Time,
+         endTime=Model.Time,
+         department = Model.DepartmentId
+     }
+    )
 </div>
 
 @section Scripts {
