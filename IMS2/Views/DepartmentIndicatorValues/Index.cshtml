@@ -14,7 +14,7 @@
         <div class="form-group">
             @Html.Label("选择时间", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <input name="searchTime" id="searchTimeID" type="date" class="form-control" data-val="true" data-val-date="字段 '选择时间' 是必须的"
+                <input name="searchTime" id="searchTimeID" type="month" class="form-control" data-val="true" data-val-date="字段 '选择时间' 是必须的"
                        data-val-required="选择时间 字段是必需的。" value="@DateTime.Now" />
             </div>
         </div>

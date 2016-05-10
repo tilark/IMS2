@@ -181,6 +181,7 @@
     <Compile Include="Controllers\IndicatorsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProvidingDepartmentIndicatorController.cs" />
+    <Compile Include="Controllers\SearchDepartmentIndicatorController.cs" />
     <Compile Include="DAL\BaseRepository.cs" />
     <Compile Include="DAL\IBaseRepository.cs" />
     <Compile Include="DAL\InitialItemData.cs" />
@@ -341,6 +342,11 @@
     <Content Include="Views\ProvidingDepartmentIndicator\Details.cshtml" />
     <Content Include="Views\ProvidingDepartmentIndicator\Edit.cshtml" />
     <Content Include="Views\ProvidingDepartmentIndicator\Index.cshtml" />
+    <Content Include="Views\SearchDepartmentIndicator\Create.cshtml" />
+    <Content Include="Views\SearchDepartmentIndicator\Delete.cshtml" />
+    <Content Include="Views\SearchDepartmentIndicator\Details.cshtml" />
+    <Content Include="Views\SearchDepartmentIndicator\Edit.cshtml" />
+    <Content Include="Views\SearchDepartmentIndicator\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

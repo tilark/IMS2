@@ -102,11 +102,6 @@ namespace IMS2.Controllers
                     departmentIndicatorValue.DepartmentIndicatorValueId = System.Guid.NewGuid();
                     departmentIndicatorValue.Time = searchTime.Value;
                     //需找到最新的版本号
-                    //var standardValue = db.DepartmentIndicatorStandards.Where(d => d.DepartmentId == department.DepartmentId && d.IndicatorId == indicator.IndicatorId);
-                    //var standardValue = from i in db.DepartmentIndicatorStandards
-                    //                    let maxVersion = db.DepartmentIndicatorStandards.Where(d => d.DepartmentId == department.DepartmentId && d.IndicatorId == indicator.IndicatorId).Max(d => d.Version)
-                    //                    where i.DepartmentId == department.DepartmentId && i.IndicatorId == indicator.IndicatorId && i.Version == maxVersion
-                    //                    select i.DepartmentIndicatorStandardId;
                     var standardValue = db.DepartmentIndicatorStandards.Where(d => d.DepartmentId == department.DepartmentId && d.IndicatorId == indicator.IndicatorId
                             && d.Version == db.DepartmentIndicatorStandards.Where(i => i.DepartmentId == department.DepartmentId && i.IndicatorId == indicator.IndicatorId).Max(v => v.Version))
                             .FirstOrDefault();

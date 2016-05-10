@@ -1,0 +1,106 @@
+﻿@model IEnumerable<IMS2.Models.DepartmentIndicatorValue>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@using (Html.BeginForm("Index", "SearchDepartmentIndicator", FormMethod.Get))
+{
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="dl-horizontal">
+        <div class="form-group">
+            @Html.Label("开始时间", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input name="startTime" id="searchTimeID" type="month" class="form-control" data-val="true" data-val-date="字段 '开始时间' 是必须的" data-val-default="@DateTime.Now"
+                       data-val-required="开始时间 字段是必需的。" />
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("截止时间", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input name="endTime" id="searchTimeID" type="month" class="form-control" data-val="true" data-val-date="字段 '结束时间' 是必须的"
+                       data-val-required="结束时间 字段是必需的。" data-val-default="@DateTime.Now" />
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("科室", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("department", null, htmlAttributes: new { @class = "form-control" })
+
+            </div>
+
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                <input type="submit" value="查询" class="btn btn-info" />
+
+            </div>
+        </div>
+
+    </div>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Department.DepartmentName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DepartmentIndicatorStandard.Remarks)
+        </th>
+        <th>
+
+            @Html.DisplayNameFor(model => model.Indicator.IndicatorName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Time)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Value)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsLocked)
+        </th>
+        <th>
+            时段
+        </th>
+        <th></th>
+    </tr>
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Department.DepartmentName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DepartmentIndicatorStandard.Remarks)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Indicator.IndicatorName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Time)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsLocked)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Indicator.Duration.DurationName)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.DepartmentIndicatorValueId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.DepartmentIndicatorValueId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.DepartmentIndicatorValueId })
+                </td>
+            </tr>
+        }
+    }
+</table>

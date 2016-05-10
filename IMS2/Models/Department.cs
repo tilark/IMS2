@@ -14,7 +14,7 @@ namespace IMS2.Models
             DepartmentIndicatorStandards = new HashSet<DepartmentIndicatorStandard>();
             DepartmentIndicatorValues = new HashSet<DepartmentIndicatorValue>();
             Indicators = new HashSet<Indicator>();
-            Indicators1 = new HashSet<Indicator>();
+            ProvidingIndicators = new HashSet<Indicator>();
         }
 
         public Guid DepartmentId { get; set; }
