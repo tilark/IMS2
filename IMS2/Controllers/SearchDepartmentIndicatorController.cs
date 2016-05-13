@@ -203,31 +203,6 @@ namespace IMS2.Controllers
             return View(departmentIndicatorValue);
         }
 
-        // GET: SearchDepartmentIndicator/Delete/5
-        public async Task<ActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            DepartmentIndicatorValue departmentIndicatorValue = await db.DepartmentIndicatorValues.FindAsync(id);
-            if (departmentIndicatorValue == null)
-            {
-                return HttpNotFound();
-            }
-            return View(departmentIndicatorValue);
-        }
-
-        // POST: SearchDepartmentIndicator/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(Guid id)
-        {
-            DepartmentIndicatorValue departmentIndicatorValue = await db.DepartmentIndicatorValues.FindAsync(id);
-            db.DepartmentIndicatorValues.Remove(departmentIndicatorValue);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
 
         protected override void Dispose(bool disposing)
         {

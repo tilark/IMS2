@@ -1,15 +1,15 @@
-﻿@model IMS2.Models.DepartmentIndicatorValue
+﻿@model IMS2.ViewModels.DepartmentIndicatorCountView
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "详情";
 }
 
-<h2>Details</h2>
+<h2>详情</h2>
 
 <div>
-    <h4>DepartmentIndicatorValue</h4>
+    <h4>科室指标详情</h4>
     <hr />
-    <dl class="dl-horizontal">
+    <dl class="dl-horizontal" style="border:solid thin">
         <dt>
             @Html.DisplayNameFor(model => model.Department.DepartmentName)
         </dt>
@@ -17,58 +17,32 @@
         <dd>
             @Html.DisplayFor(model => model.Department.DepartmentName)
         </dd>
-
         <dt>
-            @Html.DisplayNameFor(model => model.DepartmentIndicatorStandard.Remarks)
+            时间
         </dt>
-
         <dd>
-            @Html.DisplayFor(model => model.DepartmentIndicatorStandard.Remarks)
+            @Html.Label(String.Format("{0:Y}", Model.SearchTime))
         </dd>
+        @if (Model.DepartmentIndicatorValues.Count > 0)
+        {
+            foreach (var item in Model.DepartmentIndicatorValues)
+            {
+                <dt>
+                    @Html.DisplayFor(model => item.Indicator.IndicatorName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => item.Value)
+                </dd>
+            }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Indicator.IndicatorName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Indicator.IndicatorName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Time)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Time)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Value)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Value)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IsLocked)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IsLocked)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UpdateTime)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UpdateTime)
-        </dd>
+        }
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.DepartmentIndicatorValueId }) |
-    @Html.ActionLink("Back to List", "Index")
+    @{ 
+        var providingDepartmentID = ViewBag.provideDepartment;
+    }
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Department.DepartmentId, time = Model.SearchTime, provideDepartment = providingDepartmentID }) |
+    @Html.ActionLink("Back to List", "Index", new { searchTime = Model.SearchTime, providingDepartment = providingDepartmentID })
 </p>

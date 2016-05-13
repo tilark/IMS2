@@ -1,64 +1,115 @@
-﻿@model IEnumerable<IMS2.ViewModels.DepartmentIndicatorCountView>
+﻿@model IMS2.ViewModels.ProvideDepartmentIndicatorView
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>数据来源科室列表</h2>
+<fieldset>
 
-@using (Html.BeginForm("Index", "DepartmentIndicatorValues", FormMethod.Get))
-{
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @using (Html.BeginForm("Index", "ProvidingDepartmentIndicator", FormMethod.Get))
+    {
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    <div class="dl-horizontal">
-        <div class="form-group">
-            @Html.Label("选择时间", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <input name="searchTime" id="searchTimeID" type="date" class="form-control" data-val="true" data-val-date="字段 '选择时间' 是必须的"
-                       data-val-required="选择时间 字段是必需的。" value="@DateTime.Now" />
+        <div class="dl-horizontal">
+            <div class="form-group">
+                @Html.Label("选择时间", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <input name="searchTime" id="searchTimeID" type="month" class="form-control" data-val="true" data-val-date="字段 '选择时间' 是必须的"
+                           data-val-required="选择时间 字段是必需的。" />
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            @Html.Label("科室类别", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("departmentCategory", null, htmlAttributes: new { @class = "form-control" })
+            <div class="form-group">
+                @Html.Label("数据源科室", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("providingDepartment", null, htmlAttributes: new { @class = "form-control" })
 
-            </div>
-
-        </div>
-        <div class="form-group">
-            <div class="col-md-12">
-                <input type="submit" value="查询" class="btn btn-info" />
+                </div>
 
             </div>
-        </div>
+            <div class="form-group">
+                <div class="col-md-offset-5 col-md-7">
+                    <input type="submit" value="查询" class="btn btn-info" />
 
-    </div>
-}
+                </div>
+            </div>
+
+        </div>
+    }
+</fieldset>
 
 @if (Model != null)
 {
-    <table class="table table-hover">
+    if (Model.provideDepartment != null)
+    {
+        <div class="col-md-2">
+            (@Model.provideDepartment.DepartmentName)负责的项目：
 
-        <tr>
-            <td>@Html.Label("数据来源科室")</td>
-            <td>@Html.Label("项目总数")</td>
-            <td></td>
-        </tr>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Department.DepartmentName</td>
-                <td>@item.IndicatorCount</td>
-                <td>
+        </div>
+        <div class="col-md-10">
+            <table class="table">
+                <tbody>
+                    @if (Model.Indicators != null)
+                    {
+                        foreach (var item in Model.Indicators)
+                        {
 
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Department.DepartmentId, time = item.SearchTime }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Department.DepartmentId, time = item.SearchTime }) |
-                </td>
-            </tr>
-        }
-    </table>
+                            <tr>
+                                <td>@item.IndicatorName</td>
+                                <td>@item.Duration.DurationName</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+
+            </table>
+        </div>
+
+    }
+    <section>
+@using (Html.BeginForm("Create", "ProvidingDepartmentIndicator", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.provideDepartment.DepartmentId)
+    <input name="departmentID" hidden="hidden" value="@ViewBag.departmentID"/>
+    @Html.HiddenFor(model => model.searchTime)
+
+    <div class="form-group">
+        <div class="col-md-10">
+            <input type="submit" value="添加上述项目" class="btn btn-danger" />
+        </div>
+    </div>
+    <p></p>
 }
+    </section>
+    if (Model.DepartmentIndicatorCountViews != null)
+    {
+        <table class="table table-hover">
+
+            <tr>
+                <td>@Html.Label("科室")</td>
+                <td>@Html.Label("项目总数")</td>
+                <td>时间</td>
+
+                <td></td>
+            </tr>
+            @foreach (var item in Model.DepartmentIndicatorCountViews)
+            {
+                <tr>
+                    <td>@item.Department.DepartmentName</td>
+                    <td>@item.IndicatorCount</td>
+                    <td>@Model.searchTime.GetDateTimeFormats('y')[0]</td>
+                    <td>
+
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Department.DepartmentId, time = item.SearchTime, provideDepartment = Model.provideDepartment.DepartmentId }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.Department.DepartmentId, time = item.SearchTime, provideDepartment = Model.provideDepartment.DepartmentId }) |
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+}
+
 
 
 @section Scripts{

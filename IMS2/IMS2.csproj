@@ -212,6 +212,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\DepartmentIndicatorCountView.cs" />
     <Compile Include="ViewModels\DepartmentIndicatorValueView.cs" />
+    <Compile Include="ViewModels\ProvideDepartmentIndicatorView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-datetimepicker.css" />
