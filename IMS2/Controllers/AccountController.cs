@@ -86,7 +86,7 @@ namespace IMS2.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "无效的登录尝试。");
+                    ModelState.AddModelError("", "用户名或密码错误！");
                     return View(model);
             }
         }
@@ -151,7 +151,18 @@ namespace IMS2.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.EmployeeNo, Email = model.Email };
+                var userInfo = new UserInfo { UserInfoID = System.Guid.NewGuid(), UserName = model.UserName, WorkPhone = model.WorkPhone, EmployeeNo = model.EmployeeNo };
+                using (ApplicationDbContext context = new ApplicationDbContext())
+                {
+                   context.UserInfos.Add(userInfo);
+                   int num = await context.SaveChangesAsync();
+                    if (num <= 0)
+                    {
+                        return View(model);
+                    }                    
+                }
+                user.UserInfoID = userInfo.UserInfoID;
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -164,6 +175,16 @@ namespace IMS2.Controllers
                     // await UserManager.SendEmailAsync(user.Id, "确认你的帐户", "请通过单击 <a href=\"" + callbackUrl + "\">這裏</a>来确认你的帐户");
 
                     return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    //没成功，需要删除userInfo
+                    using(ApplicationDbContext context = new ApplicationDbContext())
+                    {
+                        var userInfoDel = await context.UserInfos.FindAsync(userInfo.UserInfoID);
+                        context.UserInfos.Remove(userInfoDel);
+                        await context.SaveChangesAsync();
+                    }
                 }
                 AddErrors(result);
             }

@@ -1,0 +1,62 @@
+﻿@model IEnumerable<IMS2.ViewModels.ManageUserViewModel>
+
+@{
+    ViewBag.Title = "用户信息列表";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<p>
+    @Html.ActionLink("创建新用户", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmployeeNo)
+        </th>
+        <th>
+            科室
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WorkPhone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.HomePhone)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EmployeeNo)
+        </td>
+        <td>
+            @foreach(var department in item.UserDepartments)
+            {
+                @Html.DisplayFor(model=> department.UserDepartmentName)
+                <br />
+            }
+            
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WorkPhone)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.HomePhone)
+        </td>
+        <td>
+            @Html.ActionLink("编辑", "Edit", new { id=item.UserInfoID }) |
+            @Html.ActionLink("详情", "Details", new { id=item.UserInfoID }) |
+            @Html.ActionLink("删除", "Delete", new { id=item.UserInfoID })
+        </td>
+    </tr>
+}
+
+</table>

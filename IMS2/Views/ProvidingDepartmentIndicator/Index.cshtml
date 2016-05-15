@@ -1,10 +1,9 @@
 ﻿@model IMS2.ViewModels.ProvideDepartmentIndicatorView
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "数据来源科室列表";
 }
 
-<h2>数据来源科室列表</h2>
 <fieldset>
 
     @using (Html.BeginForm("Index", "ProvidingDepartmentIndicator", FormMethod.Get))
@@ -42,29 +41,38 @@
 {
     if (Model.provideDepartment != null)
     {
-        <div class="col-md-2">
-            (@Model.provideDepartment.DepartmentName)负责的项目：
+        <div class="col-md-offset-2 col-md-10">
+            <button id="hideitem" class="btn btn-default btn-xs"><span class="label label-primary">隐藏项目</span></button>
+            <button id="showitem" class="btn btn-default btn-xs"><span class="label label-primary">显示项目</span></button>
 
         </div>
-        <div class="col-md-10">
-            <table class="table">
-                <tbody>
-                    @if (Model.Indicators != null)
+        <section id="provideitem">
+            <div class="col-md-2 pitem">
+                (@Model.provideDepartment.DepartmentName)负责的项目：
+
+            </div>
+            <div class="col-md-10 pitem">
+                <table class="table table-hover">
+                    <tbody>
+                        @if (Model.Indicators != null)
                     {
+                            int i = 1;
                         foreach (var item in Model.Indicators)
                         {
 
-                            <tr>
-                                <td>@item.IndicatorName</td>
-                                <td>@item.Duration.DurationName</td>
-                            </tr>
+                                <tr>
+                                    <td># @i</td>
+                                    <td>@item.IndicatorName</td>
+                                    <td>@item.Duration.DurationName</td>
+                                </tr>
+                                i++;
+                            }
                         }
-                    }
-                </tbody>
+                    </tbody>
 
-            </table>
-        </div>
-
+                </table>
+            </div>
+        </section>
     }
     <section>
 @using (Html.BeginForm("Create", "ProvidingDepartmentIndicator", FormMethod.Post))
@@ -75,8 +83,8 @@
     @Html.HiddenFor(model => model.searchTime)
 
     <div class="form-group">
-        <div class="col-md-10">
-            <input type="submit" value="添加上述项目" class="btn btn-danger" />
+        <div class="col-md-10 pitem">
+            <input type="submit" value="添加上述项目" class="btn btn-danger" data-toggle="modal" data-target="#myModal" data-keyboard="false"/>
         </div>
     </div>
     <p></p>
@@ -101,8 +109,8 @@
                     <td>@Model.searchTime.GetDateTimeFormats('y')[0]</td>
                     <td>
 
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Department.DepartmentId, time = item.SearchTime, provideDepartment = Model.provideDepartment.DepartmentId }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.Department.DepartmentId, time = item.SearchTime, provideDepartment = Model.provideDepartment.DepartmentId }) |
+                        @Html.ActionLink("编辑", "Edit", new { id = item.Department.DepartmentId, time = item.SearchTime, provideDepartment = Model.provideDepartment.DepartmentId }) |
+                        @Html.ActionLink("详情", "Details", new { id = item.Department.DepartmentId, time = item.SearchTime, provideDepartment = Model.provideDepartment.DepartmentId }) |
                     </td>
                 </tr>
             }
@@ -110,11 +118,38 @@
     }
 }
 
-
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">添加项目</h4>
+            </div>
+            <div class="modal-body">
+                正在努力添加中，请稍候……
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts{
 
     @Scripts.Render("~/bundles/datetimepicker")
+<script type="text/javascript">
+$(document).ready(function(){
+    $("#hideitem").click(function () {
+        $(".pitem").hide("slow");
+        $("#showitem").show();
+        $("#hideitem").hide()
+  });
+  $("#showitem").click(function(){
+      $(".pitem").show("slow");
+      $("#hideitem").show();
+      $("#showitem").hide();
+  });
+});
+</script>
 }
 
 

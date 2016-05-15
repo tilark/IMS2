@@ -49,8 +49,7 @@ namespace IMS2.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "电子邮件")]
-        [EmailAddress]
+        [Display(Name = "工号")]
         public string Email { get; set; }
 
         [Required]
@@ -64,6 +63,17 @@ namespace IMS2.Models
 
     public class RegisterViewModel
     {
+        [Required]
+        [Display(Name = "工号")]
+
+        public string EmployeeNo { get; set; }
+        [Required]
+        [Display(Name = "用户姓名")]
+
+        public string UserName { get; set; }
+        [Display(Name = "工作电话")]
+
+        public string WorkPhone { get; set; }
         [Required]
         [EmailAddress]
         [Display(Name = "电子邮件")]

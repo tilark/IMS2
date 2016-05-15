@@ -10,7 +10,7 @@ using System.Web.Mvc;
 using IMS2.Models;
 using System.Data.Entity.Infrastructure;
 using IMS2.ViewModels;
-
+using PagedList;
 namespace IMS2.Controllers
 {
     public class SearchDepartmentIndicatorController : Controller
@@ -18,33 +18,32 @@ namespace IMS2.Controllers
         private ImsDbContext db = new ImsDbContext();
 
         // GET: SearchDepartmentIndicator
-        [Route("{startTime}/{endTime}/{department}")]
-        public async Task<ActionResult> Index(DateTime? startTime, DateTime? endTime, Guid? department)
+        [Route("{startTime}/{endTime}/{department}/{page}")]
+        public async Task<ActionResult> Index(DateTime? startTime, DateTime? endTime, Guid? department, int? page)
         {
+            ViewBag.startTime = startTime;
+            ViewBag.endTime = endTime;
+            ViewBag.departmentID = department;
             ViewBag.department = new SelectList(db.Departments, "DepartmentId", "DepartmentName");
-            if(startTime != null && endTime != null && department != null)
+            var departmentIndicatorValues = db.DepartmentIndicatorValues.Include(d => d.Department).Include(d => d.DepartmentIndicatorStandard).Include(d => d.Indicator.Duration)
+                                    .Where(d => d.DepartmentId == department.Value);
+            if (startTime != null && endTime != null)
             {
-               var departmentIndicatorValues = db.DepartmentIndicatorValues.Include(d => d.Department).Include(d => d.DepartmentIndicatorStandard).Include(d => d.Indicator.Duration)
-                                    .Where(d => d.DepartmentId == department.Value
-                                    && d.Time.Year >= startTime.Value.Year && d.Time.Month >= startTime.Value.Month
-                                    && d.Time.Year <= endTime.Value.Year && d.Time.Month <= endTime.Value.Month).OrderBy(d=>d.Indicator.Priority);
-                return View(await departmentIndicatorValues.ToListAsync());
-
+               departmentIndicatorValues = departmentIndicatorValues.Where(d=>d.Time.Year >= startTime.Value.Year && d.Time.Month >= startTime.Value.Month
+                                    && d.Time.Year <= endTime.Value.Year && d.Time.Month <= endTime.Value.Month);
             }
-            return View();
+            int pageSize = int.Parse(System.Configuration.ConfigurationManager.AppSettings["pagSize"]);
+            int pageNumber = (page ?? 1);
+            return View(await departmentIndicatorValues.OrderBy(d => d.Indicator.Priority).ToPagedListAsync(pageNumber, pageSize));
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Index(IEnumerable<DepartmentIndicatorValueView> departmentIndicatorValue)
+        public async Task<ActionResult> Index(List<DepartmentIndicatorValue> departmentIndicatorValue, int? page, DateTime? startTime, DateTime? endTime, Guid? department)
         {
-            Guid departmentID = new Guid();
-            DateTime searchTime = DateTime.Now; ;
-            
+           
             foreach(var indicatorValue in departmentIndicatorValue)
             {
                 var departmentIndicatorValueLocked = await db.DepartmentIndicatorValues.FindAsync(indicatorValue.DepartmentIndicatorValueId);
-                departmentID = departmentIndicatorValueLocked.DepartmentId;
-                searchTime = departmentIndicatorValueLocked.Time;
                 //如果islocked与之前的相同，则不修改数据中的值
                 if (departmentIndicatorValueLocked.IsLocked != indicatorValue.IsLocked)
                 {
@@ -68,11 +67,7 @@ namespace IMS2.Controllers
                     } while (saveFailed);
                 }
             }
-            ViewBag.department = new SelectList(db.Departments, "DepartmentId", "DepartmentName");
-            return View( await db.DepartmentIndicatorValues.Include(d => d.Department).Include(d => d.DepartmentIndicatorStandard).Include(d => d.Indicator.Duration)
-                                    .Where(d => d.DepartmentId == departmentID
-                                    && d.Time.Year == searchTime.Year && d.Time.Month == searchTime.Month)
-                                    .OrderBy(d => d.Indicator.Priority).ToListAsync());
+            return RedirectToAction("Index", new { startTime = startTime, endTime = endTime, department = department, page = page });
         }
         private bool IsInRangeTime(DateTime starTime, DateTime midTime, DateTime endTime)
         {
@@ -108,7 +103,7 @@ namespace IMS2.Controllers
         public ActionResult Create()
         {
             ViewBag.DepartmentId = new SelectList(db.Departments, "DepartmentId", "DepartmentName");
-            ViewBag.IndicatorStandardId = new SelectList(db.DepartmentIndicatorStandards, "DepartmentIndicatorStandardId", "Remarks");
+            ViewBag.IndicatorStandardId = new SelectList(db.DepartmentIndicatorStandards, "DepartmentIndicatorStandardId", "Range");
             ViewBag.IndicatorId = new SelectList(db.Indicators, "IndicatorId", "IndicatorName");
             return View();
         }
@@ -129,7 +124,7 @@ namespace IMS2.Controllers
             }
 
             ViewBag.DepartmentId = new SelectList(db.Departments, "DepartmentId", "DepartmentName", departmentIndicatorValue.DepartmentId);
-            ViewBag.IndicatorStandardId = new SelectList(db.DepartmentIndicatorStandards, "DepartmentIndicatorStandardId", "Remarks", departmentIndicatorValue.IndicatorStandardId);
+            ViewBag.IndicatorStandardId = new SelectList(db.DepartmentIndicatorStandards, "DepartmentIndicatorStandardId", "Range", departmentIndicatorValue.IndicatorStandardId);
             ViewBag.IndicatorId = new SelectList(db.Indicators, "IndicatorId", "IndicatorName", departmentIndicatorValue.IndicatorId);
             return View(departmentIndicatorValue);
         }
@@ -158,6 +153,8 @@ namespace IMS2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "DepartmentIndicatorValueId,DepartmentId,IndicatorId,Time,Value,IndicatorStandardId,IsLocked,UpdateTime,TimeStamp")] DepartmentIndicatorValue departmentIndicatorValue)
         {
+            ViewBag.IndicatorStandardId = new SelectList(db.DepartmentIndicatorStandards, "DepartmentIndicatorStandardId", "Range", departmentIndicatorValue.IndicatorStandardId);
+
             if (ModelState.IsValid)
             {
                 DepartmentIndicatorValue departmentIndicatorValueModify = await db.DepartmentIndicatorValues.FindAsync(departmentIndicatorValue.DepartmentIndicatorValueId);
@@ -195,11 +192,8 @@ namespace IMS2.Controllers
                     }
 
                 } while (saveFailed);
-                ViewBag.IndicatorStandardId = new SelectList(db.DepartmentIndicatorStandards, "DepartmentIndicatorStandardId", "Remarks", departmentIndicatorValue.IndicatorStandardId);
                 return View(departmentIndicatorValueModify);
-                //return RedirectToAction("Index");
             }
-            ViewBag.IndicatorStandardId = new SelectList(db.DepartmentIndicatorStandards, "DepartmentIndicatorStandardId", "Remarks", departmentIndicatorValue.IndicatorStandardId);
             return View(departmentIndicatorValue);
         }
 

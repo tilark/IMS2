@@ -10,9 +10,20 @@
     <h4>更改你的帐户设置</h4>
     <hr />
     <dl class="dl-horizontal">
+        <dt>用户信息</dt>
+        <dd>
+            @if (Model.UserInfoID != null)
+            {
+                @Html.ActionLink("更改用户信息", "ChangeUserInfo")
+            }
+            else
+            {
+                @Html.ActionLink("增加用户信息", "SetUserInfo")
+            }
+        </dd>
         <dt>密码:</dt>
         <dd>
-            [
+            
             @if (Model.HasPassword)
             {
                 @Html.ActionLink("更改密码", "ChangePassword")

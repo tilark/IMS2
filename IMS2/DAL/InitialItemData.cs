@@ -62,6 +62,37 @@ namespace IMS2.DAL
             }
         }
 
+        internal async void InitialUserDepartment()
+        {
+            var fileName = HttpContext.Current.Server.MapPath(System.Configuration.ConfigurationManager
+               .AppSettings["Department"]);
+            //第一列为科室名称，第二列所属科室类别，第三列为科室的Guid
+            ReadFromExcel readFromExcel = new ReadFromExcel();
+            //按Row获取当前行的所有数据
+            int rowCount = readFromExcel.GetRowCount(fileName);
+            for (int i = 2; i <= rowCount; i++)
+            {
+                var columnData = readFromExcel.ReadRowFromExcel((uint)i, fileName);
+                //获取第一个数为科室名称
+                //数据必须大于等5才是正确的
+                if (columnData.Count >= 5)
+                {
+                    BaseRepository writeBaseData = new BaseRepository();
+                    UserDepartment userDepartment = new UserDepartment();
+                    //第一列为科室名称
+                    userDepartment.UserDepartmentName = columnData.ElementAt(0);
+
+                    //第二列为科室Guid
+                    userDepartment.UserDepartmentId = Guid.Parse(columnData.ElementAt(1));
+
+                    userDepartment.Remarks = columnData.ElementAt(4);
+                    //department.DepartmentCategoryId = departmentCategory.DepartmentCategoryId;
+                    //添加department
+                    await writeBaseData.AddUserDepartment(userDepartment);
+                }
+            }
+        }
+
         internal async void InitialIndicatorGroup()
         {
             var fileName = HttpContext.Current.Server.MapPath(System.Configuration.ConfigurationManager

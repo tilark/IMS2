@@ -1,5 +1,7 @@
-﻿@model IEnumerable<IMS2.Models.DepartmentIndicatorValue>
-
+﻿@model  PagedList.IPagedList<IMS2.Models.DepartmentIndicatorValue>
+@using PagedList.Mvc;
+@using PagedList;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 @{
     ViewBag.Title = "Index";
 }
@@ -42,89 +44,117 @@
 
     </div>
 }
-@if (Model != null)
-{
+@{ 
     int i = 0;
-    using (Html.BeginForm())
+}
+    @using (Html.BeginForm())
     {
+        
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+       
         <div class="form-group">
+@if (Model.PageCount > 0)
+{
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="保存" class="btn btn-default" />
             </div>
+}
         </div>
-
         <table class="table table-hover">
             @*<tr>
-                <th></th><th></th><th></th><th></th>
-                <th>全选</th>
-                <th></th><th></th><th></th>
-            </tr>*@
+                    <th></th><th></th><th></th><th></th>
+                    <th>全选</th>
+                    <th></th><th></th><th></th>
+                </tr>*@
+            
+            @if (Model.PageCount > 0)
+            {
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Department.DepartmentName)
+                    @*@Html.DisplayNameFor(model => model.Department.DepartmentName)*@
+                    科室
                 </th>
                 <th>
 
-                    @Html.DisplayNameFor(model => model.Indicator.IndicatorName)
+                    @*@Html.DisplayNameFor(model => model.Indicator.IndicatorName)*@
+                    指标
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Time)
+                    @*@Html.DisplayNameFor(model => model.Time)*@
+                    时间
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Value)
+                    @*@Html.DisplayNameFor(model => model.Value)*@
+                    值
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.IsLocked)
+                    @*@Html.DisplayNameFor(model => model.IsLocked)*@
+                    审核
                 </th>
                 <th>
                     时段
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.DepartmentIndicatorStandard.Remarks)
+                    @*@Html.DisplayNameFor(model => model.DepartmentIndicatorStandard.Remarks)*@
+                    备注
                 </th>
 
                 <th></th>
             </tr>
-
+            }
             @foreach (var item in Model)
             {
-            <tr>
-                <td>
-                    @Html.Hidden(String.Format("departmentIndicatorValue[{0}].DepartmentIndicatorValueId", i), item.DepartmentIndicatorValueId)
-                    @Html.DisplayFor(modelItem => item.Department.DepartmentName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Indicator.IndicatorName)
-                </td>
-                <td>
-                    
-                    @Html.Label(String.Format("departmentIndicatorValue[{0}].Time", i), String.Format("{0:Y}", item.Time))
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Value)
-                </td>
-                <td>
-                    @*@Html.DisplayFor(modelItem => item.IsLocked)*@
-                    @Html.CheckBox(String.Format("departmentIndicatorValue[{0}].IsLocked", i), item.IsLocked ? true : false)
-                </td>
+                <tr>
+                    <td>
+                        @Html.Hidden(String.Format("departmentIndicatorValue[{0}].DepartmentIndicatorValueId", i), item.DepartmentIndicatorValueId)
+                        @Html.DisplayFor(modelItem => item.Department.DepartmentName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Indicator.IndicatorName)
+                    </td>
+                    <td>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.Indicator.Duration.DurationName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DepartmentIndicatorStandard.Remarks)
-                </td>
+                        @Html.Label(String.Format("departmentIndicatorValue[{0}].Time", i), String.Format("{0:Y}", item.Time))
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Value)
+                    </td>
+                    <td>
+                        @*@Html.DisplayFor(modelItem => item.IsLocked)*@
+                        @Html.CheckBox(String.Format("departmentIndicatorValue[{0}].IsLocked", i), item.IsLocked ? true : false)
+                    </td>
 
-                <td>
-                    @Html.ActionLink("编辑", "Edit", new { id = item.DepartmentIndicatorValueId }) |
-                    @Html.ActionLink("详情", "Details", new { id = item.DepartmentIndicatorValueId }) |
-                </td>
-            </tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Indicator.Duration.DurationName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DepartmentIndicatorStandard.Remarks)
+                    </td>
+
+                    <td>
+                        @Html.ActionLink("编辑", "Edit", new { id = item.DepartmentIndicatorValueId }) |
+                        @Html.ActionLink("详情", "Details", new { id = item.DepartmentIndicatorValueId }) |
+                    </td>
+                </tr>
                 i++;
             }
 
         </table>
+        <br />
     }
-}
+    @*@(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount*@
+
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index",
+            new
+            {
+                page,
+                startTime = ViewBag.startTime,
+                endTime = ViewBag.endTime,
+                department = ViewBag.departmentID
+            }))
+
+
+
+
+

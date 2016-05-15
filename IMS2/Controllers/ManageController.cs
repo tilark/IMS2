@@ -7,6 +7,9 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using IMS2.Models;
+using IMS2.ViewModels;
+using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 
 namespace IMS2.Controllers
 {
@@ -32,9 +35,9 @@ namespace IMS2.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -64,18 +67,107 @@ namespace IMS2.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId();
+            var userApp = await UserManager.FindByIdAsync(userId);
             var model = new IndexViewModel
             {
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
+                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
+                UserInfoID = userApp.UserInfoID
             };
             return View(model);
         }
+        public async Task<ActionResult> ChangeUserInfo()
+        {
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            UserInfo userInfo = null;
+            using (ApplicationDbContext context = new ApplicationDbContext())
+            {
+                userInfo = await context.UserInfos.FindAsync(user.UserInfoID);
+            }
+            if(userInfo == null)
+            {
+                return RedirectToAction("Index", new { Message = ManageMessageId.Error });
+            }
+            var viewModel = new ChangeUserInfoViewModel
+            {
+                UserInfoID = userInfo.UserInfoID,
+                UserName = userInfo.UserName,
+                EmployeeNo = userInfo.EmployeeNo,
+                WorkPhone = userInfo.WorkPhone,
+                HomePhone = userInfo.HomePhone
+            };
+            PopulateAssignedDepartmentData(userInfo);
+            return View(viewModel);
+        }
 
-        //
+        private void PopulateAssignedDepartmentData(UserInfo userInfo)
+        {
+
+            using (ApplicationDbContext context = new ApplicationDbContext())
+            {
+                var userinfo = context.UserInfos.Find(userInfo.UserInfoID);
+                var allDepartments = context.UserDepartments.OrderBy(d => d.UserDepartmentName).ToList();
+
+                var userInfoDepartments = new HashSet<Guid>(userinfo.UserDepartments.Select(u => u.UserDepartmentId));
+                var viewModel = new List<AssignedUserDepartmentData>();
+                foreach (var department in allDepartments)
+                {
+                    viewModel.Add(new AssignedUserDepartmentData
+                    {
+                        UserDepartmentId = department.UserDepartmentId,
+                        UserDepartmentName = department.UserDepartmentName,
+                        Assigned = userInfoDepartments.Contains(department.UserDepartmentId)
+                    });
+                }
+
+                ViewBag.UserDepartments = viewModel;
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeUserInfo(ChangeUserInfoViewModel changeUserInfoViewModel)
+        {
+            if (changeUserInfoViewModel == null)
+            {
+                return RedirectToAction("Index", new { Message = ManageMessageId.Error });
+            }
+            using (ApplicationDbContext context = new ApplicationDbContext())
+            {
+                var userInfo = await context.UserInfos.FindAsync(changeUserInfoViewModel.UserInfoID);
+                try
+                {
+                    userInfo.WorkPhone = changeUserInfoViewModel.WorkPhone;
+                    userInfo.HomePhone = changeUserInfoViewModel.HomePhone;
+                    //database win
+                    bool saveFailed;
+                    do
+                    {
+                        saveFailed = false;
+                        try
+                        {
+                            await context.SaveChangesAsync();
+                        }
+                        catch (DbUpdateConcurrencyException ex)
+                        {
+                            saveFailed = true;
+                            // Update the values of the entity that failed to save from the store 
+                            ex.Entries.Single().Reload();
+                        }
+                    } while (saveFailed);
+                }
+                catch (Exception)
+                {
+
+                    ModelState.AddModelError("", "无法更新用户信息");
+                }
+
+            }
+            return RedirectToAction("ChangeUserInfo");
+        }
+
         // POST: /Manage/RemoveLogin
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -331,7 +423,9 @@ namespace IMS2.Controllers
             base.Dispose(disposing);
         }
 
-#region 帮助程序
+
+
+        #region 帮助程序
         // 用于在添加外部登录名时提供 XSRF 保护
         private const string XsrfKey = "XsrfId";
 
@@ -382,6 +476,6 @@ namespace IMS2.Controllers
             Error
         }
 
-#endregion
+        #endregion
     }
 }

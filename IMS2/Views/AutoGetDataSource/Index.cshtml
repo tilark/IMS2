@@ -1,0 +1,140 @@
+﻿@model IMS2.ViewModels.DataSourceSystemIndicatorView
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>数据来源系统列表</h2>
+
+<fieldset class="col-md-12">
+
+    @using (Html.BeginForm("Index", "AutoGetDataSource", FormMethod.Get))
+    {
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="dl-horizontal">
+            <div class="form-group">
+                @Html.Label("选择时间", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <input name="searchTime" id="searchTimeID" type="month" class="form-control" data-val="true" data-val-date="字段 '选择时间' 是必须的"
+                           data-val-required="选择时间 字段是必需的。" />
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("数据源系统", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("dataSourceSystemID", null, htmlAttributes: new { @class = "form-control" })
+
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-5 col-md-7">
+                    <input type="submit" value="查询" class="btn btn-info" />
+
+                </div>
+            </div>
+
+        </div>
+    }
+</fieldset>
+
+<section class="col-md-12">
+
+    @if (Model != null && Model.dataSourceSystem != null)
+    {
+        <div class="col-md-2">
+            (@Model.dataSourceSystem.DataSourceSystemName)负责的项目：
+
+        </div>
+        <div class="col-md-10">
+            <table class="table table-hover">
+                <tbody>
+
+                    <tr>
+                        @{
+                            int i = 0;
+                            foreach (var item in Model.Indicators)
+                            {
+
+                                if (i++ % 3 == 0)
+                                {
+                                    @:</tr><tr>
+                            }
+                                @:<td>
+                                    @item.IndicatorName
+                                    @:</td>
+                                @:<td>
+                                    @item.Duration.DurationName
+                                    @:</td>
+                            }
+                            @:</tr>
+                        }
+
+
+                    </tbody>
+
+                </table>
+            </div>
+          }
+      </section>            
+
+    <section class="col-md-12">
+        @if (Model != null)
+        {
+            using (Html.BeginForm("Create", "AutoGetDataSource", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.dataSourceSystem.DataSourceSystemId)
+                <input name="dataSourceSystemID" hidden="hidden" value="@Model.dataSourceSystem.DataSourceSystemId" />
+
+                @Html.HiddenFor(model => model.searchTime)
+
+                <div class="form-group">
+                    <div class="col-md-8 col-md-offset-4">
+                        <input type="submit" value="更新上述项目" class="btn btn-danger" />
+                    </div>
+                </div>
+                <p></p>
+            }
+        }
+       
+    </section>
+    @if (Model != null)
+    {
+        <div class="form-group">
+            <div class="col-md-2">
+                已有项目：
+
+            </div>
+            <div class="col-md-10">
+                <table class="table table-hover col-md-10">
+
+                    <tr>
+                        <td>@Html.Label("科室")</td>
+                        <td>@Html.Label("项目总数")</td>
+                        <td>时间</td>
+
+                        <td></td>
+                    </tr>
+                    @foreach (var item in Model.DepartmentIndicatorCountViews)
+                    {
+                        <tr>
+                            <td>@item.Department.DepartmentName</td>
+                            <td>@item.IndicatorCount</td>
+                            <td>@Model.searchTime.GetDateTimeFormats('y')[0]</td>
+                            <td>
+
+                                @Html.ActionLink("Edit", "Edit", new { id = item.Department.DepartmentId, time = item.SearchTime, dataSourceSystemID = Model.dataSourceSystem.DataSourceSystemId }) |
+                                @Html.ActionLink("Details", "Details", new { id = item.Department.DepartmentId, time = item.SearchTime, dataSourceSystemID = Model.dataSourceSystem.DataSourceSystemId }) |
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+        
+        
+    }
+
+

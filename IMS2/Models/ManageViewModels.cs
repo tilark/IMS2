@@ -2,6 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using System;
+using IMS2.ViewModels;
 
 namespace IMS2.Models
 {
@@ -12,6 +14,7 @@ namespace IMS2.Models
         public string PhoneNumber { get; set; }
         public bool TwoFactor { get; set; }
         public bool BrowserRemembered { get; set; }
+        public Guid? UserInfoID { get; set; }
     }
 
     public class ManageLoginsViewModel
@@ -57,7 +60,27 @@ namespace IMS2.Models
         [Compare("NewPassword", ErrorMessage = "新密码和确认密码不匹配。")]
         public string ConfirmPassword { get; set; }
     }
+    public class ChangeUserInfoViewModel
+    {
+        [ScaffoldColumn(false)]
+        public Guid UserInfoID { get; set; }
+        [Required]
+        [Display(Name = "用户名")]
 
+        public string UserName { get; set; }
+        [Display(Name = "工号")]
+
+        public string EmployeeNo { get; set; }
+        [Display(Name = "性别")]
+
+        public string Sex { get; set; }
+        [Display(Name = "工作电话")]
+
+        public string WorkPhone { get; set; }
+        [Display(Name = "家庭电话")]
+
+        public string HomePhone { get; set; }
+    }
     public class AddPhoneNumberViewModel
     {
         [Required]

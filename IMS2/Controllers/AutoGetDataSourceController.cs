@@ -9,52 +9,38 @@ using System.Web;
 using System.Web.Mvc;
 using IMS2.Models;
 using IMS2.ViewModels;
+using IMS2.DAL;
+using PagedList;
 using System.Data.Entity.Infrastructure;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-
+using ImsAutoLib;
 namespace IMS2.Controllers
 {
-    public class ProvidingDepartmentIndicatorController : Controller
+    public class AutoGetDataSourceController : Controller
     {
         private ImsDbContext db = new ImsDbContext();
 
-        // GET: ProvidingDepartmentIndicator
-        [Route("Index/{searchTime}/{providingDepartment}")]
+        // GET: AutoGetDataSource
+        [Route("Index/{searchTime}/{dataSourceSystemID}")]
 
-        public async Task<ActionResult> Index(DateTime? searchTime, Guid? providingDepartment)
+        public async Task<ActionResult> Index(DateTime? searchTime, Guid? dataSourceSystemID)
         {
-            //应该选择提供科室名列表，根据成员角色中的科室选择
-            using (ApplicationDbContext context = new ApplicationDbContext())
-            {
-                using (UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context)))
-                {
-                    var user = await userManager.FindByIdAsync(User.Identity.GetUserId());
-                    ViewBag.providingDepartment = new SelectList(user.UserInfo.UserDepartments, "UserDepartmentId", "UserDepartmentName");
-                }
+            ViewBag.dataSourceSystemID = new SelectList(db.DataSourceSystems.Distinct().OrderBy(d=>d.Priority), "DataSourceSystemId", "DataSourceSystemName");
 
-            }
-            if (searchTime != null && providingDepartment != null)
+            if(searchTime != null && dataSourceSystemID != null)
             {
-                ProvideDepartmentIndicatorView viewModel = new ProvideDepartmentIndicatorView();
-                
-                //填充ViewModel
-                //List<DepartmentIndicatorCountView> departmentIndicatorCountView = new List<DepartmentIndicatorCountView>();
-                //var provideDepartment = await db.Departments.Include(pd=>pd.ProvidingIndicators).Where(d=>d.DepartmentId == providingDepartment).FirstOrDefaultAsync();
-                var provideDepartment = await db.Departments.FindAsync(providingDepartment);
-                if (provideDepartment != null)
+                DataSourceSystemIndicatorView viewModel = new DataSourceSystemIndicatorView();
+                var dataSourceSystem = await db.DataSourceSystems.FindAsync(dataSourceSystemID);
+                if(dataSourceSystem != null)
                 {
-                    viewModel.provideDepartment = provideDepartment;
+                    ViewBag.sourceSystemID = dataSourceSystem.DataSourceSystemId;
+                    viewModel.dataSourceSystem = dataSourceSystem;
                     viewModel.searchTime = searchTime.Value;
                     viewModel.Indicators = new List<Indicator>();
                     viewModel.DepartmentIndicatorCountViews = new List<DepartmentIndicatorCountView>();
-                    //数据来源科室负责的指标，根据指标与指定时间是否在科室指标值表（简称值表）中，如果不在，依次选择指标，追寻到科室类别项目组中的各个科室，再将该指标、科室、时间写入值表中。
-                    ViewBag.departmentID = provideDepartment.DepartmentId;
-                    
-                    foreach (var indicator in provideDepartment.ProvidingIndicators)
+                    foreach(var indicator in dataSourceSystem.Indicators)
                     {
+                        //数据来源系统负责的指标，根据指标与指定时间是否在科室指标值表（简称值表）中，如果不在，依次选择指标，追寻到科室类别项目组中的各个科室，再将该指标、科室、时间写入值表中。
                         viewModel.Indicators.Add(indicator);
-
                         var departmentCollection = indicator.IndicatorGroupMapIndicators.Select(i => i.IndicatorGroup)
                             .SelectMany(i => i.DepartmentCategoryMapIndicatorGroups)
                             .Select(d => d.DepartmentCategory)
@@ -63,32 +49,30 @@ namespace IMS2.Controllers
                         {
                             //需查看这个department是否在viewModel.DepartmentIndicatorCountViews中
                             var query = viewModel.DepartmentIndicatorCountViews.Where(d => d.Department.DepartmentId == department.DepartmentId).FirstOrDefault();
-                            if(query != null)
+                            if (query != null)
                             {
                                 continue;
                             }
                             DepartmentIndicatorCountView view = new DepartmentIndicatorCountView();
                             view.Department = department;
                             //只显示
-                            //await CreateDepartmentIndicatorList(searchTime, indicator, department);   
-                            view.IndicatorCount =  await db.DepartmentIndicatorValues.Where(d => d.Indicator.ProvidingDepartmentId == provideDepartment.DepartmentId
-                                                                    && d.DepartmentId == department.DepartmentId 
-                                                                    && d.Time.Year == searchTime.Value.Year
-                                                                   && d.Time.Month == searchTime.Value.Month).CountAsync(); ;
+                            view.IndicatorCount = await db.DepartmentIndicatorValues.Where(d => d.Indicator.DataSourceSystemId == dataSourceSystem.DataSourceSystemId
+                                                                   && d.DepartmentId == department.DepartmentId
+                                                                   && d.Time.Year == searchTime.Value.Year
+                                                                  && d.Time.Month == searchTime.Value.Month).CountAsync(); ;
                             view.SearchTime = searchTime;
-                            //如果该科室已经在departmentIndicatorCountView中，需合并，将项目总数相加
-                            //if(viewModel.DepartmentIndicatorCountViews.Any<DepartmentIndicatorCountView>(i=>i.Department))
                             viewModel.DepartmentIndicatorCountViews.Add(view);
                         }
                     }
-                    //viewModel.DepartmentIndicatorCountViews = departmentIndicatorCountView;
                     return View(viewModel);
+
                 }
+
             }
             return View();
-        }
 
-        private async Task<DepartmentIndicatorValue> CreateDepartmentIndicatorList(DateTime? searchTime, Indicator indicator, Department department)
+        }
+        private async Task<DepartmentIndicatorValue> CreateDepartmentIndicatorList(DateTime? searchTime, Indicator indicator, Department department, decimal value)
         {
             if (searchTime == null || indicator == null || department == null)
             {
@@ -132,22 +116,24 @@ namespace IMS2.Controllers
                         && d.Version == db.DepartmentIndicatorStandards.Where(i => i.DepartmentId == department.DepartmentId && i.IndicatorId == indicator.IndicatorId).Max(v => v.Version))
                         .FirstOrDefault();
                 departmentIndicatorValue.IndicatorStandardId = standardValue?.DepartmentIndicatorStandardId;
-                departmentIndicatorValue.IsLocked = false;
+                departmentIndicatorValue.IsLocked = true;
                 departmentIndicatorValue.UpdateTime = DateTime.Now;
+                //值需从其他系统中获取 
+                departmentIndicatorValue.Value = value;
                 //将科室、项目、时间添加到科室值表中
-                return await AddDepartmentIndicatorValue(departmentIndicatorValue);
+                return await UpdateDepartmentIndicatorValue(departmentIndicatorValue);
             }
             return null;
         }
 
-        private async Task<DepartmentIndicatorValue> AddDepartmentIndicatorValue(DepartmentIndicatorValue departmentIndicatorValue)
+        private async Task<DepartmentIndicatorValue> UpdateDepartmentIndicatorValue(DepartmentIndicatorValue departmentIndicatorValue)
         {
             DepartmentIndicatorValue item = null;
             if (departmentIndicatorValue == null)
             {
                 return null;
             }
-            //查重
+            //找到该值，如果存在，更改Value，不存在，添加
             item = db.DepartmentIndicatorValues.Where(d => d.DepartmentId == departmentIndicatorValue.DepartmentId
                             && d.IndicatorId == departmentIndicatorValue.IndicatorId
                             && d.Time.Year == departmentIndicatorValue.Time.Year && d.Time.Month == departmentIndicatorValue.Time.Month)
@@ -156,103 +142,45 @@ namespace IMS2.Controllers
             {
                 item = departmentIndicatorValue;
                 db.DepartmentIndicatorValues.Add(item);
-                //client win
-                bool saveFailed;
-                do
-                {
-                    saveFailed = false;
-                    try
-                    {
-                        await db.SaveChangesAsync();
-
-                    }
-                    catch (DbUpdateConcurrencyException ex)
-                    {
-                        saveFailed = true;
-
-                        // Update original values from the database 
-                        var entry = ex.Entries.Single();
-                        entry.OriginalValues.SetValues(entry.GetDatabaseValues());
-                    }
-
-                } while (saveFailed);
+               
             }
+            else
+            {
+                item.Value = departmentIndicatorValue.Value;
+            }
+            //client win
+
+            bool saveFailed;
+            do
+            {
+                saveFailed = false;
+                try
+                {
+                    await db.SaveChangesAsync();
+
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    saveFailed = true;
+
+                    // Update original values from the database 
+                    var entry = ex.Entries.Single();
+                    entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                }
+
+            } while (saveFailed);
             return item;
         }
+        // GET: AutoGetDataSource/Details/5
+        [Route("Details/{id}/{time}/{dataSourceSystem}")]
 
-        // GET: ProvidingDepartmentIndicator/Details/5
-        [Route("Details/{id}/{time}/{provideDepartment}")]
-        public async Task<ActionResult> Details(Guid? id, DateTime? time, Guid? provideDepartment)
+        public async Task<ActionResult> Details(Guid? id, DateTime? time, Guid? dataSourceSystemID)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ViewBag.provideDepartment = provideDepartment;
-            //查找到该department       
-            var department = await db.Departments.FindAsync(id.Value);
-            DepartmentIndicatorCountView viewModel = new DepartmentIndicatorCountView();
-            viewModel.DepartmentIndicatorValues = new List<DepartmentIndicatorValue>();
-            viewModel.Department = department;
-            //从DepartmentIndicatorValue找值
-            viewModel.SearchTime = time;
-            var departmentIndicatorValues = await db.Departments.SelectMany(c => c.DepartmentIndicatorValues).Include(d => d.Indicator.Duration)
-                                                .Where(d => d.DepartmentId == department.DepartmentId 
-                                                && d.Time.Year == time.Value.Year && d.Time.Month == time.Value.Month
-                                                && d.Indicator.ProvidingDepartmentId == provideDepartment).OrderBy(d=>d.Indicator.Priority).ToListAsync();
-            foreach (var departmentIndicatorValue in departmentIndicatorValues)
-            {
-                viewModel.DepartmentIndicatorValues.Add(departmentIndicatorValue);
-            }
-            return View(viewModel);
-        }
-
-        // GET: ProvidingDepartmentIndicator/Create
-        public ActionResult Create()
-        {
-            ViewBag.DepartmentId = new SelectList(db.Departments, "DepartmentId", "DepartmentName");
-            ViewBag.IndicatorStandardId = new SelectList(db.DepartmentIndicatorStandards, "DepartmentIndicatorStandardId", "Remarks");
-            ViewBag.IndicatorId = new SelectList(db.Indicators, "IndicatorId", "IndicatorName");
-            return View();
-        }
-
-        // POST: ProvidingDepartmentIndicator/Create
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(DateTime? searchTime, Guid? departmentID)
-        {
-            var provideDepartment = await db.Departments.FindAsync(departmentID);
-            if (provideDepartment != null)
-            {
-                //数据来源科室负责的指标，根据指标与指定时间是否在科室指标值表（简称值表）中，如果不在，依次选择指标，追寻到科室类别项目组中的各个科室，再将该指标、科室、时间写入值表中。
-                foreach (var indicator in provideDepartment.ProvidingIndicators)
-                {
-
-                    var departmentCollection = indicator.IndicatorGroupMapIndicators.Select(i => i.IndicatorGroup)
-                        .SelectMany(i => i.DepartmentCategoryMapIndicatorGroups)
-                        .Select(d => d.DepartmentCategory)
-                        .SelectMany(d => d.Departments).Distinct();
-                    foreach (var department in departmentCollection)
-                    {
-                        //添加
-                        await CreateDepartmentIndicatorList(searchTime, indicator, department);
-                    }
-                }
-            }
-           return RedirectToAction("Index", new { searchTime = searchTime, providingDepartment = departmentID });
-        }
-        // GET: ProvidingDepartmentIndicator/Edit/5
-        [Route("Index/{id}/{time}/{provideDepartment}")]
-
-        public async Task<ActionResult> Edit(Guid? id, DateTime? time, Guid? provideDepartment)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ViewBag.provideDepartment = provideDepartment;
+            ViewBag.dataSourceSystem = dataSourceSystemID;
             //查找到该department       
             var department = await db.Departments.FindAsync(id.Value);
             DepartmentIndicatorCountView viewModel = new DepartmentIndicatorCountView();
@@ -263,7 +191,7 @@ namespace IMS2.Controllers
             var departmentIndicatorValues = await db.Departments.SelectMany(c => c.DepartmentIndicatorValues).Include(d => d.Indicator.Duration)
                                                 .Where(d => d.DepartmentId == department.DepartmentId
                                                 && d.Time.Year == time.Value.Year && d.Time.Month == time.Value.Month
-                                                && d.Indicator.ProvidingDepartmentId == provideDepartment).OrderBy(d=>d.Indicator.Priority).ToListAsync();
+                                                && d.Indicator.DataSourceSystemId == dataSourceSystemID).OrderBy(d => d.Indicator.Priority).ToListAsync();
             foreach (var departmentIndicatorValue in departmentIndicatorValues)
             {
                 viewModel.DepartmentIndicatorValues.Add(departmentIndicatorValue);
@@ -271,14 +199,99 @@ namespace IMS2.Controllers
             return View(viewModel);
         }
 
-        // POST: ProvidingDepartmentIndicator/Edit/5
+        // GET: AutoGetDataSource/Create
+        public ActionResult Create()
+        {
+            ViewBag.DepartmentId = new SelectList(db.Departments, "DepartmentId", "DepartmentName");
+            ViewBag.IndicatorStandardId = new SelectList(db.DepartmentIndicatorStandards, "DepartmentIndicatorStandardId", "Remarks");
+            ViewBag.IndicatorId = new SelectList(db.Indicators, "IndicatorId", "IndicatorName");
+            return View();
+        }
+
+        // POST: AutoGetDataSource/Create
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(Department department, IEnumerable<DepartmentIndicatorValue> departmentIndicatorValues, DateTime? searchTime, Guid? provideDepartment)
+        public async Task<ActionResult> Create(DateTime? searchTime, Guid? dataSourceSystemID)
         {
-            ViewBag.provideDepartment = provideDepartment;
+            if(searchTime != null && dataSourceSystemID != null)
+            {
+                var sourceSystem = await db.DataSourceSystems.FindAsync(dataSourceSystemID.Value);
+                if (sourceSystem != null)
+                {
+                    Decimal value = 0;
+                    IndicatorValue indicatorValue = new IndicatorValue();
+                    //数据来源科室负责的指标，根据指标与指定时间是否在科室指标值表（简称值表）中，如果不在，依次选择指标，追寻到科室类别项目组中的各个科室，再将该指标、科室、时间写入值表中。
+                    foreach (var indicator in sourceSystem.Indicators)
+                    {
+
+                        var departmentCollection = indicator.IndicatorGroupMapIndicators.Select(i => i.IndicatorGroup)
+                            .SelectMany(i => i.DepartmentCategoryMapIndicatorGroups)
+                            .Select(d => d.DepartmentCategory)
+                            .SelectMany(d => d.Departments).Distinct();
+                        foreach (var department in departmentCollection)
+                        {
+                            //根据下拉列表的选项，根据自动获取的系统名称，获取相关的值，再添加到数据库中
+                            switch (sourceSystem.DataSourceSystemName)
+                            {
+                                case "病案管理系统":
+                                    //从病案管理系统中获取值
+                                    var bagl = new ImsAutoLib.Bagl.Bagl();
+                                    value = bagl.GetIndicatorValue(department.DepartmentId, indicator.IndicatorId, searchTime.Value);
+                                    break;
+                                case "计算":
+                                    value = indicatorValue.GetDepartmentIndicatorValueByCalculate(department.DepartmentId, indicator.IndicatorId, searchTime.Value);
+
+                                    break;
+                                case "超声影像系统":
+                                    break;
+                            }
+                            //添加
+                            await CreateDepartmentIndicatorList(searchTime, indicator, department, value);
+                        }
+                    }
+                }
+            }
+            return RedirectToAction("Index", new { searchTime = searchTime, dataSourceSystemID = dataSourceSystemID });
+        }
+
+        // GET: AutoGetDataSource/Edit/5
+        [Route("Details/{id}/{time}/{dataSourceSystem}")]
+
+        public async Task<ActionResult> Edit(Guid? id, DateTime? time, Guid? dataSourceSystemID)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ViewBag.dataSourceSystemID = dataSourceSystemID;
+            //查找到该department       
+            var department = await db.Departments.FindAsync(id.Value);
+            DepartmentIndicatorCountView viewModel = new DepartmentIndicatorCountView();
+            viewModel.DepartmentIndicatorValues = new List<DepartmentIndicatorValue>();
+            viewModel.Department = department;
+            //从DepartmentIndicatorValue找值
+            viewModel.SearchTime = time;
+            var departmentIndicatorValues = await db.Departments.SelectMany(c => c.DepartmentIndicatorValues).Include(d => d.Indicator.Duration)
+                                                .Where(d => d.DepartmentId == department.DepartmentId
+                                                && d.Time.Year == time.Value.Year && d.Time.Month == time.Value.Month
+                                                && d.Indicator.DataSourceSystemId == dataSourceSystemID).OrderBy(d => d.Indicator.Priority).ToListAsync();
+            foreach (var departmentIndicatorValue in departmentIndicatorValues)
+            {
+                viewModel.DepartmentIndicatorValues.Add(departmentIndicatorValue);
+            }
+            return View(viewModel);
+        }
+
+        // POST: AutoGetDataSource/Edit/5
+        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
+        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(Department department, IEnumerable<DepartmentIndicatorValue> departmentIndicatorValues, DateTime? searchTime, Guid? dataSourceSystemID)
+        {
+            ViewBag.dataSourceSystemID = dataSourceSystemID;
 
             var viewModel = new DepartmentIndicatorCountView();
             if (department != null)
@@ -292,14 +305,14 @@ namespace IMS2.Controllers
                 //保存值
                 var departmentIdicatorValue = await db.DepartmentIndicatorValues
                                              .FindAsync(departmentIdicatorValuequery.DepartmentIndicatorValueId);
-                //if (TryUpdateModel(departmentIdicatorValue, "", new string[] { "Value" }))
-                //{
                 try
                 {
                     if (departmentIdicatorValuequery.Value != null &&
-                        departmentIdicatorValue.Value != departmentIdicatorValuequery.Value)
+                        departmentIdicatorValue.Value != departmentIdicatorValuequery.Value
+                        || departmentIdicatorValuequery.IsLocked != departmentIdicatorValue.IsLocked)
                     {
                         departmentIdicatorValue.Value = departmentIdicatorValuequery.Value;
+                        departmentIdicatorValue.IsLocked = departmentIdicatorValuequery.IsLocked;
                         //database win
                         bool saveFailed;
                         do
@@ -329,7 +342,7 @@ namespace IMS2.Controllers
             return View(viewModel);
         }
 
-        // GET: ProvidingDepartmentIndicator/Delete/5
+        // GET: AutoGetDataSource/Delete/5
         public async Task<ActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -344,7 +357,7 @@ namespace IMS2.Controllers
             return View(departmentIndicatorValue);
         }
 
-        // POST: ProvidingDepartmentIndicator/Delete/5
+        // POST: AutoGetDataSource/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(Guid id)

@@ -121,6 +121,26 @@ namespace IMS2.DAL
             return item;
         }
 
+        public async Task<UserDepartment> AddUserDepartment(UserDepartment userDepartment)
+        {
+            UserDepartment item = null;
+            if(userDepartment == null)
+            {
+                return item;
+            }
+            using (ApplicationDbContext context = new ApplicationDbContext())
+            {
+                item = await context.UserDepartments.FindAsync(userDepartment.UserDepartmentId);
+                if(item == null)
+                {
+                    item = userDepartment;
+                    context.UserDepartments.Add(item);
+                    await context.SaveChangesAsync();
+                }
+            }
+            return item;
+        }
+
         public async Task<IndicatorGroupMapIndicator> AddIndicatorGroupMapIndicator(IndicatorGroupMapIndicator indicatorGroupMapIndicator, string indicatorGroupName, string indicatorName)
         {
             IndicatorGroupMapIndicator item = null;

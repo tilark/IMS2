@@ -29,6 +29,8 @@ namespace IMS2
 
             //initialItemData.InitialDepartmentCategoryMapIndicatorGroup();
             //initialItemData.InitialIndicatorAlgorithm();
+
+            //initialItemData.InitialUserDepartment();
         }
     }
 }
