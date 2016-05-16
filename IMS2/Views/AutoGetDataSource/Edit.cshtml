@@ -36,6 +36,7 @@
             int i = 0;
             <table class="table table-hover">
                 <tr>
+                    <th>序列</th>
                     <th>指标</th>
                     <th>值</th>
                     <th>审核</th>
@@ -44,6 +45,7 @@
                 @foreach (var item in Model.DepartmentIndicatorValues)
                     {
                     <tr>
+                        <td># @(i+1)</td>
                         <td>
                             @Html.Hidden(String.Format("departmentIndicatorValues[{0}].DepartmentIndicatorValueId", i), item.DepartmentIndicatorValueId)
                             @Html.DisplayFor(model => item.Indicator.IndicatorName)
@@ -76,7 +78,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="保存" class="btn btn-default" />
+                <input type="submit" value="保存" class="btn btn-primary" />
             </div>
         </div>
     </div>
@@ -85,7 +87,7 @@
 
 <div>
 
-    @Html.ActionLink("Back to List", "Index", new { searchTime = Model.SearchTime, dataSourceSystemID = ViewBag.dataSourceSystemID })
+    @Html.ActionLink("返回列表", "Index", new { searchTime = Model.SearchTime, dataSourceSystemID = ViewBag.dataSourceSystemID })
 </div>
 
 @section Scripts {

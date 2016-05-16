@@ -1,10 +1,10 @@
 ﻿@model IMS2.ViewModels.DataSourceSystemIndicatorView
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "数据来源系统列表";
 }
 
-<h2>数据来源系统列表</h2>
+<h3>数据来源系统界面</h3>
 
 <fieldset class="col-md-12">
 
@@ -43,11 +43,17 @@
 
     @if (Model != null && Model.dataSourceSystem != null)
     {
-        <div class="col-md-2">
+        <div class="col-md-offset-2 col-md-10">
+            <button id="hideitem" class="btn btn-default btn-xs"><span class="label label-primary">隐藏项目</span></button>
+            <button id="showitem" class="btn btn-default btn-xs"><span class="label label-primary">显示项目</span></button>
+
+        </div>
+
+        <div class="col-md-2 pitem">
             (@Model.dataSourceSystem.DataSourceSystemName)负责的项目：
 
         </div>
-        <div class="col-md-10">
+        <div class="col-md-10 pitem">
             <table class="table table-hover">
                 <tbody>
 
@@ -91,8 +97,8 @@
                 @Html.HiddenFor(model => model.searchTime)
 
                 <div class="form-group">
-                    <div class="col-md-8 col-md-offset-4">
-                        <input type="submit" value="更新上述项目" class="btn btn-danger" />
+                    <div class="col-md-8 col-md-offset-4 pitem">
+                        <input type="submit" value="更新上述项目" class="btn btn-danger" data-toggle="modal" data-target="#myModal" data-keyboard="false"/>
                     </div>
                 </div>
                 <p></p>
@@ -102,6 +108,7 @@
     </section>
     @if (Model != null)
     {
+        int i = 1;
         <div class="form-group">
             <div class="col-md-2">
                 已有项目：
@@ -111,24 +118,28 @@
                 <table class="table table-hover col-md-10">
 
                     <tr>
+                        <td>序列</td>
                         <td>@Html.Label("科室")</td>
                         <td>@Html.Label("项目总数")</td>
                         <td>时间</td>
 
                         <td></td>
                     </tr>
+                    
                     @foreach (var item in Model.DepartmentIndicatorCountViews)
                     {
                         <tr>
+                            <td># @i</td>
                             <td>@item.Department.DepartmentName</td>
                             <td>@item.IndicatorCount</td>
                             <td>@Model.searchTime.GetDateTimeFormats('y')[0]</td>
                             <td>
 
-                                @Html.ActionLink("Edit", "Edit", new { id = item.Department.DepartmentId, time = item.SearchTime, dataSourceSystemID = Model.dataSourceSystem.DataSourceSystemId }) |
-                                @Html.ActionLink("Details", "Details", new { id = item.Department.DepartmentId, time = item.SearchTime, dataSourceSystemID = Model.dataSourceSystem.DataSourceSystemId }) |
+                                @Html.ActionLink("编辑", "Edit", new { id = item.Department.DepartmentId, time = item.SearchTime, dataSourceSystemID = Model.dataSourceSystem.DataSourceSystemId }) |
+                                @Html.ActionLink("详情", "Details", new { id = item.Department.DepartmentId, time = item.SearchTime, dataSourceSystemID = Model.dataSourceSystem.DataSourceSystemId }) |
                             </td>
                         </tr>
+                        i++;
                     }
                 </table>
             </div>
@@ -136,5 +147,23 @@
         
         
     }
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">添加项目</h4>
+            </div>
+            <div class="modal-body">
+                正在努力添加中，请稍候……
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
 
-
+    @Scripts.Render("~/bundles/datetimepicker")
+    <script type="text/javascript" src="~/Scripts/IMSjquery.js">
+    </script>
+}

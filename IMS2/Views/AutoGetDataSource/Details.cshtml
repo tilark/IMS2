@@ -29,6 +29,7 @@
         <div class="col-md-offset-1 col-md-11">
             <table class="table table-hover">
                 <tr style="font:bold">
+                    <td>序列</td>
                     <td>指标</td>
                     <td>值</td>
                     <td>审核</td>
@@ -38,9 +39,11 @@
 
                 @if (Model.DepartmentIndicatorValues.Count > 0)
                 {
+                    int i = 1;
                     foreach (var item in Model.DepartmentIndicatorValues)
                     {
                         <tr>
+                            <td># @i</td>
                             <td>
                                 @Html.DisplayFor(model => item.Indicator.IndicatorName)
                             </td>
@@ -55,7 +58,7 @@
                             </td>
                             
                         </tr>
-
+                        i++;
                     }
 
                 }
@@ -70,7 +73,7 @@
         @*@{
             var providingDepartmentID = ViewBag.provideDepartment;
         }*@
-        @Html.ActionLink("Edit", "Edit", new { id = Model.Department.DepartmentId, time = Model.SearchTime, dataSourceSystemID = @ViewBag.dataSourceSystem }) |
-        @Html.ActionLink("Back to List", "Index", new { searchTime = Model.SearchTime, dataSourceSystemID = @ViewBag.dataSourceSystem })
+        @Html.ActionLink("编辑", "Edit", new { id = Model.Department.DepartmentId, time = Model.SearchTime, dataSourceSystemID = @ViewBag.dataSourceSystem }) |
+        @Html.ActionLink("返回列表", "Index", new { searchTime = Model.SearchTime, dataSourceSystemID = @ViewBag.dataSourceSystem })
     </p>
 </section>
