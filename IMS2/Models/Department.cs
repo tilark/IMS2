@@ -16,8 +16,11 @@ namespace IMS2.Models
             Indicators = new HashSet<Indicator>();
             ProvidingIndicators = new HashSet<Indicator>();
         }
+        [Display(Name = "科室ID")]
 
         public Guid DepartmentId { get; set; }
+        [Display(Name = "科室类别")]
+
 
         public Guid DepartmentCategoryId { get; set; }
 

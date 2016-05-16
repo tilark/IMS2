@@ -14,6 +14,7 @@ namespace IMS2.Models
         {
             Indicators = new HashSet<Indicator>();
         }
+        [Display(Name = "数据来源系统ID")]
 
         public Guid DataSourceSystemId { get; set; }
 

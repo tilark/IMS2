@@ -8,6 +8,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using IMS2.Models;
+using IMS2.ViewModels;
+using System.Data.Entity.Infrastructure;
 
 namespace IMS2.Controllers
 {
@@ -16,9 +18,17 @@ namespace IMS2.Controllers
         private ImsDbContext db = new ImsDbContext();
 
         // GET: DepartmentCategory
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(IMSMessageIdEnum? message)
         {
-            return View(await db.DepartmentCategories.OrderBy(d=>d.Priority).ToListAsync());
+            ViewBag.StatusMessage =
+               message == IMSMessageIdEnum.CreateSuccess ? "已创建新项。"
+               : message == IMSMessageIdEnum.EditdSuccess ? "已更新完成。"
+               : message == IMSMessageIdEnum.DeleteSuccess ? "已删除成功。"
+               : message == IMSMessageIdEnum.CreateError ? "创建项目出现错误。"
+               : message == IMSMessageIdEnum.EditError ? "有重名，无法更新相关信息。"
+               : message == IMSMessageIdEnum.DeleteError ? "不允许删除该项。"
+               : "";
+            return View(await db.DepartmentCategories.OrderBy(d => d.Priority).ToListAsync());
         }
 
         // GET: DepartmentCategory/Details/5
@@ -51,10 +61,19 @@ namespace IMS2.Controllers
         {
             if (ModelState.IsValid)
             {
-                departmentCategory.DepartmentCategoryId = Guid.NewGuid();
-                db.DepartmentCategories.Add(departmentCategory);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                var query = await db.DepartmentCategories.Where(d => d.DepartmentCategoryId == departmentCategory.DepartmentCategoryId || d.DepartmentCategoryName == departmentCategory.DepartmentCategoryName)
+                            .SingleOrDefaultAsync();
+                if (query == null)
+                {
+                    db.DepartmentCategories.Add(departmentCategory);
+                    await db.SaveChangesAsync();
+                    return RedirectToAction("Index", new { message = IMSMessageIdEnum.CreateSuccess });
+
+                }
+                else
+                {
+                    return RedirectToAction("Index", new { message = IMSMessageIdEnum.CreateError });
+                }
             }
 
             return View(departmentCategory);
@@ -72,6 +91,8 @@ namespace IMS2.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.DepartmentCategoryName = departmentCategory.DepartmentCategoryName;
+
             return View(departmentCategory);
         }
 
@@ -84,9 +105,42 @@ namespace IMS2.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(departmentCategory).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                //是否有重名
+                var query = await db.DepartmentCategories.Where(d => d.DepartmentCategoryName == departmentCategory.DepartmentCategoryName).SingleOrDefaultAsync();
+                if (query != null)
+                {
+                    //有两个同名的科室
+                    ModelState.AddModelError("", String.Format("不能出现同名：{0}", departmentCategory.DepartmentCategoryName));
+
+                }
+                else
+                {
+                    //只能更改优先级与备注信息
+                    db.Entry(departmentCategory).State = EntityState.Modified;
+                    //client win
+                    bool saveFailed;
+                    do
+                    {
+                        saveFailed = false;
+                        try
+                        {
+                            await db.SaveChangesAsync();
+
+                        }
+                        catch (DbUpdateConcurrencyException ex)
+                        {
+                            saveFailed = true;
+
+                            // Update original values from the database 
+                            var entry = ex.Entries.Single();
+                            entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                        }
+
+                    } while (saveFailed);
+
+                    return RedirectToAction("Index", new { message = IMSMessageIdEnum.EditdSuccess });
+                }
+               
             }
             return View(departmentCategory);
         }
@@ -112,9 +166,32 @@ namespace IMS2.Controllers
         public async Task<ActionResult> DeleteConfirmed(Guid id)
         {
             DepartmentCategory departmentCategory = await db.DepartmentCategories.FindAsync(id);
-            db.DepartmentCategories.Remove(departmentCategory);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            if (departmentCategory.DepartmentCategoryMapIndicatorGroups.Count <= 0
+                && departmentCategory.Departments.Count <= 0)
+            {
+                db.DepartmentCategories.Remove(departmentCategory);
+                bool saveFailed;
+                do
+                {
+                    saveFailed = false;
+                    try
+                    {
+                        await db.SaveChangesAsync();
+
+                    }
+                    catch (DbUpdateConcurrencyException ex)
+                    {
+                        saveFailed = true;
+
+                        // Update original values from the database 
+                        var entry = ex.Entries.Single();
+                        entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                    }
+
+                } while (saveFailed);
+                return RedirectToAction("Index", new { message = IMSMessageIdEnum.DeleteSuccess });
+            }
+            return RedirectToAction("Index", new { message = IMSMessageIdEnum.DeleteError });
         }
 
         protected override void Dispose(bool disposing)

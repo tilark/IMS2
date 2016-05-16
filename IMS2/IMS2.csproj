@@ -250,7 +250,9 @@
     <Compile Include="ViewModels\DataSourceSystemIndicatorView.cs" />
     <Compile Include="ViewModels\DepartmentIndicatorCountView.cs" />
     <Compile Include="ViewModels\DepartmentIndicatorValueView.cs" />
+    <Compile Include="ViewModels\IMSMessageIdEnum.cs" />
     <Compile Include="ViewModels\ManageUserViewModel.cs" />
+    <Compile Include="ViewModels\PriotryRemarksViewModel.cs" />
     <Compile Include="ViewModels\ProvideDepartmentIndicatorView.cs" />
   </ItemGroup>
   <ItemGroup>

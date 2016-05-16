@@ -8,6 +8,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using IMS2.Models;
+using System.Data.Entity.Infrastructure;
+using IMS2.ViewModels;
 
 namespace IMS2.Controllers
 {
@@ -16,8 +18,16 @@ namespace IMS2.Controllers
         private ImsDbContext db = new ImsDbContext();
 
         // GET: DataSourceSystem
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(IMSMessageIdEnum? message)
         {
+            ViewBag.StatusMessage =
+                message == IMSMessageIdEnum.CreateSuccess ? "已创建新项。"
+                : message == IMSMessageIdEnum.EditdSuccess ? "已更新完成。"
+                : message == IMSMessageIdEnum.DeleteSuccess ? "已删除成功。"
+                : message == IMSMessageIdEnum.CreateError ? "创建项目出现错误。"
+                : message == IMSMessageIdEnum.EditError ? "有重名，无法更新相关信息。"
+                : message == IMSMessageIdEnum.DeleteError ? "不允许删除该项。"
+                : "";
             return View(await db.DataSourceSystems.ToListAsync());
         }
 
@@ -51,10 +61,20 @@ namespace IMS2.Controllers
         {
             if (ModelState.IsValid)
             {
-                dataSourceSystem.DataSourceSystemId = Guid.NewGuid();
-                db.DataSourceSystems.Add(dataSourceSystem);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                //查找是否有要同的Guid与相同的名称
+                var query = await db.DataSourceSystems.Where(d => d.DataSourceSystemId == dataSourceSystem.DataSourceSystemId || d.DataSourceSystemName == dataSourceSystem.DataSourceSystemName)
+                            .SingleOrDefaultAsync();
+                if (query == null)
+                {
+                    db.DataSourceSystems.Add(dataSourceSystem);
+                    await db.SaveChangesAsync();
+                    return RedirectToAction("Index", new { message = IMSMessageIdEnum.CreateSuccess });
+
+                }
+                else
+                {
+                    return RedirectToAction("Index", new { message = IMSMessageIdEnum.CreateError });
+                }
             }
 
             return View(dataSourceSystem);
@@ -72,6 +92,7 @@ namespace IMS2.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.DataSourceSystemName = dataSourceSystem.DataSourceSystemName;
             return View(dataSourceSystem);
         }
 
@@ -84,9 +105,30 @@ namespace IMS2.Controllers
         {
             if (ModelState.IsValid)
             {
+                //只能更改优先级与备注信息
                 db.Entry(dataSourceSystem).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                //client win
+                bool saveFailed;
+                do
+                {
+                    saveFailed = false;
+                    try
+                    {
+                        await db.SaveChangesAsync();
+
+                    }
+                    catch (DbUpdateConcurrencyException ex)
+                    {
+                        saveFailed = true;
+
+                        // Update original values from the database 
+                        var entry = ex.Entries.Single();
+                        entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                    }
+
+                } while (saveFailed);
+
+                return RedirectToAction("Index", new { message = IMSMessageIdEnum.EditdSuccess });
             }
             return View(dataSourceSystem);
         }
@@ -112,9 +154,32 @@ namespace IMS2.Controllers
         public async Task<ActionResult> DeleteConfirmed(Guid id)
         {
             DataSourceSystem dataSourceSystem = await db.DataSourceSystems.FindAsync(id);
-            db.DataSourceSystems.Remove(dataSourceSystem);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            //如果数据来源系统中有指标集合，不能删除
+            if (dataSourceSystem.Indicators.Count <= 0)
+            {
+                db.DataSourceSystems.Remove(dataSourceSystem);
+                bool saveFailed;
+                do
+                {
+                    saveFailed = false;
+                    try
+                    {
+                        await db.SaveChangesAsync();
+
+                    }
+                    catch (DbUpdateConcurrencyException ex)
+                    {
+                        saveFailed = true;
+
+                        // Update original values from the database 
+                        var entry = ex.Entries.Single();
+                        entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                    }
+
+                } while (saveFailed);
+                return RedirectToAction("Index", new { message = IMSMessageIdEnum.DeleteSuccess });
+            }
+            return RedirectToAction("Index", new { message = IMSMessageIdEnum.DeleteError });
         }
 
         protected override void Dispose(bool disposing)
@@ -125,5 +190,6 @@ namespace IMS2.Controllers
             }
             base.Dispose(disposing);
         }
+       
     }
 }

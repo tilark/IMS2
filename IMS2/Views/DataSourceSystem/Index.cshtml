@@ -4,13 +4,16 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
-
+<h2>数据来源系统</h2>
+<p class="text-success">@ViewBag.StatusMessage</p>
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("创建新项", "Create")
 </p>
 <table class="table">
     <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.DataSourceSystemId)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.DataSourceSystemName)
         </th>
@@ -26,6 +29,9 @@
 @foreach (var item in Model) {
     <tr>
         <td>
+            @Html.DisplayFor(modelItem => item.DataSourceSystemId)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.DataSourceSystemName)
         </td>
         <td>
@@ -35,9 +41,9 @@
             @Html.DisplayFor(modelItem => item.Remarks)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.DataSourceSystemId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.DataSourceSystemId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.DataSourceSystemId })
+            @Html.ActionLink("编辑", "Edit", new { id=item.DataSourceSystemId }) |
+            @Html.ActionLink("详情", "Details", new { id=item.DataSourceSystemId }) |
+            @Html.ActionLink("删除", "Delete", new { id=item.DataSourceSystemId })
         </td>
     </tr>
 }
