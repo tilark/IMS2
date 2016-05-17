@@ -11,6 +11,7 @@
 </p>
 <table class="table">
     <tr>
+        <th>序号</th>
         <th>
             @Html.DisplayNameFor(model => model.DepartmentCategory.DepartmentCategoryName)
         </th>
@@ -25,9 +26,12 @@
         </th>
         <th></th>
     </tr>
-
+@{ 
+    int i = 1;
+}
 @foreach (var item in Model) {
     <tr>
+        <td>#@i</td>
         <td>
             @Html.DisplayFor(modelItem => item.DepartmentCategory.DepartmentCategoryName)
         </td>
@@ -46,6 +50,7 @@
             @Html.ActionLink("Delete", "Delete", new { id=item.DepartmentCategoryMapIndicatorGroupId })
         </td>
     </tr>
+    i++;
 }
 
 </table>

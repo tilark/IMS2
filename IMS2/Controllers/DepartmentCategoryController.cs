@@ -170,6 +170,7 @@ namespace IMS2.Controllers
                 && departmentCategory.Departments.Count <= 0)
             {
                 db.DepartmentCategories.Remove(departmentCategory);
+                //client win
                 bool saveFailed;
                 do
                 {

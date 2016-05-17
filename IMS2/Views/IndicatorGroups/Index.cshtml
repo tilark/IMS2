@@ -1,16 +1,20 @@
 ﻿@model IEnumerable<IMS2.Models.IndicatorGroup>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "列表";
 }
 
-<h2>Index</h2>
+<h2>列表</h2>
+<p class="text-success">@ViewBag.StatusMessage</p>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("创建新项", "Create")
 </p>
 <table class="table">
     <tr>
+        <th>
+            序号
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.IndicatorGroupName)
         </th>
@@ -22,9 +26,12 @@
         </th>
         <th></th>
     </tr>
-
+    @{ 
+        int i = 1;
+    }
 @foreach (var item in Model) {
     <tr>
+        <td>#@i</td>
         <td>
             @Html.DisplayFor(modelItem => item.IndicatorGroupName)
         </td>
@@ -35,11 +42,12 @@
             @Html.DisplayFor(modelItem => item.Remarks)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.IndicatorGroupId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.IndicatorGroupId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.IndicatorGroupId })
+            @Html.ActionLink("编辑", "Edit", new { id=item.IndicatorGroupId }) |
+            @Html.ActionLink("详情", "Details", new { id=item.IndicatorGroupId }) |
+            @Html.ActionLink("删除", "Delete", new { id=item.IndicatorGroupId })
         </td>
     </tr>
+    i++;
 }
 
 </table>
