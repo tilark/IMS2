@@ -15,6 +15,7 @@ namespace IMS2.Models
         }
 
         public Guid DepartmentIndicatorStandardId { get; set; }
+        [Display(Name = "科室")]
 
         public Guid DepartmentId { get; set; }
 
@@ -52,11 +53,22 @@ namespace IMS2.Models
         public virtual Indicator Indicator { get; set; }
 
         public virtual ICollection<DepartmentIndicatorValue> DepartmentIndicatorValues { get; set; }
+       
+    }
+    public partial class DepartmentIndicatorStandard
+    {
+        [Display(Name = "范围")]
+
         public string Range
         {
             get
             {
-                return "[" + LowerBound.ToString() + "-" + UpperBound.ToString() + "]";
+               
+                var upperBoundSign = UpperBound.HasValue ? UpperBoundIncluded.HasValue ? UpperBoundIncluded.Value ? UpperBound.Value.ToString() + "]" : UpperBound.Value.ToString() + ")" : UpperBound.Value.ToString() + ")" : "+∞)";
+
+                var lowerBoundSign = LowerBound.HasValue ? LowerBoundIncluded.HasValue ? LowerBoundIncluded.Value ? "[" + LowerBound.Value.ToString() : "(" + LowerBound.Value.ToString() : "(" + LowerBound.Value.ToString() : "(-∞";
+
+                return lowerBoundSign + "," + upperBoundSign;
             }
         }
     }

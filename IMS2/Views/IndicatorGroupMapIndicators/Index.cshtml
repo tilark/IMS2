@@ -1,39 +1,50 @@
-﻿@model IEnumerable<IMS2.Models.IndicatorGroupMapIndicator>
+﻿@model PagedList.IPagedList<IMS2.ViewModels.IndicatorGroupIndicatorView>
 
+@using PagedList.Mvc;
+@using PagedList;
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>列表</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.IndicatorGroup.IndicatorGroupName)
+            序列
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Indicator.IndicatorName)
+            指标组名
+        </th>
+        <th>
+            指标名
         </th>
 
         <th>
-            @Html.DisplayNameFor(model => model.Priority)
+            优先级
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Remarks)
+           备注
         </th>
         <th></th>
     </tr>
-
+    @{ 
+        int i = 1;
+    }
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.IndicatorGroup.IndicatorGroupName)
+            #@((ViewBag.pageNumber -1 )* ViewBag.pageSize + i)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Indicator.IndicatorName)
+            @Html.DisplayFor(modelItem => item.IndicatorGroupName)
+        </td>
+        <td>
+            @foreach (var indicator in item.Indicators)
+            {
+                @Html.DisplayFor(modelItem => indicator.IndicatorName) 
+                <br />
+            }
         </td>
 
         <td>
@@ -43,11 +54,16 @@
             @Html.DisplayFor(modelItem => item.Remarks)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.IndicatorGroupMapIndicatorId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.IndicatorGroupMapIndicatorId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.IndicatorGroupMapIndicatorId })
+            @Html.ActionLink("编辑", "Edit", new { id=item.IndicatorGroupId }) |
+            @Html.ActionLink("详情", "Details", new { id=item.IndicatorGroupId }) |
         </td>
     </tr>
+    i++;
 }
 
 </table>
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index",
+            new
+            {
+                page
+            }))

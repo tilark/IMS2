@@ -23,52 +23,47 @@
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Unit, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Unit, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Unit, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.IsAutoGetData, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsAutoGetData)
+                <div class="checkbox" >
+                    @Html.CheckBoxFor(model => model.IsAutoGetData)
                     @Html.ValidationMessageFor(model => model.IsAutoGetData, "", new { @class = "text-danger" })
                 </div>
             </div>
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProvidingDepartmentId, "ProvidingDepartmentId", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="form-group" id="dataSourceSystemDiv">
+            @Html.LabelFor(model => model.DataSourceSystemId, "数据来源系统", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("ProvidingDepartmentId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ProvidingDepartmentId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.DataSourceSystemId, "DataSourceSystemId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("DataSourceSystemId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("DataSourceSystemId",null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.DataSourceSystemId, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DutyDepartmentId, "DutyDepartmentId", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="form-group" id="providingDepartmentDiv">
+            <div class="control-label col-md-2">
+                数据来源科室
+            </div>
             <div class="col-md-10">
-                @Html.DropDownList("DutyDepartmentId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("ProvidingDepartmentId",null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ProvidingDepartmentId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DutyDepartmentId, "责任科室", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("DutyDepartmentId",null, "无", htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.DutyDepartmentId, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.DurationId, "DurationId", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.DurationId, "跨度", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("DurationId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("DurationId", null,htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.DurationId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -78,6 +73,13 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Priority, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Priority, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Unit, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Unit, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Unit, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -103,4 +105,5 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+<script src="~/Scripts/IMSjquery.js"></script>
 }

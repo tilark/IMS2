@@ -109,7 +109,8 @@ namespace IMS2.Controllers
             {
                 if (TryUpdateModel(department, "", new string[] { "DepartmentCategoryId", "DepartmentName", "Priority", "Remarks" }))
                 {
-                    var query = await db.Departments.Where(d => d.DepartmentName == department.DepartmentName).FirstOrDefaultAsync();
+                    var query = await db.Departments.Where(d => d.DepartmentName == department.DepartmentName
+                                        && d.DepartmentId != department.DepartmentId).FirstOrDefaultAsync();
                     if (query != null)
                     {
                         ModelState.AddModelError("", String.Format("已有科室名：{0}", department.DepartmentName));

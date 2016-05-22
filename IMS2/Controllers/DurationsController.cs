@@ -99,7 +99,8 @@ namespace IMS2.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (await IsNullByName(duration.DurationName))
+                var query = await db.Durations.Where(d => d.DurationName == duration.DurationName && d.DurationId != duration.DurationId).FirstOrDefaultAsync();
+                if (query == null)
                 {
                     db.Entry(duration).State = EntityState.Modified;
                     await db.SaveChangesAsync();

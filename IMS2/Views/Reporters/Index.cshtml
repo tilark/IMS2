@@ -1,0 +1,74 @@
+﻿@model IMS2.ViewModels.AssignedDepartmentCategoryData
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>报表</h2>
+
+@using (Html.BeginForm("Index", "Reporters", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="dl-horizontal">
+       
+        @*科室类别列表（CheckBox)类型*@
+        <div class="form-group">
+            @Html.Label("科室类别", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <table>
+
+                    @{
+                        List<IMS2.ViewModels.AssignedDepartmentCategoryData> DepartmentCategories = ViewBag.DepartmentCategories;
+                        foreach (var DepartmentCategory in DepartmentCategories)
+                        {
+                            <tr>
+                                <td style="background-color:@(Html.Raw(@DepartmentCategory.Assigned ? @DepartmentCategory.Color : ""))">
+                                    <input type="checkbox" name="selectedDepartmentCategory" value="@DepartmentCategory.DepartmentCategoryID"
+                                           @(Html.Raw(DepartmentCategory.Assigned ? "checked = \"checked\"" : ""))  />
+                                    @DepartmentCategory.DepartmentCategoryName
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="查询指标组" class="btn btn-primary col-md-offset-4" />
+        </div>
+
+    </div>
+    <div class="col-md-12">
+        @Html.Partial("_IndicatorGroupPartial")
+    </div>
+    <div class="form-group">
+        @Html.Label("开始时间", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <input name="startTime" id="searchTimeID" type="month" class="form-control" />
+        </div>
+    </div>
+        <div class="form-group">
+            @Html.Label("截止时间", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input name="endTime" id="searchTimeID" type="month" class="form-control" />
+                <span class="bg-danger">@ViewBag.Status</span>
+            </div>
+        </div>
+    <p><br /></p>
+    <div class="form-group">
+        <input type="submit" value="导出报表" class="btn btn-primary col-md-offset-4" />
+    </div>
+                        }
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script src="~/Scripts/IMSjquery.js"></script>
+
+}
+

@@ -1,0 +1,73 @@
+﻿@model PagedList.IPagedList<IMS2.Models.DepartmentIndicatorStandard>
+@using PagedList.Mvc;
+@using PagedList;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>标准值列表</h2>
+<p class="text-success">@ViewBag.StatusMessage</p>
+
+<p>
+    @Html.ActionLink("创建新标准值", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            科室
+        </th>
+        <th>
+            指标
+        </th>
+        <th>
+            标准值范围
+        </th>
+        <th>
+            版本号
+        </th>
+
+        <th>
+            更新时间
+        </th>
+        <th>
+            备注
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Department.DepartmentName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Indicator.IndicatorName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Range)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Version)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.UpdateTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Remarks)
+        </td>
+        <td>
+            @Html.ActionLink("编辑", "Edit", new { id=item.DepartmentIndicatorStandardId }) |
+            @Html.ActionLink("详情", "Details", new { id=item.DepartmentIndicatorStandardId }) |
+            @Html.ActionLink("删除", "Delete", new { id=item.DepartmentIndicatorStandardId })
+        </td>
+    </tr>
+}
+
+</table>
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index",
+            new
+            {
+                page
+            }))

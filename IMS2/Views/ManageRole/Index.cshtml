@@ -1,0 +1,39 @@
+﻿@model IEnumerable<IMS2.ViewModels.RoleView>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>权限列表</h2>
+<p>
+    @Html.ActionLink("新建权限", "Create")
+</p>
+<p class="text-success">@ViewBag.StatusMessage</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>序号</td>
+            <td>权限名</td>
+            <td></td>
+        </tr>
+        
+    </thead>
+    <tbody>
+        @{ int i = 1;}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>#@i</td>
+                <td>@item.RoleName</td>
+                <td>
+                    @Html.ActionLink("删除", "Delete", new { id = item.RoleName })
+                </td>
+            </tr>
+
+            i++;
+        }
+
+    </tbody>
+</table>

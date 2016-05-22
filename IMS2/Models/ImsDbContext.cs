@@ -30,7 +30,7 @@ namespace IMS2.Models
         {
             modelBuilder.Entity<DataSourceSystem>()
                 .Property(e => e.Priority)
-                .HasPrecision(18, 0);
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<DataSourceSystem>()
                 .Property(e => e.TimeStamp)
@@ -38,7 +38,7 @@ namespace IMS2.Models
 
             modelBuilder.Entity<DepartmentCategory>()
                 .Property(e => e.Priority)
-                .HasPrecision(18, 0);
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<DepartmentCategory>()
                 .Property(e => e.TimeStamp)
@@ -51,7 +51,7 @@ namespace IMS2.Models
 
             modelBuilder.Entity<DepartmentCategoryMapIndicatorGroup>()
                 .Property(e => e.Priority)
-                .HasPrecision(18, 0);
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<DepartmentCategoryMapIndicatorGroup>()
                 .Property(e => e.TimeStamp)
@@ -59,11 +59,11 @@ namespace IMS2.Models
 
             modelBuilder.Entity<DepartmentIndicatorStandard>()
                 .Property(e => e.UpperBound)
-                .HasPrecision(18, 0);
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<DepartmentIndicatorStandard>()
                 .Property(e => e.LowerBound)
-                .HasPrecision(18, 0);
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<DepartmentIndicatorStandard>()
                 .Property(e => e.TimeStamp)
@@ -80,7 +80,7 @@ namespace IMS2.Models
 
             modelBuilder.Entity<Department>()
                 .Property(e => e.Priority)
-                .HasPrecision(18, 0);
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<Department>()
                 .Property(e => e.TimeStamp)
@@ -103,7 +103,7 @@ namespace IMS2.Models
 
             modelBuilder.Entity<IndicatorGroupMapIndicator>()
                 .Property(e => e.Priority)
-                .HasPrecision(18, 0);
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<IndicatorGroupMapIndicator>()
                 .Property(e => e.TimeStamp)
@@ -111,7 +111,7 @@ namespace IMS2.Models
 
             modelBuilder.Entity<IndicatorGroup>()
                 .Property(e => e.Priority)
-                .HasPrecision(18, 0);
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<IndicatorGroup>()
                 .Property(e => e.TimeStamp)
@@ -129,7 +129,7 @@ namespace IMS2.Models
 
             modelBuilder.Entity<Indicator>()
                 .Property(e => e.Priority)
-                .HasPrecision(18, 0);
+                .HasPrecision(18, 2);
 
             modelBuilder.Entity<Indicator>()
                 .Property(e => e.TimeStamp)

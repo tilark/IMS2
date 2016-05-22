@@ -1,0 +1,107 @@
+﻿@model IMS2.ViewModels.DepartmentIndicatorStandardView
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>DepartmentIndicatorStandard</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.DepartmentIndicatorStandardId)
+        @Html.HiddenFor(model => model.DepartmentName)
+        @Html.HiddenFor(model => model.IndicatorName)
+        <div class="form-group">
+            @Html.LabelFor(model => model.DepartmentId, "科室", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.DropDownList("DepartmentId", null, htmlAttributes: new { @class = "form-control" })*@
+                @Html.DisplayFor(model => model.DepartmentName)
+                @Html.ValidationMessageFor(model => model.DepartmentId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IndicatorId, "指标", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.DropDownList("IndicatorId", null, htmlAttributes: new { @class = "form-control" })*@
+                @Html.DisplayFor(model => model.IndicatorName)
+                @Html.ValidationMessageFor(model => model.IndicatorId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UpperBound, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.UpperBound, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.UpperBound, "", new { @class = "text-danger" })
+            </div>
+            @Html.LabelFor(model => model.UpperBoundIncluded, htmlAttributes: new { @class = "control-label col-md-1" })
+            <div class="col-md-5">
+                <div class="checkbox">
+                    @Html.CheckBoxFor(model => model.UpperBoundIncluded)
+                    @Html.ValidationMessageFor(model => model.UpperBoundIncluded, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LowerBound, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.LowerBound, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LowerBound, "", new { @class = "text-danger" })
+            </div>
+            @Html.LabelFor(model => model.LowerBoundIncluded, htmlAttributes: new { @class = "control-label col-md-1" })
+            <div class="col-md-5">
+                <div class="checkbox">
+                    @Html.CheckBoxFor(model => model.LowerBoundIncluded)
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Version, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Version, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Version, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UpdateTime, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DisplayFor(model => model.UpdateTime, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Remarks, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Remarks, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="保存" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("返回列表", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

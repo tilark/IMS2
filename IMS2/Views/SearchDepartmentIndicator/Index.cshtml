@@ -6,7 +6,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>编辑指标值</h2>
 
 @using (Html.BeginForm("Index", "SearchDepartmentIndicator", FormMethod.Get))
 {
@@ -29,19 +29,15 @@
         </div>
         <div class="form-group">
             @Html.Label("科室", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-4">
                 @Html.DropDownList("department", null, htmlAttributes: new { @class = "form-control" })
 
             </div>
-
-        </div>
-        <div class="form-group">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <input type="submit" value="查询" class="btn btn-info" />
 
             </div>
         </div>
-
     </div>
 }
 @{ 
@@ -56,8 +52,8 @@
         <div class="form-group">
 @if (Model.PageCount > 0)
 {
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="保存" class="btn btn-default" />
+            <div class="col-md-offset-10 col-md-2">
+                <input type="submit" value="审核确定" class="btn btn-primary" />
             </div>
 }
         </div>
@@ -72,31 +68,25 @@
             {
             <tr>
                 <th>
-                    @*@Html.DisplayNameFor(model => model.Department.DepartmentName)*@
                     科室
                 </th>
                 <th>
 
-                    @*@Html.DisplayNameFor(model => model.Indicator.IndicatorName)*@
                     指标
                 </th>
                 <th>
-                    @*@Html.DisplayNameFor(model => model.Time)*@
                     时间
                 </th>
                 <th>
-                    @*@Html.DisplayNameFor(model => model.Value)*@
                     值
                 </th>
                 <th>
-                    @*@Html.DisplayNameFor(model => model.IsLocked)*@
                     审核
                 </th>
                 <th>
                     时段
                 </th>
                 <th>
-                    @*@Html.DisplayNameFor(model => model.DepartmentIndicatorStandard.Remarks)*@
                     备注
                 </th>
 

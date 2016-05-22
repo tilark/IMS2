@@ -1,0 +1,30 @@
+﻿
+@model IMS2.ViewModels.RoleView
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>删除</h2>
+<dl class="dl-horizontal">
+
+    <dt>
+        @Html.DisplayNameFor(model => model.RoleName)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.RoleName)
+    </dd>
+</dl>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        <input type="submit" value="删除" class="btn btn-danger" /> |
+        @Html.ActionLink("返回列表", "Index")
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

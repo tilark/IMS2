@@ -1,10 +1,10 @@
-﻿@model IMS2.Models.IndicatorGroupMapIndicator
+﻿@model IMS2.ViewModels.IndicatorGroupIndicatorView
 
 @{
     ViewBag.Title = "Edit";
 }
 
-<h2>Edit</h2>
+<h2>编辑</h2>
 
 
 @using (Html.BeginForm())
@@ -12,29 +12,22 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>IndicatorGroupMapIndicator</h4>
+        <h4>指标组</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.IndicatorGroupMapIndicatorId)
+        @Html.HiddenFor(model => model.IndicatorGroupId)
+        @Html.HiddenFor(model => model.IndicatorGroupName)
+
 
         <div class="form-group">
-            @Html.LabelFor(model => model.IndicatorGroupId, "IndicatorGroupId", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.IndicatorGroupName, null, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("IndicatorGroupId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.IndicatorGroupId, "", new { @class = "text-danger" })
+                @Html.DisplayFor(model => model.IndicatorGroupName)
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.IndicatorId, "IndicatorId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("IndicatorId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.IndicatorId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Priority, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Priority, null, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Priority, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Priority, "", new { @class = "text-danger" })
@@ -48,17 +41,40 @@
                 @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
             </div>
         </div>
-
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <table>
+                    <tr>
+                        @{
+                            int cnt = 0;
+                            List<IMS2.ViewModels.AssignedIndicatorData> groupIndicators = ViewBag.GroupIndicators;
+                            foreach (var groupIndicator in groupIndicators)
+                            {
+                                if (cnt++ % 3 == 0)
+                                {
+                                    @:</tr><tr>
+                                }
+                                @:<td>
+                                    <input type="checkbox" name="selectedIndicator" value="@groupIndicator.IndicatorId"
+                                           @(Html.Raw(groupIndicator.Assigned ? "checked = \"checked\"" : "")) />
+                                        @: @groupIndicator.IndicatorName
+                                        @:</td>
+                            }
+                            @:</tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="修改" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("返回列表", "Index")
 </div>
 
 @section Scripts {

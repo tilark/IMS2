@@ -8,6 +8,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using IMS2.Models;
+using PagedList;
+using System.Data.Entity.Infrastructure;
+using IMS2.ViewModels;
 
 namespace IMS2.Controllers
 {
@@ -16,10 +19,20 @@ namespace IMS2.Controllers
         private ImsDbContext db = new ImsDbContext();
 
         // GET: Indicators
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? page, IMSMessageIdEnum? message)
         {
-            var indicators = db.Indicators.Include(i => i.DataSourceSystem).Include(i => i.Department).Include(i => i.ProvidingDepartment).Include(i => i.Duration).OrderBy(i=>i.Priority);
-            return View(await indicators.ToListAsync());
+            ViewBag.StatusMessage =
+              message == IMSMessageIdEnum.CreateSuccess ? "已创建新项。"
+              : message == IMSMessageIdEnum.EditdSuccess ? "已更新完成。"
+              : message == IMSMessageIdEnum.DeleteSuccess ? "已删除成功。"
+              : message == IMSMessageIdEnum.CreateError ? "创建项目出现错误。"
+              : message == IMSMessageIdEnum.EditError ? "有重名，无法更新相关信息。"
+              : message == IMSMessageIdEnum.DeleteError ? "不允许删除该项。"
+              : "";
+            var indicators = db.Indicators.Include(i => i.DataSourceSystem).Include(i => i.Department).Include(i => i.ProvidingDepartment).Include(i => i.Duration).OrderBy(i => i.Priority);
+            int pageSize = 30;
+            int pageNumber = page ?? 1;
+            return View(await indicators.ToPagedListAsync(pageNumber, pageSize));
         }
 
         // GET: Indicators/Details/5
@@ -56,10 +69,34 @@ namespace IMS2.Controllers
         {
             if (ModelState.IsValid)
             {
-                indicator.IndicatorId = Guid.NewGuid();
-                db.Indicators.Add(indicator);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                var query = await db.Indicators.Where(i => i.IndicatorName == indicator.IndicatorName).FirstOrDefaultAsync();
+                if(query == null)
+                {
+                    if (indicator.IsAutoGetData == true && indicator.DataSourceSystemId != null)
+                    {
+                        indicator.ProvidingDepartmentId = null;
+                    }
+                    else if(indicator.IsAutoGetData == false && indicator.ProvidingDepartmentId != null)
+                    {
+                        indicator.DataSourceSystemId = null;
+                    }
+                    else
+                    {
+                        //错误
+                        return RedirectToAction("Index", new { message = IMSMessageIdEnum.CreateError });
+
+                    }
+                    indicator.IndicatorId = Guid.NewGuid();
+                    db.Indicators.Add(indicator);
+                    await db.SaveChangesAsync();
+                    return RedirectToAction("Index", new { message = IMSMessageIdEnum.CreateSuccess });
+
+                }
+                else
+                {
+                    return RedirectToAction("Index", new { message = IMSMessageIdEnum.CreateError });
+                }
+
             }
 
             ViewBag.DataSourceSystemId = new SelectList(db.DataSourceSystems, "DataSourceSystemId", "DataSourceSystemName", indicator.DataSourceSystemId);
@@ -93,13 +130,56 @@ namespace IMS2.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "IndicatorId,IndicatorName,Unit,IsAutoGetData,ProvidingDepartmentId,DataSourceSystemId,DutyDepartmentId,DurationId,Priority,Remarks,TimeStamp")] Indicator indicator)
+        public async Task<ActionResult> Edit(Indicator indicator)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(indicator).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                if (TryUpdateModel(indicator, "", new string[] { "IndicatorName", "Unit", "IsAutoGetData", "ProvidingDepartmentId", "DataSourceSystemId", "DutyDepartmentId", "DurationId", "Priority" ,"Remarks" }))
+                {
+                    var query = await db.Indicators.Where(d => d.IndicatorName == indicator.IndicatorName && d.IndicatorId != indicator.IndicatorId).FirstOrDefaultAsync();
+                    if (query != null)
+                    {
+                        ModelState.AddModelError("", String.Format("已有指标名：{0}", indicator.IndicatorName));
+
+                    }
+                    else
+                    {
+                        if (indicator.IsAutoGetData == true)
+                        {
+                            //DataSourceSystemId不能为Null，否则就出错
+                            indicator.ProvidingDepartmentId = null;
+                        }
+                        else
+                        {
+                            indicator.DataSourceSystemId = null;
+                        }
+                        db.Entry(indicator).State = EntityState.Modified;
+                        //client win
+                        bool saveFailed;
+                        do
+                        {
+                            saveFailed = false;
+                            try
+                            {
+                                await db.SaveChangesAsync();
+
+                            }
+                            catch (DbUpdateConcurrencyException ex)
+                            {
+                                saveFailed = true;
+
+                                // Update original values from the database 
+                                var entry = ex.Entries.Single();
+                                entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                            }
+
+                        } while (saveFailed);
+                        return RedirectToAction("Index", new { message = IMSMessageIdEnum.EditdSuccess });
+
+                    }
+                }
+
+               
             }
             ViewBag.DataSourceSystemId = new SelectList(db.DataSourceSystems, "DataSourceSystemId", "DataSourceSystemName", indicator.DataSourceSystemId);
             ViewBag.DutyDepartmentId = new SelectList(db.Departments, "DepartmentId", "DepartmentName", indicator.DutyDepartmentId);
@@ -128,10 +208,37 @@ namespace IMS2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(Guid id)
         {
+
             Indicator indicator = await db.Indicators.FindAsync(id);
-            db.Indicators.Remove(indicator);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            if(indicator.DepartmentIndicatorStandards.Count <= 0
+                && indicator.DepartmentIndicatorValues.Count <= 0
+                && indicator.IndicatorGroupMapIndicators.Count <= 0)
+            {
+                db.Indicators.Remove(indicator);
+                //client win
+                bool saveFailed;
+                do
+                {
+                    saveFailed = false;
+                    try
+                    {
+                        await db.SaveChangesAsync();
+
+                    }
+                    catch (DbUpdateConcurrencyException ex)
+                    {
+                        saveFailed = true;
+
+                        // Update original values from the database 
+                        var entry = ex.Entries.Single();
+                        entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                    }
+
+                } while (saveFailed);
+                return RedirectToAction("Index", new { message = IMSMessageIdEnum.DeleteSuccess });
+
+            }
+            return RedirectToAction("Index", new { message = IMSMessageIdEnum.DeleteError });
         }
 
         protected override void Dispose(bool disposing)

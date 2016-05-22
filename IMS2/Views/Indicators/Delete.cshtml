@@ -11,28 +11,40 @@
     <h4>Indicator</h4>
     <hr />
     <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IndicatorName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IndicatorName)
+        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.DataSourceSystem.DataSourceSystemName)
         </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DataSourceSystem.DataSourceSystemName)
-        </dd>
-
         <dt>
-            @Html.DisplayNameFor(model => model.Department.DepartmentName)
+            @Html.DisplayNameFor(model => model.IsAutoGetData)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Department.DepartmentName)
+            @Html.DisplayFor(model => model.IsAutoGetData)
         </dd>
-
+        <dd>
+            @Html.DisplayFor(model => model.DataSourceSystem.DataSourceSystemName)
+        </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ProvidingDepartment.DepartmentName)
+            数据来源科室
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.ProvidingDepartment.DepartmentName)
+        </dd>
+        <dt>
+            责任科室
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Department.DepartmentName)
         </dd>
 
         <dt>
@@ -43,13 +55,6 @@
             @Html.DisplayFor(model => model.Duration.DurationName)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IndicatorName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IndicatorName)
-        </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.Unit)
@@ -59,13 +64,7 @@
             @Html.DisplayFor(model => model.Unit)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IsAutoGetData)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.IsAutoGetData)
-        </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.Priority)
@@ -97,8 +96,8 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            <input type="submit" value="删除" class="btn btn-danger" /> |
+            @Html.ActionLink("返回列表", "Index")
         </div>
     }
 </div>

@@ -1,0 +1,28 @@
+﻿
+    <div class="form-group" >
+        @Html.Label("指标组", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <table>
+                <tr>
+                    @{
+                        int cnt = 0;
+                        List<IMS2.ViewModels.AssignedIndicatorGroupData> indicatorsGroups = ViewBag.IndicatorsGroup;
+                        foreach (var indicatorGroup in indicatorsGroups)
+                        {
+                            if (cnt++ % 3 == 0)
+                            {
+                                @:</tr><tr>
+                                }
+                            @:<td @(Html.Raw(indicatorGroup.Assigned ? "style=\"background-color:greenyellow\"" : ""))>
+                                <input type="checkbox" name="selectedIndicatorGroup" value="@indicatorGroup.IndicatorGroupId"
+                                       @(Html.Raw(indicatorGroup.Assigned ? "checked = \"checked\"" : ""))  />
+                                @: @indicatorGroup.IndicatorGroupName
+                                @:</td>
+                            }
+                        @:</tr>
+                    }
+                </table>
+            </div>
+        </div>
+
+

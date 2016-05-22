@@ -1,22 +1,22 @@
-﻿@model IEnumerable<IMS2.Models.DepartmentCategoryMapIndicatorGroup>
+﻿@model IEnumerable<IMS2.ViewModels.DepartmentCategoryIndicatorGroupView>
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>列表</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("创建新科室类别", "Create", "DepartmentCategory")
 </p>
 <table class="table">
     <tr>
         <th>序号</th>
         <th>
-            @Html.DisplayNameFor(model => model.DepartmentCategory.DepartmentCategoryName)
+            @Html.DisplayNameFor(model => model.DepartmentCategoryName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.IndicatorGroup.IndicatorGroupName)
+            指标组
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Priority)
@@ -33,10 +33,19 @@
     <tr>
         <td>#@i</td>
         <td>
-            @Html.DisplayFor(modelItem => item.DepartmentCategory.DepartmentCategoryName)
+            @Html.DisplayFor(modelItem => item.DepartmentCategoryName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.IndicatorGroup.IndicatorGroupName)
+            @{ 
+                int j = 1;
+            }
+            @foreach (var indicatorGroup in item.IndicatorGroups)
+            {
+                @j@:、
+                @Html.DisplayFor(modelItem => indicatorGroup.IndicatorGroupName)
+                <br />
+                j++;
+            }
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Priority)
@@ -45,9 +54,9 @@
             @Html.DisplayFor(modelItem => item.Remarks)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.DepartmentCategoryMapIndicatorGroupId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.DepartmentCategoryMapIndicatorGroupId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.DepartmentCategoryMapIndicatorGroupId })
+            @Html.ActionLink("编辑", "Edit", new { id=item.DepartmentCategoryId }) |
+            @Html.ActionLink("详情", "Details", new { id=item.DepartmentCategoryId }) |
+            @Html.ActionLink("删除", "Delete", new { id=item.DepartmentCategoryId })
         </td>
     </tr>
     i++;

@@ -58,6 +58,14 @@
                 <br />
             }
         </dd>
+        <dt>权限</dt>
+        <dd>
+            @foreach (var role in Model.RoleViews)
+            {
+                @Html.DisplayFor(model => role.RoleName)
+                <br />
+            }
+        </dd>
     </dl>
 </div>
 <p>

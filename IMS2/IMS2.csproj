@@ -202,8 +202,11 @@
     <Compile Include="Controllers\DepartmentCategoryController.cs" />
     <Compile Include="Controllers\DepartmentCategoryMapIndicatorGroupsController.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
+    <Compile Include="Controllers\DepartmentIndicatorStandardsController.cs" />
     <Compile Include="Controllers\DepartmentIndicatorValuesController.cs" />
+    <Compile Include="Controllers\ManageRoleController.cs" />
     <Compile Include="Controllers\ManageUserController.cs" />
+    <Compile Include="Controllers\ReportersController.cs" />
     <Compile Include="Controllers\ShowDepartmentIndicatorValueController.cs" />
     <Compile Include="Controllers\DurationsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -226,6 +229,10 @@
     <Compile Include="ImsDbContextMigrations\201605070358507_InitialDScaffle.Designer.cs">
       <DependentUpon>201605070358507_InitialDScaffle.cs</DependentUpon>
     </Compile>
+    <Compile Include="ImsDbContextMigrations\201605220159351_DecimalTo2.cs" />
+    <Compile Include="ImsDbContextMigrations\201605220159351_DecimalTo2.Designer.cs">
+      <DependentUpon>201605220159351_DecimalTo2.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImsDbContextMigrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\DataSourceSystem.cs" />
@@ -246,14 +253,24 @@
     <Compile Include="Models\UserInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\AssignedDepartmentCategoryData.cs" />
+    <Compile Include="ViewModels\AssignedIndicatorData.cs" />
+    <Compile Include="ViewModels\AssignedIndicatorGroupData.cs" />
     <Compile Include="ViewModels\AssignedUserDepartmentData.cs" />
+    <Compile Include="ViewModels\BackGroundColorEnum.cs" />
     <Compile Include="ViewModels\DataSourceSystemIndicatorView.cs" />
+    <Compile Include="ViewModels\DepartmentCategoryIndicatorGroupView.cs" />
     <Compile Include="ViewModels\DepartmentIndicatorCountView.cs" />
+    <Compile Include="ViewModels\DepartmentIndicatorStandardView.cs" />
     <Compile Include="ViewModels\DepartmentIndicatorValueView.cs" />
     <Compile Include="ViewModels\IMSMessageIdEnum.cs" />
+    <Compile Include="ViewModels\IndicatorAlgorithmsView.cs" />
+    <Compile Include="ViewModels\IndicatorGroupIndicatorView.cs" />
     <Compile Include="ViewModels\ManageUserViewModel.cs" />
-    <Compile Include="ViewModels\PriotryRemarksViewModel.cs" />
     <Compile Include="ViewModels\ProvideDepartmentIndicatorView.cs" />
+    <Compile Include="ViewModels\ReporterView.cs" />
+    <Compile Include="ViewModels\ResetPasswordView.cs" />
+    <Compile Include="ViewModels\RoleView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-datetimepicker.css" />
@@ -409,6 +426,20 @@
     <Content Include="Views\ManageUser\Details.cshtml" />
     <Content Include="Views\ManageUser\Edit.cshtml" />
     <Content Include="Views\ManageUser\Index.cshtml" />
+    <Content Include="Views\ManageRole\Create.cshtml" />
+    <Content Include="Views\ManageRole\Index.cshtml" />
+    <Content Include="Views\ManageRole\Delete.cshtml" />
+    <Content Include="Views\ManageUser\ChangeRole.cshtml" />
+    <Content Include="Views\ManageUser\ResetPassword.cshtml" />
+    <Content Include="Views\Home\_AdminViewPartial.cshtml" />
+    <Content Include="Views\DepartmentIndicatorStandards\Create.cshtml" />
+    <Content Include="Views\DepartmentIndicatorStandards\Delete.cshtml" />
+    <Content Include="Views\DepartmentIndicatorStandards\Details.cshtml" />
+    <Content Include="Views\DepartmentIndicatorStandards\Edit.cshtml" />
+    <Content Include="Views\DepartmentIndicatorStandards\Index.cshtml" />
+    <Content Include="Views\Reporters\Index.cshtml" />
+    <Content Include="Views\Reporters\_IndicatorGroupPartial.cshtml" />
+    <Content Include="Views\Reporters\TestDateTimePicker.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -424,6 +455,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ImsDbContextMigrations\201605070358507_InitialDScaffle.resx">
       <DependentUpon>201605070358507_InitialDScaffle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImsDbContextMigrations\201605220159351_DecimalTo2.resx">
+      <DependentUpon>201605220159351_DecimalTo2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

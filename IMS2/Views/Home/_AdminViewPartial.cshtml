@@ -1,0 +1,46 @@
+﻿
+@*@if(User.IsInRole("Administrator"))
+{*@
+
+
+    <fieldset>
+        <legend>
+            用户管理
+        </legend>
+        <ul class="nav nav-pills">
+            <li class="col-md-2">@Html.ActionLink("用户列表", "Index", "ManageUser", routeValues: null, htmlAttributes: new { @class= "btn btn-primary" })</li>
+            <li class="col-md-2">@Html.ActionLink("创建用户", "Create", "ManageUser", routeValues: null, htmlAttributes: new { @class= "btn btn-primary"})</li>
+            <li class="col-md-2">@Html.ActionLink("管理权限", "Index", "ManageRole", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+
+        </ul>
+
+    </fieldset>
+    <p>
+        <br />
+    </p>
+    <fieldset>
+        <legend>
+            基础数据维护
+        </legend>
+        <ul class="nav nav-pills home">
+            <li class="col-md-2">@Html.ActionLink("指标", "Index", "Indicators", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+            <li class="col-md-2">@Html.ActionLink("指标组", "Index", "IndicatorGroups", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+            <li class="col-md-2">@Html.ActionLink("指标组指标", "Index", "IndicatorGroupMapIndicators", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+            <li class="col-md-2">@Html.ActionLink("科室", "Index", "Department", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+            <li class="col-md-2">@Html.ActionLink("科室类别", "Index", "DepartmentCategory", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+            <li class="col-md-2">@Html.ActionLink("科室类别指标组", "Index", "DepartmentCategoryMapIndicatorGroups", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+            <li class="col-md-2">@Html.ActionLink("时段", "Index", "Durations", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+            <li class="col-md-2">@Html.ActionLink("数据来源系统", "Index", "DataSourceSystem", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+            <li class="col-md-2">@Html.ActionLink("指标算法", "Index", "IndicatorAlgorithms", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+
+        </ul>
+    </fieldset>
+    <p>
+        <br />
+    </p>
+    <fieldset>
+        <legend>
+            初始化数据
+        </legend>
+    </fieldset>
+@*}*@

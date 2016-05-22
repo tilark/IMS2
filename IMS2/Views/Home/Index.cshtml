@@ -9,23 +9,47 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
+    <div class="col-md-12">
+        <fieldset>
+            <legend>
+                业务处理
+            </legend>
+            <ul class="nav nav-pills">
+                <li class="col-md-2">@Html.ActionLink("编辑指标值", "Index", "ProvidingDepartmentIndicator", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+            </ul>
+        </fieldset>
         <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
+            <br />
         </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+        <fieldset>
+            <legend>
+                指标监测
+            </legend>
+            <ul class="nav nav-pills">
+                <li class="col-md-2">@Html.ActionLink("审核指标", "Index", "SearchDepartmentIndicator", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+                <li class="col-md-2">@Html.ActionLink("添加指标值", "Index", "ProvidingDepartmentIndicator", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+                <li class="col-md-2">@Html.ActionLink("查看全院数据", "Index", "ShowDepartmentIndicatorValue", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+                <li class="col-md-2">@Html.ActionLink("自动获取数据", "Index", "AutoGetDataSource", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+                <li class="col-md-2">@Html.ActionLink("管理标准值", "Index", "DepartmentIndicatorStandards", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+
+            </ul>
+        </fieldset>
+        <p>
+            <br />
+        </p>
+        <fieldset>
+            <legend>
+                报表
+            </legend>
+            <ul class="nav nav-pills">
+                <li class="col-md-2">@Html.ActionLink("导出报表", "Index", "Reporters", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+            </ul>
+        </fieldset>
+        <p>
+            <br />
+        </p>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+    <div class="col-md-12">
+        @Html.Partial("_AdminViewPartial")
     </div>
 </div>

@@ -1,30 +1,23 @@
-﻿@model IMS2.Models.DepartmentCategoryMapIndicatorGroup
+﻿@model IMS2.ViewModels.DepartmentCategoryIndicatorGroupView
 
 @{
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>详情</h2>
 
 <div>
-    <h4>DepartmentCategoryMapIndicatorGroup</h4>
+    <h4>科室类别指标组</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.DepartmentCategory.DepartmentCategoryName)
+            @Html.DisplayNameFor(model => model.DepartmentCategoryName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.DepartmentCategory.DepartmentCategoryName)
+            @Html.DisplayFor(model => model.DepartmentCategoryName)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IndicatorGroup.IndicatorGroupName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IndicatorGroup.IndicatorGroupName)
-        </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.Priority)
@@ -42,9 +35,23 @@
             @Html.DisplayFor(model => model.Remarks)
         </dd>
 
+        @{
+            int i = 1;
+        }
+        @foreach (var item in Model.IndicatorGroups)
+        {
+
+            <dt>
+                指标组#@i
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => item.IndicatorGroupName)
+            </dd>
+            i++;
+        }
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.DepartmentCategoryMapIndicatorGroupId }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("编辑", "Edit", new { id = Model.DepartmentCategoryId }) |
+    @Html.ActionLink("返回列表", "Index")
 </p>

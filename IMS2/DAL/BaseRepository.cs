@@ -294,17 +294,24 @@ namespace IMS2.DAL
             {
                 try
                 {
-                    item = new DepartmentCategoryMapIndicatorGroup();
-                    var departmentCategory = context.DepartmentCategories.Where(d => d.DepartmentCategoryName == mapItem.DepartmentCategoryName)
-                        .Single();
-                    var indicatorGroup = context.IndicatorGroups.Where(i => i.IndicatorGroupName == mapItem.IndicatorGroupName)
-                        .Single();
-                    item.DepartmentCategoryId = departmentCategory.DepartmentCategoryId;
-                    item.IndicatorGroupId = indicatorGroup.IndicatorGroupId;
-                    item.Priority = mapItem.Priority;
-                    item.DepartmentCategoryMapIndicatorGroupId = System.Guid.NewGuid();
-                    context.DepartmentCategoryMapIndicatorGroups.Add(item);
-                    await context.SaveChangesAsync();
+                    //查重
+                    item =  context.DepartmentCategoryMapIndicatorGroups.Where(d => d.DepartmentCategory.DepartmentCategoryName == mapItem.DepartmentCategoryName
+                                        && d.IndicatorGroup.IndicatorGroupName == mapItem.IndicatorGroupName).FirstOrDefault();
+                    if(item == null)
+                    {
+                        item = new DepartmentCategoryMapIndicatorGroup();
+                        var departmentCategory = context.DepartmentCategories.Where(d => d.DepartmentCategoryName == mapItem.DepartmentCategoryName)
+                            .Single();
+                        var indicatorGroup = context.IndicatorGroups.Where(i => i.IndicatorGroupName == mapItem.IndicatorGroupName)
+                            .Single();
+                        item.DepartmentCategoryId = departmentCategory.DepartmentCategoryId;
+                        item.IndicatorGroupId = indicatorGroup.IndicatorGroupId;
+                        item.Priority = mapItem.Priority;
+                        item.DepartmentCategoryMapIndicatorGroupId = System.Guid.NewGuid();
+                        context.DepartmentCategoryMapIndicatorGroups.Add(item);
+                        await context.SaveChangesAsync();
+                    }
+                    
                 }
                 catch (Exception)
                 {

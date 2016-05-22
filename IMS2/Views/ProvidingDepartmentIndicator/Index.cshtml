@@ -20,23 +20,21 @@
             </div>
             <div class="form-group">
                 @Html.Label("数据源科室", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
+                <div class="col-md-4">
                     @Html.DropDownList("providingDepartment", null, htmlAttributes: new { @class = "form-control" })
 
                 </div>
-
-            </div>
-            <div class="form-group">
-                <div class="col-md-offset-5 col-md-7">
+                <div class="col-md-6">
                     <input type="submit" value="查询" class="btn btn-info" />
 
                 </div>
             </div>
-
         </div>
     }
 </fieldset>
-
+<p>
+    <br />
+</p>
 @if (Model != null)
 {
     if (Model.provideDepartment != null)
@@ -55,10 +53,10 @@
                 <table class="table table-hover">
                     <tbody>
                         @if (Model.Indicators != null)
-                    {
-                            int i = 1;
-                        foreach (var item in Model.Indicators)
                         {
+                            int i = 1;
+                            foreach (var item in Model.Indicators)
+                            {
 
                                 <tr>
                                     <td># @i</td>
@@ -74,47 +72,52 @@
             </div>
         </section>
     }
-    <section>
-@using (Html.BeginForm("Create", "ProvidingDepartmentIndicator", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(model => model.provideDepartment.DepartmentId)
-    <input name="departmentID" hidden="hidden" value="@ViewBag.departmentID"/>
-    @Html.HiddenFor(model => model.searchTime)
+    @if (User.IsInRole("创建指标值"))
+    {
+        <section>
 
-    <div class="form-group">
-        <div class="col-md-10 pitem">
-            <input type="submit" value="添加上述项目" class="btn btn-danger" data-toggle="modal" data-target="#myModal" data-keyboard="false"/>
-        </div>
-    </div>
-    <p></p>
-}
-    </section>
+            @using (Html.BeginForm("Create", "ProvidingDepartmentIndicator", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.provideDepartment.DepartmentId)
+                <input name="departmentID" hidden="hidden" value="@ViewBag.departmentID" />
+                @Html.HiddenFor(model => model.searchTime)
+
+                <div class="form-group">
+                    <div class="col-md-10 pitem">
+                        <input type="submit" value="添加上述项目" class="btn btn-danger" data-toggle="modal" data-target="#myModal" data-keyboard="false" />
+                    </div>
+                </div>
+                <p></p>
+                }
+
+        </section>
+    }
     if (Model.DepartmentIndicatorCountViews != null)
     {
-        <table class="table table-hover">
+<table class="table table-hover">
 
-            <tr>
-                <td>@Html.Label("科室")</td>
-                <td>@Html.Label("项目总数")</td>
-                <td>时间</td>
+    <tr>
+        <td>@Html.Label("科室")</td>
+        <td>@Html.Label("项目总数")</td>
+        <td>时间</td>
 
-                <td></td>
-            </tr>
-            @foreach (var item in Model.DepartmentIndicatorCountViews)
+        <td></td>
+    </tr>
+    @foreach (var item in Model.DepartmentIndicatorCountViews)
             {
-                <tr>
-                    <td>@item.Department.DepartmentName</td>
-                    <td>@item.IndicatorCount</td>
-                    <td>@Model.searchTime.GetDateTimeFormats('y')[0]</td>
-                    <td>
+        <tr>
+            <td>@item.Department.DepartmentName</td>
+            <td>@item.IndicatorCount</td>
+            <td>@Model.searchTime.GetDateTimeFormats('y')[0]</td>
+            <td>
 
-                        @Html.ActionLink("编辑", "Edit", new { id = item.Department.DepartmentId, time = item.SearchTime, provideDepartment = Model.provideDepartment.DepartmentId }) |
-                        @Html.ActionLink("详情", "Details", new { id = item.Department.DepartmentId, time = item.SearchTime, provideDepartment = Model.provideDepartment.DepartmentId }) |
-                    </td>
-                </tr>
-            }
-        </table>
+                @Html.ActionLink("编辑", "Edit", new { id = item.Department.DepartmentId, time = item.SearchTime, provideDepartment = Model.provideDepartment.DepartmentId }) |
+                @Html.ActionLink("详情", "Details", new { id = item.Department.DepartmentId, time = item.SearchTime, provideDepartment = Model.provideDepartment.DepartmentId }) |
+            </td>
+        </tr>
+    }
+</table>
     }
 }
 
@@ -136,21 +139,21 @@
 @section Scripts{
 
     @Scripts.Render("~/bundles/datetimepicker")
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#showitem").hide();
-    $("#hideitem").click(function () {
-        $(".pitem").hide("slow");
-        $("#showitem").show();
-        $("#hideitem").hide()
-  });
-  $("#showitem").click(function(){
-      $(".pitem").show("slow");
-      $("#hideitem").show();
-      $("#showitem").hide();
-  });
-});
-</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#showitem").hide();
+            $("#hideitem").click(function () {
+                $(".pitem").hide("slow");
+                $("#showitem").show();
+                $("#hideitem").hide()
+            });
+            $("#showitem").click(function () {
+                $(".pitem").show("slow");
+                $("#hideitem").show();
+                $("#showitem").hide();
+            });
+        });
+    </script>
 }
 
 

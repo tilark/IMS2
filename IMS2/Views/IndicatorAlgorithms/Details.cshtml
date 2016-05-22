@@ -1,4 +1,4 @@
-﻿@model IMS2.Models.IndicatorAlgorithm
+﻿@model IMS2.ViewModels.IndicatorAlgorithmsView
 
 @{
     ViewBag.Title = "Details";
@@ -11,27 +11,27 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.ResultId)
+            @Html.DisplayNameFor(model => model.Result)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ResultId)
+            @Html.DisplayFor(model => model.Result)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.FirstOperandID)
+            @Html.DisplayNameFor(model => model.FirstOperand)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.FirstOperandID)
+            @Html.DisplayFor(model => model.FirstOperand)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.SecondOperandID)
+            @Html.DisplayNameFor(model => model.SecondOperand)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.SecondOperandID)
+            @Html.DisplayFor(model => model.SecondOperand)
         </dd>
 
         <dt>
@@ -53,6 +53,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.IndicatorAlgorithmsId }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("编辑", "Edit", new { id = Model.IndicatorAlgorithmsId }) |
+    @Html.ActionLink("返回列表", "Index")
 </p>

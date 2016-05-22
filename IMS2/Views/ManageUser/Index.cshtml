@@ -5,10 +5,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
+<h2>用户列表</h2>
 <p>
     @Html.ActionLink("创建新用户", "Create")
 </p>
+<p class="text-success">@ViewBag.StatusMessage</p>
+
 <table class="table">
     <tr>
         <th>
@@ -26,6 +28,7 @@
         <th>
             @Html.DisplayNameFor(model => model.HomePhone)
         </th>
+        <th>权限</th>
         <th></th>
     </tr>
 
@@ -52,9 +55,19 @@
             @Html.DisplayFor(modelItem => item.HomePhone)
         </td>
         <td>
+            @foreach (var role in item.RoleViews)
+            {
+                @Html.DisplayFor(model => role.RoleName)
+                <br />
+            }
+        </td>
+        <td>
             @Html.ActionLink("编辑", "Edit", new { id=item.UserInfoID }) |
-            @Html.ActionLink("详情", "Details", new { id=item.UserInfoID }) |
+            @Html.ActionLink("详情", "Details", new { id=item.UserID }) |
+            @Html.ActionLink("更改权限", "ChangeRole", new { id = item.UserID}) |
+            @Html.ActionLink("重置密码", "ResetPassword", new { id = item.UserID }) |
             @Html.ActionLink("删除", "Delete", new { id=item.UserInfoID })
+
         </td>
     </tr>
 }

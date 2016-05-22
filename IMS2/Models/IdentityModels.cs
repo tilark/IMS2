@@ -42,5 +42,7 @@ namespace IMS2.Models
               .MapRightKey("UserInfoID")
               .ToTable("UserInfoDepartments"));
         }
+
+        //public System.Data.Entity.DbSet<IMS2.Models.ApplicationUser> ApplicationUsers { get; set; }
     }
 }

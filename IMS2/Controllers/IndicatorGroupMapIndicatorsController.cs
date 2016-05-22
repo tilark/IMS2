@@ -8,6 +8,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using IMS2.Models;
+using IMS2.ViewModels;
+using PagedList;
+using System.Data.Entity.Infrastructure;
 
 namespace IMS2.Controllers
 {
@@ -16,10 +19,27 @@ namespace IMS2.Controllers
         private ImsDbContext db = new ImsDbContext();
 
         // GET: IndicatorGroupMapIndicators
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? page)
         {
-            var indicatorGroupMapIndicators = db.IndicatorGroupMapIndicators.Include(i => i.Indicator).Include(i => i.IndicatorGroup).OrderBy(i=>i.IndicatorGroup.IndicatorGroupName).ThenBy(i=>i.Priority);
-            return View(await indicatorGroupMapIndicators.ToListAsync());
+            int pageSize = int.Parse(System.Configuration.ConfigurationManager.AppSettings["pagSize"]);
+            int pageNumber = (page ?? 1);
+            ViewBag.pageSize = pageSize;
+            ViewBag.pageNumber = pageNumber;
+            var viewModel = new List<IndicatorGroupIndicatorView>();
+            var indicatorGroups = await db.IndicatorGroups.OrderBy(i => i.Priority).ToListAsync();
+
+            foreach (var indicatorGroup in indicatorGroups)
+            {
+                var view = new IndicatorGroupIndicatorView();
+                view.Indicators = new List<Indicator>();
+                view.IndicatorGroupId = indicatorGroup.IndicatorGroupId;
+                view.IndicatorGroupName = indicatorGroup.IndicatorGroupName;
+                view.Priority = indicatorGroup.Priority;
+                view.Remarks = indicatorGroup.Remarks;
+                view.Indicators = await indicatorGroup.IndicatorGroupMapIndicators.Select(i => i.Indicator).OrderBy(i => i.Priority).ToListAsync();
+                viewModel.Add(view);
+            }
+            return View(await viewModel.OrderBy(o => o.Priority).ToPagedListAsync(pageNumber, pageSize));
         }
 
         // GET: IndicatorGroupMapIndicators/Details/5
@@ -29,41 +49,23 @@ namespace IMS2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            IndicatorGroupMapIndicator indicatorGroupMapIndicator = await db.IndicatorGroupMapIndicators.FindAsync(id);
-            if (indicatorGroupMapIndicator == null)
+            var viewModel = new IndicatorGroupIndicatorView();
+            var indicatorGroup = await db.IndicatorGroups.FindAsync(id.Value);
+            if(indicatorGroup == null)
             {
                 return HttpNotFound();
             }
-            return View(indicatorGroupMapIndicator);
+            viewModel.IndicatorGroupId = indicatorGroup.IndicatorGroupId;
+            viewModel.IndicatorGroupName = indicatorGroup.IndicatorGroupName;
+            viewModel.Priority = indicatorGroup.Priority;
+            viewModel.Remarks = indicatorGroup.Remarks;
+            viewModel.Indicators = new List<Indicator>();
+            viewModel.Indicators = await indicatorGroup.IndicatorGroupMapIndicators.Select(i => i.Indicator).OrderBy(i => i.Priority).ToListAsync();
+
+            return View(viewModel);
         }
 
-        // GET: IndicatorGroupMapIndicators/Create
-        public ActionResult Create()
-        {
-            ViewBag.IndicatorId = new SelectList(db.Indicators, "IndicatorId", "IndicatorName");
-            ViewBag.IndicatorGroupId = new SelectList(db.IndicatorGroups, "IndicatorGroupId", "IndicatorGroupName");
-            return View();
-        }
-
-        // POST: IndicatorGroupMapIndicators/Create
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "IndicatorGroupMapIndicatorId,IndicatorGroupId,IndicatorId,Priority,Remarks,TimeStamp")] IndicatorGroupMapIndicator indicatorGroupMapIndicator)
-        {
-            if (ModelState.IsValid)
-            {
-                indicatorGroupMapIndicator.IndicatorGroupMapIndicatorId = Guid.NewGuid();
-                db.IndicatorGroupMapIndicators.Add(indicatorGroupMapIndicator);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-
-            ViewBag.IndicatorId = new SelectList(db.Indicators, "IndicatorId", "IndicatorName", indicatorGroupMapIndicator.IndicatorId);
-            ViewBag.IndicatorGroupId = new SelectList(db.IndicatorGroups, "IndicatorGroupId", "IndicatorGroupName", indicatorGroupMapIndicator.IndicatorGroupId);
-            return View(indicatorGroupMapIndicator);
-        }
+       
 
         // GET: IndicatorGroupMapIndicators/Edit/5
         public async Task<ActionResult> Edit(Guid? id)
@@ -72,14 +74,20 @@ namespace IMS2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            IndicatorGroupMapIndicator indicatorGroupMapIndicator = await db.IndicatorGroupMapIndicators.FindAsync(id);
-            if (indicatorGroupMapIndicator == null)
+            var viewModel = new IndicatorGroupIndicatorView();
+            var indicatorGroup = await db.IndicatorGroups.FindAsync(id.Value);
+            if (indicatorGroup == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.IndicatorId = new SelectList(db.Indicators, "IndicatorId", "IndicatorName", indicatorGroupMapIndicator.IndicatorId);
-            ViewBag.IndicatorGroupId = new SelectList(db.IndicatorGroups, "IndicatorGroupId", "IndicatorGroupName", indicatorGroupMapIndicator.IndicatorGroupId);
-            return View(indicatorGroupMapIndicator);
+            viewModel.IndicatorGroupId = indicatorGroup.IndicatorGroupId;
+            viewModel.IndicatorGroupName = indicatorGroup.IndicatorGroupName;
+            viewModel.Priority = indicatorGroup.Priority;
+            viewModel.Remarks = indicatorGroup.Remarks;
+            viewModel.Indicators = new List<Indicator>();
+            viewModel.Indicators = await indicatorGroup.IndicatorGroupMapIndicators.Select(i => i.Indicator).OrderBy(i => i.Priority).ToListAsync();
+            await PopulateAssignedIndicatorData(indicatorGroup);
+            return View(viewModel);
         }
 
         // POST: IndicatorGroupMapIndicators/Edit/5
@@ -87,19 +95,148 @@ namespace IMS2.Controllers
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "IndicatorGroupMapIndicatorId,IndicatorGroupId,IndicatorId,Priority,Remarks,TimeStamp")] IndicatorGroupMapIndicator indicatorGroupMapIndicator)
+        public async Task<ActionResult> Edit(IndicatorGroupIndicatorView model, string[] selectedIndicator)
         {
+            var indicatorGroup = await db.IndicatorGroups.FindAsync(model.IndicatorGroupId);
             if (ModelState.IsValid)
             {
-                db.Entry(indicatorGroupMapIndicator).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            ViewBag.IndicatorId = new SelectList(db.Indicators, "IndicatorId", "IndicatorName", indicatorGroupMapIndicator.IndicatorId);
-            ViewBag.IndicatorGroupId = new SelectList(db.IndicatorGroups, "IndicatorGroupId", "IndicatorGroupName", indicatorGroupMapIndicator.IndicatorGroupId);
-            return View(indicatorGroupMapIndicator);
-        }
+                indicatorGroup.Priority = model.Priority;
+                indicatorGroup.Remarks = model.Remarks;
+                await UpdateUserDepartments(selectedIndicator, indicatorGroup);
 
+                //database win
+                bool saveFailed;
+                do
+                {
+                    saveFailed = false;
+                    try
+                    {
+                        await db.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException ex)
+                    {
+                        saveFailed = true;
+                        // Update the values of the entity that failed to save from the store 
+                        ex.Entries.Single().Reload();
+                    }
+                } while (saveFailed);
+            }
+            await PopulateAssignedIndicatorData(indicatorGroup);
+
+            return View(model);
+        }
+        private async Task  PopulateAssignedIndicatorData(IndicatorGroup indicatorGroup)
+        {
+            var allIndicators = new List<Indicator>();
+            allIndicators = await db.Indicators.OrderBy(d => d.Priority).ToListAsync();
+            var groupIndicators = new HashSet<Guid>(indicatorGroup.IndicatorGroupMapIndicators.Select(i => i.IndicatorId));
+            var viewModel = new List<AssignedIndicatorData>();
+            foreach (var indicator in allIndicators)
+            {
+                viewModel.Add(new AssignedIndicatorData
+                {
+                    IndicatorId = indicator.IndicatorId,
+                    IndicatorName = indicator.IndicatorName,
+                    Assigned = groupIndicators.Contains(indicator.IndicatorId)
+                });
+            }
+
+            ViewBag.GroupIndicators = viewModel;
+        }
+        private async Task UpdateUserDepartments(string[] selectedIndicator, IndicatorGroup indicatorGroupToUpdate)
+        {
+            if (selectedIndicator == null)
+            {
+                //需将IndicatorGroupMapIndicator表中有关Group与Indicator的信息删除
+                var indicatorGroupMapIndicators = await db.IndicatorGroupMapIndicators.Where(i => i.IndicatorGroupId == indicatorGroupToUpdate.IndicatorGroupId).ToListAsync();
+                foreach(var item in indicatorGroupMapIndicators)
+                {
+                    db.IndicatorGroupMapIndicators.Remove(item);
+                    #region//database win
+                    bool saveFailed;
+                    do
+                    {
+                        saveFailed = false;
+                        try
+                        {
+                            await db.SaveChangesAsync();
+                        }
+                        catch (DbUpdateConcurrencyException ex)
+                        {
+                            saveFailed = true;
+                            // Update the values of the entity that failed to save from the store 
+                            ex.Entries.Single().Reload();
+                        }
+                    } while (saveFailed);
+                    #endregion
+                }
+                return;
+            }
+            var selectedDepartmentsHS = new HashSet<string>(selectedIndicator);
+            var groupIndicators = new HashSet<Guid>
+                (indicatorGroupToUpdate.IndicatorGroupMapIndicators.Select(u => u.IndicatorId));
+            var allIndicators = await db.Indicators.ToListAsync();
+            foreach (var indicator in allIndicators)
+            {
+                if (selectedDepartmentsHS.Contains(indicator.IndicatorId.ToString()))
+                {
+                    if (!groupIndicators.Contains(indicator.IndicatorId))
+                    {
+                        //将IndicatorGroup 与Indicator加入到IndicatorGroupMapIndicator表中
+                        IndicatorGroupMapIndicator item = new IndicatorGroupMapIndicator();
+                        item.IndicatorGroupMapIndicatorId = System.Guid.NewGuid();
+                        item.IndicatorGroupId = indicatorGroupToUpdate.IndicatorGroupId;
+                        item.IndicatorId = indicator.IndicatorId;
+                        item.Priority = indicatorGroupToUpdate.Priority;
+                        db.IndicatorGroupMapIndicators.Add(item);
+                        #region //database win
+                        bool saveFailed;
+                        do
+                        {
+                            saveFailed = false;
+                            try
+                            {
+                                await db.SaveChangesAsync();
+                            }
+                            catch (DbUpdateConcurrencyException ex)
+                            {
+                                saveFailed = true;
+                                // Update the values of the entity that failed to save from the store 
+                                ex.Entries.Single().Reload();
+                            }
+                        } while (saveFailed);
+                        #endregion
+                    }
+                }
+                else
+                {
+                    if (groupIndicators.Contains(indicator.IndicatorId))
+                    {
+                        var item = await db.IndicatorGroupMapIndicators.Where(i => i.IndicatorGroupId == indicatorGroupToUpdate.IndicatorGroupId
+                                        && i.IndicatorId == indicator.IndicatorId).FirstAsync();
+                        db.IndicatorGroupMapIndicators.Remove(item);
+                       
+                        #region//database win
+                        bool saveFailed;
+                        do
+                        {
+                            saveFailed = false;
+                            try
+                            {
+                                await db.SaveChangesAsync();
+                            }
+                            catch (DbUpdateConcurrencyException ex)
+                            {
+                                saveFailed = true;
+                                // Update the values of the entity that failed to save from the store 
+                                ex.Entries.Single().Reload();
+                            }
+                        } while (saveFailed);
+                        #endregion
+                    }
+                }
+            }
+        }
         // GET: IndicatorGroupMapIndicators/Delete/5
         public async Task<ActionResult> Delete(Guid? id)
         {

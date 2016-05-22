@@ -12,9 +12,6 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.DataSourceSystemId)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.DataSourceSystemName)
         </th>
         <th>
@@ -28,9 +25,6 @@
 
 @foreach (var item in Model) {
     <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.DataSourceSystemId)
-        </td>
         <td>
             @Html.DisplayFor(modelItem => item.DataSourceSystemName)
         </td>

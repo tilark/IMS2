@@ -10,6 +10,21 @@
     <h4>Indicator</h4>
     <hr />
     <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IndicatorName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IndicatorName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsAutoGetData)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsAutoGetData)
+        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.DataSourceSystem.DataSourceSystemName)
         </dt>
@@ -17,22 +32,22 @@
         <dd>
             @Html.DisplayFor(model => model.DataSourceSystem.DataSourceSystemName)
         </dd>
-
         <dt>
-            @Html.DisplayNameFor(model => model.Department.DepartmentName)
+            数据来源科室
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProvidingDepartment.DepartmentName)
+        </dd>
+        <dt>
+            责任科室
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.Department.DepartmentName)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ProvidingDepartment.DepartmentName)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ProvidingDepartment.DepartmentName)
-        </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.Duration.DurationName)
@@ -42,13 +57,6 @@
             @Html.DisplayFor(model => model.Duration.DurationName)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IndicatorName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IndicatorName)
-        </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.Unit)
@@ -58,13 +66,7 @@
             @Html.DisplayFor(model => model.Unit)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IsAutoGetData)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.IsAutoGetData)
-        </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.Priority)

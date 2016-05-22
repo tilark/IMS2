@@ -106,7 +106,8 @@ namespace IMS2.Controllers
             if (ModelState.IsValid)
             {
                 //是否有重名
-                var query = await db.DepartmentCategories.Where(d => d.DepartmentCategoryName == departmentCategory.DepartmentCategoryName).SingleOrDefaultAsync();
+                var query = await db.DepartmentCategories.Where(d => d.DepartmentCategoryName == departmentCategory.DepartmentCategoryName
+                                                && d.DepartmentCategoryId != departmentCategory.DepartmentCategoryId).FirstOrDefaultAsync();
                 if (query != null)
                 {
                     //有两个同名的科室

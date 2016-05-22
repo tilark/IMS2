@@ -14,6 +14,7 @@ namespace IMS2.Models
             DepartmentCategoryMapIndicatorGroups = new HashSet<DepartmentCategoryMapIndicatorGroup>();
             Departments = new HashSet<Department>();
         }
+        [Display(Name = "科室类别ID")]
 
         public Guid DepartmentCategoryId { get; set; }
 

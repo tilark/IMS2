@@ -24,7 +24,7 @@ namespace IMS2.Controllers
 
         public async Task<ActionResult> Index(DateTime? searchTime, Guid? providingDepartment)
         {
-            //应该选择提供科室名列表，根据成员角色中的科室选择
+            //应该选择提供科室名列表，根据成员角色中的科室选择，如果权限为“创建指标值”，可获取全部科室信息
             using (ApplicationDbContext context = new ApplicationDbContext())
             {
                 using (UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context)))

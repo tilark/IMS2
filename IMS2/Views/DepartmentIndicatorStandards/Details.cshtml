@@ -1,0 +1,65 @@
+﻿@model IMS2.ViewModels.DepartmentIndicatorStandardView
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>详情</h2>
+
+<div>
+    <h4>科室指标标准值</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DepartmentName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DepartmentName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IndicatorName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IndicatorName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Range)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Range)
+        </dd>
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Version)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Version)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdateTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remarks)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remarks)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("编辑", "Edit", new { id = Model.DepartmentIndicatorStandardId }) |
+    @Html.ActionLink("返回列表", "Index")
+</p>

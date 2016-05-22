@@ -9,6 +9,7 @@ namespace IMS2.ViewModels
 {
     public class ManageUserViewModel
     {
+        public string UserID { get; set; }
         [ScaffoldColumn(false)]
         public Guid UserInfoID { get; set; }
         [Required]
@@ -28,5 +29,6 @@ namespace IMS2.ViewModels
 
         public string HomePhone { get; set; }
         public List<UserDepartment>  UserDepartments { get; set; }
+        public List<RoleView> RoleViews { get; set; }
     }
 }

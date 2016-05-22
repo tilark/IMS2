@@ -1,0 +1,101 @@
+﻿@model IMS2.ViewModels.ManageUserViewModel
+
+@{
+    ViewBag.Title = "ChangeRole";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>更改权限</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmployeeNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmployeeNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Sex)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Sex)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkPhone)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WorkPhone)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HomePhone)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HomePhone)
+        </dd>
+        <dt>科室</dt>
+        <dd>
+            @foreach (var department in Model.UserDepartments)
+            {
+                @Html.DisplayFor(model => department.UserDepartmentName)
+                <br />
+            }
+        </dd>
+
+    </dl>
+</div>
+@using (Html.BeginForm())
+{ 
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-horizontal">
+        @Html.HiddenFor(model => model.UserID)
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <table>
+                    <tr>
+                        @{
+                            int cnt = 0;
+                            List<IMS2.ViewModels.RoleView> roleViews = ViewBag.RoleViews;
+                            foreach (var role in roleViews)
+                            {
+                                if (cnt++ % 3 == 0)
+                                {
+                                    @:</tr><tr>
+                                 }
+                                        @:<td>
+                                            <input type="checkbox" name="selectedRoles" value="@role.RoleName"
+                                                   @(Html.Raw(role.Assigned ? "checked = \"checked\"" : "")) />
+                                            @: @role.RoleName
+                                            @:</td>
+                              }
+                                        @:</tr>
+                           }
+                            
+                </table>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+ }
