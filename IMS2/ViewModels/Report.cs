@@ -12,7 +12,7 @@ namespace IMS2.ViewModels
     /// <remarks>表示整个报表。遍历以获取“报表行”。
     /// 初始化后，执行GetData即可获取数据。
     /// </remarks>
-    public partial class Reprot
+    public partial class Report
         : IEnumerable<ReportRow>
     {
         /// <summary>
@@ -50,13 +50,13 @@ namespace IMS2.ViewModels
 
 
         /// <summary>
-        /// 初始化报表<see cref="Reprot"/>。
+        /// 初始化报表<see cref="Report"/>。
         /// </summary>
         /// <param name="departmentCategories">“科室分类”ID。</param>
         /// <param name="IndicatorGroups">“指标组”ID。</param>
         /// <param name="startTime">期初时段。</param>
         /// <param name="endTime">期末时段。</param>
-        public Reprot(IEnumerable<Guid> departmentCategoryIds, IEnumerable<Guid> IndicatorGroupIds, DateTime startTime, DateTime endTime)
+        public Report(IEnumerable<Guid> departmentCategoryIds, IEnumerable<Guid> IndicatorGroupIds, DateTime startTime, DateTime endTime)
         {
             this.departmentCategoryIds = new List<Guid>(departmentCategoryIds);
             this.IndicatorGroupIds = new List<Guid>(IndicatorGroupIds);
@@ -64,24 +64,95 @@ namespace IMS2.ViewModels
             this.endTime = endTime;
 
             reportRows = new List<ReportRow>();
-
-            GetData();
         }
 
         /// <summary>
         /// 获取数据。
         /// </summary>
-        private void GetData()
+        public void GetData()
         {
+            //标准化“期初时段”“期末时段”时间点。
+            startTime = new DateTime(startTime.Year, startTime.Month, 1);
+            endTime = new DateTime(endTime.Year, endTime.Month, 1);
+
             using (var context = new Models.ImsDbContext())
             {
+                //遍历每个“科室分类ID”。
                 foreach (var departmentCategoryId in departmentCategoryIds)
                 {
-                    var newReportRow = new ReportRow();
+                    //获取“科室分类”。
+                    var departmentCategory = context.DepartmentCategories.Where(i => i.DepartmentCategoryId == departmentCategoryId).FirstOrDefault();
 
-                    //var query = from record in context.DepartmentIndicatorValues
-                    //            where record.DepartmentId = Department
-                    //            select record;
+                    //处理“科室分类”不存在。
+                    if (departmentCategory == null)
+                    {
+                        throw new Exception("科室分类ID不存在：" + departmentCategoryId.ToString());
+                    }
+
+                    //获取“科室分类”对应的“科室”。
+                    var departments = context.DepartmentCategories.Where(i => i.DepartmentCategoryId == departmentCategoryId).SelectMany(c => c.Departments);
+
+                    //遍历每个“科室”。
+                    foreach (var department in departments)
+                    {
+                        //用于遍历时间段的时间点。
+                        DateTime tempTime = startTime;
+
+                        while (tempTime <= endTime)
+                        {
+                            //月份。
+                            {
+                                //新增“报表行”。
+                                var newReportRow = new ReportRow();
+                                reportRows.Add(newReportRow);
+
+                                newReportRow.startTime = tempTime;
+                                newReportRow.endTime = tempTime;
+                                newReportRow.departmentName = department.DepartmentName;
+                                newReportRow.departmentPriority = department.Priority;
+                                newReportRow.departmentCategoryName = departmentCategory.DepartmentCategoryName;
+                                newReportRow.departmentCatetoryPriority = departmentCategory.Priority;
+
+                                //遍历“指标组ID”
+                                foreach (var indicatorGourpId in IndicatorGroupIds)
+                                {
+                                    //获取“指标组”。
+                                    var indicatorGroup = context.IndicatorGroups.Where(i => i.IndicatorGroupId == indicatorGourpId).FirstOrDefault();
+
+                                    //处理“指标组”不存在。
+                                    if (indicatorGroup == null)
+                                    {
+                                        throw new Exception("不存在指标组ID：" + indicatorGourpId.ToString());
+                                    }
+
+                                    //获取“指标组”对应的“指标”。
+                                    var queryIndicators = context.IndicatorGroups.Where(i => i.IndicatorGroupId == indicatorGourpId).SelectMany(c => c.IndicatorGroupMapIndicators).Select(c => c.Indicator);
+
+                                    //遍历“指标”。
+                                    foreach (var indicator in queryIndicators)
+                                    {
+                                        //新增“指标列”。
+                                        var newReportRowIndicator = new ReportRowIndicator();
+                                        newReportRow.ReportRowIndicators.Add(newReportRowIndicator);
+
+                                        newReportRowIndicator.Value = GetDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, tempTime, tempTime);
+                                        newReportRowIndicator.IndicatorGroupName = indicatorGroup.IndicatorGroupName;
+                                        newReportRowIndicator.IndicatorGroupPriority = indicatorGroup.Priority;
+                                        newReportRowIndicator.IndicatorName = indicator.IndicatorName;
+                                        newReportRowIndicator.IndicatorPriority = indicator.Priority;
+                                    }
+                                }
+                            }
+
+                            //季度
+                            if (tempTime.Month == 3 || tempTime.Month == 6 || tempTime.Month == 9 || tempTime.Month == 12)
+                            {
+
+                            }
+
+                            tempTime = tempTime.AddMonths(1);
+                        };
+                    }
                 }
             }
         }
@@ -124,7 +195,7 @@ namespace IMS2.ViewModels
                 else
                 {
                     return null;
-                }                
+                }
             }
         }
 
@@ -275,5 +346,22 @@ namespace IMS2.ViewModels
         /// 是否超“标准值”。
         /// </summary>
         public bool OutOfStandard;
+    }
+
+
+
+
+
+
+}
+
+namespace IMS2.Models
+{
+    public partial class DepartmentIndicatorValue
+    {
+        public bool OutOfStardard()
+        {
+
+        }
     }
 }
