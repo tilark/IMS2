@@ -249,6 +249,7 @@
     <Compile Include="Models\IndicatorGroup.cs" />
     <Compile Include="Models\IndicatorGroupMapIndicator.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="ViewModels\Report.cs" />
     <Compile Include="Models\UserDepartment.cs" />
     <Compile Include="Models\UserInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
