@@ -135,7 +135,9 @@ namespace IMS2.ViewModels
                                         var newReportRowIndicator = new ReportRowIndicator();
                                         newReportRow.ReportRowIndicators.Add(newReportRowIndicator);
 
-                                        newReportRowIndicator.Value = GetDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, tempTime, tempTime);
+                                        var departmentIndicatorValue = context.DepartmentIndicatorValues.Where(i => i.DepartmentId == department.DepartmentId && i.IndicatorId == indicator.IndicatorId && i.Time == tempTime).FirstOrDefault();
+
+                                        //newReportRowIndicator.Value = GetDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, tempTime, tempTime);
                                         newReportRowIndicator.IndicatorGroupName = indicatorGroup.IndicatorGroupName;
                                         newReportRowIndicator.IndicatorGroupPriority = indicatorGroup.Priority;
                                         newReportRowIndicator.IndicatorName = indicator.IndicatorName;
@@ -361,7 +363,36 @@ namespace IMS2.Models
     {
         public bool OutOfStardard()
         {
+            if (DepartmentIndicatorStandard != null)
+            {
+                if (DepartmentIndicatorStandard.LowerBoundIncluded == true)
+                {
+                    if (Value < DepartmentIndicatorStandard.LowerBound)
+                        return true;
+                }
+                else if (DepartmentIndicatorStandard.LowerBoundIncluded == false)
+                {
+                    if (Value <= DepartmentIndicatorStandard.LowerBound)
+                        return true;
+                }
 
+                if (DepartmentIndicatorStandard.UpperBoundIncluded == true)
+                {
+                    if (Value > DepartmentIndicatorStandard.UpperBound)
+                        return true;
+                }
+                else if (DepartmentIndicatorStandard.UpperBoundIncluded == false)
+                {
+                    if (Value >= DepartmentIndicatorStandard.UpperBound)
+                        return true;
+                }
+
+                return false;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
