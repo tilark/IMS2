@@ -442,6 +442,7 @@
     <Content Include="Views\Reporters\Index.cshtml" />
     <Content Include="Views\Reporters\_IndicatorGroupPartial.cshtml" />
     <Content Include="Views\Reporters\TestDateTimePicker.cshtml" />
+    <Content Include="Views\Reporters\ReportView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

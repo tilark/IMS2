@@ -47,7 +47,10 @@ namespace IMS2.Controllers
                 {
                     ViewBag.Status = "截止时间需大于等于开始时间！";
                 }
-                Report(startTime, endTime, selectedDepartmentCategory, selectedIndicatorGroup);
+                else
+                {
+                    Report(startTime, endTime, selectedDepartmentCategory, selectedIndicatorGroup);
+                }
             }
             await PopulateAssignedDepartmentCategoryData(selectedDepartmentCategory);
             await PopulateAssignedIndicatorGroupData(selectedDepartmentCategory);
@@ -68,9 +71,10 @@ namespace IMS2.Controllers
         /// <param name="endTime">The end time.</param>
         /// <param name="selectedDepartmentCategory">The selected department category.</param>
         /// <param name="selectedIndicatorGroup">The selected indicator group.</param>
-        public void Report(DateTime? startTime, DateTime? endTime, string[] selectedDepartmentCategory, string[] selectedIndicatorGroup)
+        public ActionResult Report(DateTime? startTime, DateTime? endTime, string[] selectedDepartmentCategory, string[] selectedIndicatorGroup)
         {
-
+            var reports = new List<Reprot>();
+            return View("ReportView", reports);
         }
 
         #region AssignedDepartmentCategory
