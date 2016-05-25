@@ -1,4 +1,4 @@
-﻿@model IEnumerable<IMS2.ViewModels.Reprot>
+﻿@model IEnumerable<IMS2.ViewModels.Report>
 
 @{
     ViewBag.Title = "ReportView";
@@ -23,7 +23,7 @@
                 @*//第一行指标组*@
                 @foreach (var titleIndicatorGroup in reports.reportRows.First().OrderBy(i => i.IndicatorGroupPriority).ThenBy(i => i.IndicatorPriority))
                 {
-                   
+
                     <td>@titleIndicatorGroup.IndicatorGroupName</td>
                 }
             </tr>
@@ -34,13 +34,13 @@
                 <td></td>
                 @foreach (var titleIndicator in reports.reportRows.First().OrderBy(i => i.IndicatorGroupPriority).ThenBy(i => i.IndicatorPriority))
                 {
-                    
+
                         <td>@titleIndicator.IndicatorName</td>
                 }
             </tr>
         </thead>
         <tbody>
-           
+               
                 @*//第三行开始填入时间时间，科室类别，科室，各指标值*@
                 @foreach (var department in reports.OrderBy(i => i.departmentCatetoryPriority).ThenBy(i => i.departmentPriority))
                 {
@@ -50,7 +50,8 @@
                         <td>@department.departmentName</td>
                         @foreach (var indicator in department.ReportRowIndicators.OrderBy(i => i.IndicatorGroupPriority).ThenBy(i => i.IndicatorPriority))
                         {
-                            <td>@indicator.Value</td>
+                            var color = indicator.OutOfStandard.HasValue ? indicator.OutOfStandard ? "success" : "danger" : "";
+                            <td class="@(Html.Raw(color))">@indicator.Value</td>
                         }
                     </tr>
                 }

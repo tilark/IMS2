@@ -73,7 +73,7 @@ namespace IMS2.Controllers
         /// <param name="selectedIndicatorGroup">The selected indicator group.</param>
         public ActionResult Report(DateTime? startTime, DateTime? endTime, string[] selectedDepartmentCategory, string[] selectedIndicatorGroup)
         {
-            var reports = new List<Reprot>();
+            var reports = new List<Report>();
             return View("ReportView", reports);
         }
 
