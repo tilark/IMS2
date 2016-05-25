@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace IMS2.Models
+namespace IMS2.ViewModels
 {
     /// <summary>
     /// 报表。
@@ -64,6 +64,8 @@ namespace IMS2.Models
             this.endTime = endTime;
 
             reportRows = new List<ReportRow>();
+
+            GetData();
         }
 
         /// <summary>
@@ -71,7 +73,7 @@ namespace IMS2.Models
         /// </summary>
         private void GetData()
         {
-            using (var context = new ImsDbContext())
+            using (var context = new Models.ImsDbContext())
             {
                 foreach (var departmentCategoryId in departmentCategoryIds)
                 {
@@ -81,6 +83,48 @@ namespace IMS2.Models
                     //            where record.DepartmentId = Department
                     //            select record;
                 }
+            }
+        }
+
+        private static decimal? GetDepartmentIndicatorValueValue(Models.ImsDbContext context, Guid departmentId, Guid indicatorId, DateTime startTime, DateTime endTime)
+        {
+            var indicatorAlgorithm = context.IndicatorAlgorithms.Where(i => i.ResultId == indicatorId).FirstOrDefault();
+
+            if (indicatorAlgorithm != null)
+            {
+                if (string.IsNullOrEmpty(indicatorAlgorithm.OperationMethod))
+                    throw new Exception("操作符为空。");
+
+                decimal? operand1 = GetDepartmentIndicatorValueValue(context, departmentId, indicatorAlgorithm.FirstOperandID, startTime, endTime);
+                decimal? operand2 = GetDepartmentIndicatorValueValue(context, departmentId, indicatorAlgorithm.SecondOperandID, startTime, endTime);
+
+                switch (indicatorAlgorithm.OperationMethod)
+                {
+                    case ("addition"):
+                        return operand1 + operand2;
+                    case ("subtraction"):
+                        return operand1 - operand2;
+                    case ("multiplication"):
+                        return operand1 * operand2;
+                    case ("division"):
+                        return (operand2 == decimal.Zero) ? null : operand1 / operand2; //除数为0时，返回null。
+                    default:
+                        return null;
+                }
+            }
+            else
+            {
+                var queryDepartmentIndicatorValue = context.DepartmentIndicatorValues.Where(i => i.IndicatorId == indicatorId && i.DepartmentId == departmentId && i.Time <= endTime && i.Time >= startTime);
+
+                if (queryDepartmentIndicatorValue.Any())
+                {
+                    decimal? returnedValue = queryDepartmentIndicatorValue.Sum(i => i.Value);
+                    return returnedValue;
+                }
+                else
+                {
+                    return null;
+                }                
             }
         }
 
@@ -225,7 +269,7 @@ namespace IMS2.Models
         /// <summary>
         /// “指标值”。
         /// </summary>
-        public decimal Value;
+        public decimal? Value;
 
         /// <summary>
         /// 是否超“标准值”。
