@@ -11,6 +11,8 @@ using IMS2.Models;
 using IMS2.ViewModels;
 namespace IMS2.Controllers
 {
+    [Authorize(Roles = "管理基础数据, Administrators")]
+
     public class IndicatorAlgorithmsController : Controller
     {
         private ImsDbContext db = new ImsDbContext();

@@ -13,6 +13,8 @@ using IMS2.ViewModels;
 using PagedList;
 namespace IMS2.Controllers
 {
+    [Authorize(Roles = "修改全院指标值, Administrators")]
+
     public class SearchDepartmentIndicatorController : Controller
     {
         private ImsDbContext db = new ImsDbContext();
@@ -153,7 +155,7 @@ namespace IMS2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "DepartmentIndicatorValueId,DepartmentId,IndicatorId,Time,Value,IndicatorStandardId,IsLocked,UpdateTime,TimeStamp")] DepartmentIndicatorValue departmentIndicatorValue)
         {
-            ViewBag.IndicatorStandardId = new SelectList(db.DepartmentIndicatorStandards, "DepartmentIndicatorStandardId", "Range", departmentIndicatorValue.IndicatorStandardId);
+            ViewBag.IndicatorStandardId = new SelectList(db.DepartmentIndicatorStandards.Where(d => d.DepartmentId == departmentIndicatorValue.DepartmentId && d.IndicatorId == departmentIndicatorValue.IndicatorId), "DepartmentIndicatorStandardId", "Range", departmentIndicatorValue.IndicatorStandardId);
 
             if (ModelState.IsValid)
             {

@@ -13,6 +13,7 @@ namespace IMS2.ViewModels
        public  Department Department { get; set; }
         public List<Indicator> Indicators { get; set; }
         public int IndicatorCount { get; set; }
+        public int HasValueCount { get; set; }
         public DateTime? SearchTime { get; set; }
         public DateTime Time { get; set; }
         public List<DepartmentIndicatorValue> DepartmentIndicatorValues { get; set; }

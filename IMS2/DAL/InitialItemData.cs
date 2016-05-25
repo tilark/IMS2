@@ -33,6 +33,22 @@ namespace IMS2.DAL
 
     public class InitialItemData
     {
+        public void InitialBaseData()
+        {
+           InitialDepartmentCategory();
+           InitialDataSourceSystem();
+           InitialDuration();
+           InitialDepartment();
+           InitialIndicator();
+           InitialIndicatorGroup();
+           InitialIndicatorGroupMapIndicator();
+
+           InitialDepartmentCategoryMapIndicatorGroup();
+           InitialIndicatorAlgorithm();                            
+           InitialUserDepartment();
+
+           
+        }
         internal async void InitialDepartmentCategory()
         {
             var fileName = HttpContext.Current.Server.MapPath(System.Configuration.ConfigurationManager

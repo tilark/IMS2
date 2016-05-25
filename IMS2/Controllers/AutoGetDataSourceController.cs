@@ -15,6 +15,7 @@ using System.Data.Entity.Infrastructure;
 using ImsAutoLib;
 namespace IMS2.Controllers
 {
+    [Authorize(Roles = "修改全院指标值, Administrators")]
     public class AutoGetDataSourceController : Controller
     {
         private ImsDbContext db = new ImsDbContext();

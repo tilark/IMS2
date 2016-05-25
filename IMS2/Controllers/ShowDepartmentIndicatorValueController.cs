@@ -10,9 +10,13 @@ using System.Web.Mvc;
 using IMS2.Models;
 using IMS2.ViewModels;
 using System.Data.Entity.Infrastructure;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace IMS2.Controllers
 {
+    [Authorize(Roles = "修改全院指标值,修改科室指标值, Administrators")]
+
     public class ShowDepartmentIndicatorValueController : Controller
     {
         private ImsDbContext db = new ImsDbContext();
@@ -22,8 +26,25 @@ namespace IMS2.Controllers
 
         public async Task<ActionResult> Index(DateTime? searchTime, Guid? department)
         {
-            //应该根据成员角色中的科室列表
-            ViewBag.department = new SelectList(db.Departments.OrderBy(d=>d.Priority), "DepartmentId", "DepartmentName");
+            if(User.IsInRole("修改全院指标值") || User.IsInRole("Administrators"))
+            {
+                ViewBag.department = new SelectList(db.Departments.OrderBy(d => d.Priority), "DepartmentId", "DepartmentName");
+
+            }
+            else
+            {
+                using (ApplicationDbContext context = new ApplicationDbContext())
+                {
+                    using (UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context)))
+                    {
+                        var user = await userManager.FindByIdAsync(User.Identity.GetUserId());
+                        ViewBag.department = new SelectList(user.UserInfo.UserDepartments, "UserDepartmentId", "UserDepartmentName");
+                    }
+
+                }
+            }
+            //应该选择提供科室名列表，根据成员角色中的科室选择，如果权限为“创建指标值”，可获取全部科室信息
+
             if (searchTime != null && department != null)
             {
                 var departments = await db.Departments.FindAsync(department.Value);

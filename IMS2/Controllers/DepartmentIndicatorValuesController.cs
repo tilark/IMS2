@@ -13,6 +13,8 @@ using System.Data.Entity.Infrastructure;
 
 namespace IMS2.Controllers
 {
+    [Authorize(Roles = "修改科室指标值, Administrators, 修改全院指标值,")]
+
     public class DepartmentIndicatorValuesController : Controller
     {
         private ImsDbContext db = new ImsDbContext();

@@ -13,6 +13,7 @@ using System.Data.Entity.Infrastructure;
 
 namespace IMS2.Controllers
 {
+    [Authorize]
     public class ReportersController : Controller
     {
         private ImsDbContext db = new ImsDbContext();

@@ -15,6 +15,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace IMS2.Controllers
 {
+    [Authorize(Roles = "修改全院指标值,修改科室指标值, Administrators")]
+
     public class ProvidingDepartmentIndicatorController : Controller
     {
         private ImsDbContext db = new ImsDbContext();
@@ -24,20 +26,31 @@ namespace IMS2.Controllers
 
         public async Task<ActionResult> Index(DateTime? searchTime, Guid? providingDepartment)
         {
-            //应该选择提供科室名列表，根据成员角色中的科室选择，如果权限为“创建指标值”，可获取全部科室信息
-            using (ApplicationDbContext context = new ApplicationDbContext())
+            if (User.IsInRole("修改全院指标值") || User.IsInRole("Administrators"))
             {
-                using (UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context)))
-                {
-                    var user = await userManager.FindByIdAsync(User.Identity.GetUserId());
-                    ViewBag.providingDepartment = new SelectList(user.UserInfo.UserDepartments, "UserDepartmentId", "UserDepartmentName");
-                }
+                //ViewBag.providingDepartment = new SelectList(db.Departments.Where(d => d.ProvidingIndicators != null).OrderBy(d => d.Priority), "DepartmentId", "DepartmentName");
+                ViewBag.providingDepartment = new SelectList(db.Indicators.Select(i => i.ProvidingDepartment).Distinct().OrderBy(d => d.Priority), "DepartmentId", "DepartmentName");
+
 
             }
+            else
+            {
+                //应该选择提供科室名列表，根据成员角色中的科室选择，如果权限为“创建指标值”，可获取全部科室信息
+                using (ApplicationDbContext context = new ApplicationDbContext())
+                {
+                    using (UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context)))
+                    {
+                        var user = await userManager.FindByIdAsync(User.Identity.GetUserId());
+                        ViewBag.providingDepartment = new SelectList(user.UserInfo.UserDepartments, "UserDepartmentId", "UserDepartmentName");
+                    }
+
+                }
+            }
+
             if (searchTime != null && providingDepartment != null)
             {
                 ProvideDepartmentIndicatorView viewModel = new ProvideDepartmentIndicatorView();
-                
+
                 //填充ViewModel
                 //List<DepartmentIndicatorCountView> departmentIndicatorCountView = new List<DepartmentIndicatorCountView>();
                 //var provideDepartment = await db.Departments.Include(pd=>pd.ProvidingIndicators).Where(d=>d.DepartmentId == providingDepartment).FirstOrDefaultAsync();
@@ -50,7 +63,7 @@ namespace IMS2.Controllers
                     viewModel.DepartmentIndicatorCountViews = new List<DepartmentIndicatorCountView>();
                     //数据来源科室负责的指标，根据指标与指定时间是否在科室指标值表（简称值表）中，如果不在，依次选择指标，追寻到科室类别项目组中的各个科室，再将该指标、科室、时间写入值表中。
                     ViewBag.departmentID = provideDepartment.DepartmentId;
-                    
+
                     foreach (var indicator in provideDepartment.ProvidingIndicators)
                     {
                         viewModel.Indicators.Add(indicator);
@@ -63,7 +76,7 @@ namespace IMS2.Controllers
                         {
                             //需查看这个department是否在viewModel.DepartmentIndicatorCountViews中
                             var query = viewModel.DepartmentIndicatorCountViews.Where(d => d.Department.DepartmentId == department.DepartmentId).FirstOrDefault();
-                            if(query != null)
+                            if (query != null)
                             {
                                 continue;
                             }
@@ -71,10 +84,15 @@ namespace IMS2.Controllers
                             view.Department = department;
                             //只显示
                             //await CreateDepartmentIndicatorList(searchTime, indicator, department);   
-                            view.IndicatorCount =  await db.DepartmentIndicatorValues.Where(d => d.Indicator.ProvidingDepartmentId == provideDepartment.DepartmentId
-                                                                    && d.DepartmentId == department.DepartmentId 
+                            view.IndicatorCount = await db.DepartmentIndicatorValues.Where(d => d.Indicator.ProvidingDepartmentId == provideDepartment.DepartmentId
+                                                                   && d.DepartmentId == department.DepartmentId
+                                                                   && d.Time.Year == searchTime.Value.Year
+                                                                  && d.Time.Month == searchTime.Value.Month).CountAsync();
+                            view.HasValueCount = await db.DepartmentIndicatorValues.Where(d => d.Indicator.ProvidingDepartmentId == provideDepartment.DepartmentId
+                                                                    && d.DepartmentId == department.DepartmentId
                                                                     && d.Time.Year == searchTime.Value.Year
-                                                                   && d.Time.Month == searchTime.Value.Month).CountAsync(); ;
+                                                                   && d.Time.Month == searchTime.Value.Month
+                                                                   && d.Value.HasValue).CountAsync();
                             view.SearchTime = searchTime;
                             //如果该科室已经在departmentIndicatorCountView中，需合并，将项目总数相加
                             //if(viewModel.DepartmentIndicatorCountViews.Any<DepartmentIndicatorCountView>(i=>i.Department))
@@ -197,9 +215,9 @@ namespace IMS2.Controllers
             //从DepartmentIndicatorValue找值
             viewModel.SearchTime = time;
             var departmentIndicatorValues = await db.Departments.SelectMany(c => c.DepartmentIndicatorValues).Include(d => d.Indicator.Duration)
-                                                .Where(d => d.DepartmentId == department.DepartmentId 
+                                                .Where(d => d.DepartmentId == department.DepartmentId
                                                 && d.Time.Year == time.Value.Year && d.Time.Month == time.Value.Month
-                                                && d.Indicator.ProvidingDepartmentId == provideDepartment).OrderBy(d=>d.Indicator.Priority).ToListAsync();
+                                                && d.Indicator.ProvidingDepartmentId == provideDepartment).OrderBy(d => d.Indicator.Priority).ToListAsync();
             foreach (var departmentIndicatorValue in departmentIndicatorValues)
             {
                 viewModel.DepartmentIndicatorValues.Add(departmentIndicatorValue);
@@ -241,7 +259,7 @@ namespace IMS2.Controllers
                     }
                 }
             }
-           return RedirectToAction("Index", new { searchTime = searchTime, providingDepartment = departmentID });
+            return RedirectToAction("Index", new { searchTime = searchTime, providingDepartment = departmentID });
         }
         // GET: ProvidingDepartmentIndicator/Edit/5
         [Route("Index/{id}/{time}/{provideDepartment}")]
@@ -263,7 +281,7 @@ namespace IMS2.Controllers
             var departmentIndicatorValues = await db.Departments.SelectMany(c => c.DepartmentIndicatorValues).Include(d => d.Indicator.Duration)
                                                 .Where(d => d.DepartmentId == department.DepartmentId
                                                 && d.Time.Year == time.Value.Year && d.Time.Month == time.Value.Month
-                                                && d.Indicator.ProvidingDepartmentId == provideDepartment).OrderBy(d=>d.Indicator.Priority).ToListAsync();
+                                                && d.Indicator.ProvidingDepartmentId == provideDepartment).OrderBy(d => d.Indicator.Priority).ToListAsync();
             foreach (var departmentIndicatorValue in departmentIndicatorValues)
             {
                 viewModel.DepartmentIndicatorValues.Add(departmentIndicatorValue);
@@ -296,26 +314,34 @@ namespace IMS2.Controllers
                 //{
                 try
                 {
-                    if (departmentIdicatorValuequery.Value != null &&
-                        departmentIdicatorValue.Value != departmentIdicatorValuequery.Value)
+                    if (departmentIdicatorValuequery.Value.HasValue)
                     {
-                        departmentIdicatorValue.Value = departmentIdicatorValuequery.Value;
-                        //database win
-                        bool saveFailed;
-                        do
+
+                        if (departmentIdicatorValue.Value != departmentIdicatorValuequery.Value)
                         {
-                            saveFailed = false;
-                            try
+                            departmentIdicatorValue.Value = departmentIdicatorValuequery.Value;
+                            //database win
+                            bool saveFailed;
+                            do
                             {
-                                await db.SaveChangesAsync();
-                            }
-                            catch (DbUpdateConcurrencyException ex)
-                            {
-                                saveFailed = true;
-                                // Update the values of the entity that failed to save from the store 
-                                ex.Entries.Single().Reload();
-                            }
-                        } while (saveFailed);
+                                saveFailed = false;
+                                try
+                                {
+                                    await db.SaveChangesAsync();
+                                }
+                                catch (DbUpdateConcurrencyException ex)
+                                {
+                                    saveFailed = true;
+                                    // Update the values of the entity that failed to save from the store 
+                                    ex.Entries.Single().Reload();
+                                }
+                            } while (saveFailed);
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", String.Format(" 指标\"{0}\"值输入错误，请重新输入！", departmentIdicatorValue.Indicator.IndicatorName));
+
                     }
                 }
                 catch (Exception)

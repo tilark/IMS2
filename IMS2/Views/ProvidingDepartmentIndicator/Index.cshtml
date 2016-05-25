@@ -41,7 +41,7 @@
     {
         <div class="col-md-offset-2 col-md-10">
             <button id="hideitem" class="btn btn-default btn-xs"><span class="label label-primary">隐藏项目</span></button>
-            <button id="showitem" class="btn btn-default btn-xs"><span class="label label-primary">显示项目</span></button>
+            <button id="showitem" class="btn btn-default btn-xs"><span class="label label-primary" hidden="hidden">显示项目</span></button>
 
         </div>
         <section id="provideitem">
@@ -72,7 +72,7 @@
             </div>
         </section>
     }
-    @if (User.IsInRole("创建指标值"))
+    if (User.IsInRole("修改全院指标值") || User.IsInRole("Administrators") || User.IsInRole("创建指标值"))
     {
         <section>
 
@@ -99,7 +99,7 @@
 
     <tr>
         <td>@Html.Label("科室")</td>
-        <td>@Html.Label("项目总数")</td>
+        <td>@Html.Label("指标完成度")</td>
         <td>时间</td>
 
         <td></td>
@@ -108,7 +108,7 @@
             {
         <tr>
             <td>@item.Department.DepartmentName</td>
-            <td>@item.IndicatorCount</td>
+            <td>@item.HasValueCount / @item.IndicatorCount</td>
             <td>@Model.searchTime.GetDateTimeFormats('y')[0]</td>
             <td>
 

@@ -1,13 +1,13 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - 惠州市第一人民医院指标监测系统</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-@Styles.Render("~/Content/datetimepickerCss")
+    @Styles.Render("~/Content/datetimepickerCss")
 
 </head>
 <body>
@@ -19,13 +19,19 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("惠州市第一人民医院指标监测系统", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("指标监测系统", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
+
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("主页", "Index", "Home")</li>
-                    <li>@Html.ActionLink("关于", "About", "Home")</li>
-                    <li>@Html.ActionLink("联系方式", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("首页", "Index", "Home")</li>
+                    <li>@Html.ActionLink("编辑指标值", "Index", "ProvidingDepartmentIndicator")</li>
+                    @if (User.IsInRole("修改全院指标值") || User.IsInRole("Administrators"))
+                    {
+                        <li>@Html.ActionLink("审核指标", "Index", "SearchDepartmentIndicator")</li>
+                        <li>@Html.ActionLink("添加指标值", "Index", "ProvidingDepartmentIndicator")</li>
+                        <li>@Html.ActionLink("查看全院数据", "Index", "ShowDepartmentIndicatorValue")</li>
+                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -34,9 +40,8 @@
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer>
-        </footer>
-            <p>&copy; @DateTime.Now.Year - 设计者：陈殝达，刘林</p>
+        <footer></footer>
+        <p>&copy; @DateTime.Now.Year - 设计者：陈殝达，刘林</p>
     </div>
 
     @Scripts.Render("~/bundles/jquery")

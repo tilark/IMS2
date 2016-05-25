@@ -222,6 +222,7 @@
     <Compile Include="DAL\IBaseRepository.cs" />
     <Compile Include="DAL\IndicatorValue.cs" />
     <Compile Include="DAL\InitialItemData.cs" />
+    <Compile Include="DAL\RoleAction.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

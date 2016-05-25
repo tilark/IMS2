@@ -15,6 +15,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace IMS2.Controllers
 {
+    [Authorize(Roles = "修改全院人员信息, Administrators")]
+
     public class ManageUserController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

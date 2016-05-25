@@ -1,26 +1,29 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "惠州市第一人民医院指标监测系统";
 }
-
 <div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    <h1>@ViewBag.Title</h1>
+    <p class="lead">欢迎进入指标监测系统！</p>
 </div>
 
-<div class="row">
+
     <div class="col-md-12">
-        <fieldset>
-            <legend>
-                业务处理
-            </legend>
-            <ul class="nav nav-pills">
-                <li class="col-md-2">@Html.ActionLink("编辑指标值", "Index", "ProvidingDepartmentIndicator", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
-            </ul>
-        </fieldset>
-        <p>
-            <br />
-        </p>
+    <fieldset>
+        <legend>
+            业务处理
+        </legend>
+        <ul class="nav nav-pills">
+            <li class="col-md-2">@Html.ActionLink("编辑指标值", "Index", "ProvidingDepartmentIndicator", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+        </ul>
+    </fieldset>
+    <p>
+        <br />
+    </p>
+</div>
+@if (User.IsInRole("修改全院指标值") || User.IsInRole("Administrators"))
+{
+    <div class="col-md-12">
+
         <fieldset>
             <legend>
                 指标监测
@@ -48,8 +51,8 @@
         <p>
             <br />
         </p>
-    </div>
-    <div class="col-md-12">
-        @Html.Partial("_AdminViewPartial")
-    </div>
-</div>
+        </div>
+}
+        <div class="col-md-12">
+            @Html.Partial("_AdminViewPartial")
+        </div>

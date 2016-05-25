@@ -13,6 +13,8 @@ using System.Data.Entity.Infrastructure;
 
 namespace IMS2.Controllers
 {
+    [Authorize(Roles = "管理基础数据, Administrators")]
+
     public class DepartmentCategoryController : Controller
     {
         private ImsDbContext db = new ImsDbContext();

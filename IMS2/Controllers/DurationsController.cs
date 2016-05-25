@@ -11,6 +11,8 @@ using IMS2.Models;
 
 namespace IMS2.Controllers
 {
+    [Authorize(Roles = "管理基础数据, Administrators")]
+
     public class DurationsController : Controller
     {
         private ImsDbContext db = new ImsDbContext();

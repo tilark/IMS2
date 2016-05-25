@@ -14,6 +14,8 @@ using PagedList;
 
 namespace IMS2.Controllers
 {
+    [Authorize(Roles = "管理基础数据, Administrators, 修改全院指标值")]
+
     public class DepartmentIndicatorStandardsController : Controller
     {
         private ImsDbContext db = new ImsDbContext();

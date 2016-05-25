@@ -12,6 +12,8 @@ using IMS2.Models;
 
 namespace IMS2.Controllers
 {
+    [Authorize(Roles = "修改全院人员信息, Administrators")]
+
     public class ManageRoleController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
