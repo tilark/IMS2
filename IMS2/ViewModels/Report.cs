@@ -347,7 +347,7 @@ namespace IMS2.ViewModels
         /// <summary>
         /// 是否超“标准值”。
         /// </summary>
-        public bool OutOfStandard;
+        public bool? OutOfStandard;
     }
 
 
