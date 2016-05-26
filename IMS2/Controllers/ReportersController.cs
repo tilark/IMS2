@@ -49,7 +49,7 @@ namespace IMS2.Controllers
                 }
                 else
                 {
-                    Report(startTime, endTime, selectedDepartmentCategory, selectedIndicatorGroup);
+                    return ReportView(startTime, endTime, selectedDepartmentCategory, selectedIndicatorGroup);
                 }
             }
             await PopulateAssignedDepartmentCategoryData(selectedDepartmentCategory);
@@ -61,7 +61,6 @@ namespace IMS2.Controllers
         {
 
             await PopulateAssignedIndicatorGroupData(selectedDepartmentCategory);
-            //return PartialView("IndicatorGroupPartial");
             return PartialView("_IndicatorGroupPartial");
         }
         /// <summary>
@@ -71,9 +70,10 @@ namespace IMS2.Controllers
         /// <param name="endTime">The end time.</param>
         /// <param name="selectedDepartmentCategory">The selected department category.</param>
         /// <param name="selectedIndicatorGroup">The selected indicator group.</param>
-        public ActionResult Report(DateTime? startTime, DateTime? endTime, string[] selectedDepartmentCategory, string[] selectedIndicatorGroup)
+        public ActionResult ReportView(DateTime? startTime, DateTime? endTime, string[] selectedDepartmentCategory, string[] selectedIndicatorGroup)
         {
             var report = new Report(selectedDepartmentCategory.Select(c => new Guid(c)).ToList(), selectedIndicatorGroup.Select(c => new Guid(c)).ToList(), startTime.Value, endTime.Value);
+
             report.GetData();
             return View("ReportView", report);
         }
