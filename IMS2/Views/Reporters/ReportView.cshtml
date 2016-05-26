@@ -6,8 +6,8 @@
 }
 
 <h2>报表视图</h2>
-    <h3>@Model.Title</h3>
-    <h4>@Model.startTime -- @Model.endTime</h4>
+<h3>@Model.Title</h3>
+<h4>@Model.startTime -- @Model.endTime</h4>
 
 <table class="table table-hover table-bordered">
     <thead>
@@ -16,10 +16,27 @@
             <td></td>
             <td></td>
             @*//第一行指标组*@
-            @foreach (var titleIndicatorGroup in Model.reportRows.First().OrderBy(i => i.IndicatorGroupPriority).ThenBy(i => i.IndicatorPriority))
-            {
+            @{
+                var list = Model.reportRows.First().OrderBy(i => i.IndicatorGroupPriority).ThenBy(i => i.IndicatorPriority).Select(c => c.IndicatorGroupName).ToList();
 
-                <td>@titleIndicatorGroup.IndicatorGroupName</td>
+                string previousIndicatorGroupName = list[0];
+                int colspan = 1;
+
+                for (int i = 1; i < list.Count; i += 1)
+                {
+                    if (previousIndicatorGroupName == list[i])
+                    {
+                        colspan += 1;
+                    }
+                    else
+                    {
+                        <td colspan=@(colspan.ToString())>@(previousIndicatorGroupName)</td>
+                        colspan = 1;
+                        previousIndicatorGroupName = list[i];
+                    }
+                }
+
+                <td colspan=@(colspan.ToString())>@(previousIndicatorGroupName)</td>
             }
         </tr>
         <tr>
@@ -53,4 +70,3 @@
 
     </tbody>
 </table>
-
