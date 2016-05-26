@@ -40,10 +40,10 @@ namespace IMS2.Controllers
                 await InitialAssignedDepartmentCategoryData();
                 await InitialAssignedIndicatorGroupData();
                 return View();
-            }             
-            else if(startTime != null && endTime != null && selectedDepartmentCategory != null && selectedIndicatorGroup != null)
-            {               
-                if(endTime.Value.Year < startTime.Value.Year || (endTime.Value.Year == startTime.Value.Year && endTime.Value.Month < startTime.Value.Month))
+            }
+            else if (startTime != null && endTime != null && selectedDepartmentCategory != null && selectedIndicatorGroup != null)
+            {
+                if (endTime.Value.Year < startTime.Value.Year || (endTime.Value.Year == startTime.Value.Year && endTime.Value.Month < startTime.Value.Month))
                 {
                     ViewBag.Status = "截止时间需大于等于开始时间！";
                 }
@@ -73,8 +73,9 @@ namespace IMS2.Controllers
         /// <param name="selectedIndicatorGroup">The selected indicator group.</param>
         public ActionResult Report(DateTime? startTime, DateTime? endTime, string[] selectedDepartmentCategory, string[] selectedIndicatorGroup)
         {
-            var reports = new List<Report>();
-            return View("ReportView", reports);
+            var report = new Report(selectedDepartmentCategory.Select(c => new Guid(c)).ToList(), selectedIndicatorGroup.Select(c => new Guid(c)).ToList(), startTime.Value, endTime.Value);
+            report.GetData();
+            return View("ReportView", report);
         }
 
         #region AssignedDepartmentCategory
@@ -100,7 +101,7 @@ namespace IMS2.Controllers
             var allDepartmentCategories = await db.DepartmentCategories.OrderBy(d => d.Priority).ToListAsync();
             var viewModel = new List<AssignedDepartmentCategoryData>();
             var selectedCategory = new HashSet<Guid>();
-            foreach(var category in selectedDepartmentCategory)
+            foreach (var category in selectedDepartmentCategory)
             {
                 selectedCategory.Add(Guid.Parse(category));
             }
@@ -114,7 +115,7 @@ namespace IMS2.Controllers
                     Color = color.ToString()
                 });
                 if ((int)color++ >= 14)
-                    color = BackGroundColorEnum.BurlyWood; 
+                    color = BackGroundColorEnum.BurlyWood;
             }
             ViewBag.DepartmentCategories = viewModel;
         }
@@ -125,7 +126,7 @@ namespace IMS2.Controllers
             var allIndicatorGroup = await db.IndicatorGroups.OrderBy(i => i.Priority).ToListAsync();
             var viewModel = new List<AssignedIndicatorGroupData>();
 
-            foreach(var indicatorGroup in allIndicatorGroup)
+            foreach (var indicatorGroup in allIndicatorGroup)
             {
                 viewModel.Add(new AssignedIndicatorGroupData
                 {
@@ -140,14 +141,14 @@ namespace IMS2.Controllers
 
         private async Task PopulateAssignedIndicatorGroupData(string[] selectedDepartmentCategory)
         {
-            if(selectedDepartmentCategory == null)
+            if (selectedDepartmentCategory == null)
             {
                 return;
             }
             var allIndicatorGroups = new List<IndicatorGroup>();
             allIndicatorGroups = await db.IndicatorGroups.OrderBy(d => d.Priority).ToListAsync();
             var viewModel = new List<AssignedIndicatorGroupData>();
-            foreach(var selectedCategory in selectedDepartmentCategory)
+            foreach (var selectedCategory in selectedDepartmentCategory)
             {
                 //找到相关的科室类别
                 DepartmentCategory departmentCategory = await db.DepartmentCategories.FindAsync(Guid.Parse(selectedCategory));

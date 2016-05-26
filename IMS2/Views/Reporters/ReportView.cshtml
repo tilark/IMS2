@@ -1,4 +1,4 @@
-﻿@model IEnumerable<IMS2.ViewModels.Report>
+﻿@model IMS2.ViewModels.Report
 
 @{
     ViewBag.Title = "ReportView";
@@ -6,56 +6,53 @@
 }
 
 <h2>报表视图</h2>
+    
+<table class="table table-hover table-bordered">
+    <thead>
+        <template>
+            <h3>@Model.Title</h3>
+            <h4>@Model.startTime -- @Model.endTime</h4>
+        </template>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            @*//第一行指标组*@
+            @foreach (var titleIndicatorGroup in Model.reportRows.First().OrderBy(i => i.IndicatorGroupPriority).ThenBy(i => i.IndicatorPriority))
+            {
 
-@foreach (var reports in Model)
-{
-    //写入标题
-    <table class="table table-hover table-bordered">
-        <thead>
-            <template>
-                <h3>@reports.Title</h3>
-                <h4>@reports.startTime -- @reports.endTime</h4>
-            </template>
+                <td>@titleIndicatorGroup.IndicatorGroupName</td>
+            }
+        </tr>
+        <tr>
+            @*//第二行填入指标名称*@
+            <td></td>
+            <td></td>
+            <td></td>
+            @foreach (var titleIndicator in Model.reportRows.First().OrderBy(i => i.IndicatorGroupPriority).ThenBy(i => i.IndicatorPriority))
+            {
+
+                <td>@titleIndicator.IndicatorName</td>
+            }
+        </tr>
+    </thead>
+    <tbody>
+
+        @*//第三行开始填入时间时间，科室类别，科室，各指标值*@
+        @foreach (var department in Model.OrderBy(i => i.departmentCatetoryPriority).ThenBy(i => i.departmentPriority))
+        {
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                @*//第一行指标组*@
-                @foreach (var titleIndicatorGroup in reports.reportRows.First().OrderBy(i => i.IndicatorGroupPriority).ThenBy(i => i.IndicatorPriority))
+                <td>@department.ToStringDateInterval()</td>
+                <td>@department.departmentCategoryName</td>
+                <td>@department.departmentName</td>
+                @foreach (var indicator in department.ReportRowIndicators.OrderBy(i => i.IndicatorGroupPriority).ThenBy(i => i.IndicatorPriority))
                 {
-
-                    <td>@titleIndicatorGroup.IndicatorGroupName</td>
+                    var color = indicator.OutOfStandard.HasValue ? indicator.OutOfStandard.Value ? "success" : "danger" : "";
+                    <td class="@(Html.Raw(color))">@indicator.Value</td>
                 }
             </tr>
-            <tr>
-                @*//第二行填入指标名称*@
-                <td></td>
-                <td></td>
-                <td></td>
-                @foreach (var titleIndicator in reports.reportRows.First().OrderBy(i => i.IndicatorGroupPriority).ThenBy(i => i.IndicatorPriority))
-                {
+        }
 
-                        <td>@titleIndicator.IndicatorName</td>
-                }
-            </tr>
-        </thead>
-        <tbody>
-               
-                @*//第三行开始填入时间时间，科室类别，科室，各指标值*@
-                @foreach (var department in reports.OrderBy(i => i.departmentCatetoryPriority).ThenBy(i => i.departmentPriority))
-                {
-                    <tr>
-                        <td>@department.ToStringDateInterval()</td>
-                        <td>@department.departmentCategoryName</td>
-                        <td>@department.departmentName</td>
-                        @foreach (var indicator in department.ReportRowIndicators.OrderBy(i => i.IndicatorGroupPriority).ThenBy(i => i.IndicatorPriority))
-                        {
-                            var color = indicator.OutOfStandard.HasValue ? indicator.OutOfStandard ? "success" : "danger" : "";
-                            <td class="@(Html.Raw(color))">@indicator.Value</td>
-                        }
-                    </tr>
-                }
-           
-        </tbody>
-    </table>
-}
+    </tbody>
+</table>
+
