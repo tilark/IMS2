@@ -15,6 +15,7 @@ namespace IMS2.Models
             DepartmentIndicatorValues = new HashSet<DepartmentIndicatorValue>();
             IndicatorGroupMapIndicators = new HashSet<IndicatorGroupMapIndicator>();
         }
+        [Display(Name = "指标ID")]
 
         public Guid IndicatorId { get; set; }
 

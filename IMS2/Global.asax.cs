@@ -17,12 +17,12 @@ namespace IMS2
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            InitialItemData initialItemData = new InitialItemData();
-            initialItemData.InitialBaseData();
+            //InitialItemData initialItemData = new InitialItemData();
+            //initialItemData.InitialBaseData();
 
-            RoleAction roleAction = new RoleAction();
-            roleAction.InitialRoleName();
-            roleAction.CreateAdmin();
+            //RoleAction roleAction = new RoleAction();
+            //roleAction.InitialRoleName();
+            //roleAction.CreateAdmin();
         }
     }
 }

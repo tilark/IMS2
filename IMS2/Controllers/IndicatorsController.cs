@@ -88,7 +88,7 @@ namespace IMS2.Controllers
                         return RedirectToAction("Index", new { message = IMSMessageIdEnum.CreateError });
 
                     }
-                    indicator.IndicatorId = Guid.NewGuid();
+                    //indicator.IndicatorId = Guid.NewGuid();
                     db.Indicators.Add(indicator);
                     await db.SaveChangesAsync();
                     return RedirectToAction("Index", new { message = IMSMessageIdEnum.CreateSuccess });
