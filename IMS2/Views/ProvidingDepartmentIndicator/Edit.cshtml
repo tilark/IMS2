@@ -67,6 +67,7 @@
                         @*审核状态*@
                         <td>
                             @Html.DisplayFor(model => item.IsLocked)
+                            @Html.Hidden(String.Format("departmentIndicatorValues[{0}].IsLocked", i), item.IsLocked)
                         </td>
                         <td>
                             @Html.DisplayFor(model => item.Indicator.Duration.DurationName)

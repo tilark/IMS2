@@ -25,20 +25,20 @@ namespace IMS2.Controllers
 
         public async Task<ActionResult> Index(DateTime? searchTime, Guid? dataSourceSystemID)
         {
-            ViewBag.dataSourceSystemID = new SelectList(db.DataSourceSystems.Distinct().OrderBy(d=>d.Priority), "DataSourceSystemId", "DataSourceSystemName");
+            ViewBag.dataSourceSystemID = new SelectList(db.DataSourceSystems.Distinct().OrderBy(d => d.Priority), "DataSourceSystemId", "DataSourceSystemName");
 
-            if(searchTime != null && dataSourceSystemID != null)
+            if (searchTime != null && dataSourceSystemID != null)
             {
                 DataSourceSystemIndicatorView viewModel = new DataSourceSystemIndicatorView();
                 var dataSourceSystem = await db.DataSourceSystems.FindAsync(dataSourceSystemID);
-                if(dataSourceSystem != null)
+                if (dataSourceSystem != null)
                 {
                     ViewBag.sourceSystemID = dataSourceSystem.DataSourceSystemId;
                     viewModel.dataSourceSystem = dataSourceSystem;
                     viewModel.searchTime = searchTime.Value;
                     viewModel.Indicators = new List<Indicator>();
                     viewModel.DepartmentIndicatorCountViews = new List<DepartmentIndicatorCountView>();
-                    foreach(var indicator in dataSourceSystem.Indicators)
+                    foreach (var indicator in dataSourceSystem.Indicators)
                     {
                         //数据来源系统负责的指标，根据指标与指定时间是否在科室指标值表（简称值表）中，如果不在，依次选择指标，追寻到科室类别项目组中的各个科室，再将该指标、科室、时间写入值表中。
                         viewModel.Indicators.Add(indicator);
@@ -73,36 +73,40 @@ namespace IMS2.Controllers
             return View();
 
         }
-        private async Task<DepartmentIndicatorValue> CreateDepartmentIndicatorList(DateTime? searchTime, Indicator indicator, Department department, decimal value)
+        private async Task<DepartmentIndicatorValue> CreateDepartmentIndicatorList(DateTime? searchTime, Indicator indicator, Department department, decimal? value)
         {
             if (searchTime == null || indicator == null || department == null)
             {
                 return null;
             }
             bool canAdd = false;
-            switch (indicator.Duration.DurationName)
+            switch (indicator.Duration.DurationId.ToString().ToLower())
             {
-                case "季":
+                case ("d48aa438-ad71-4419-a2a2-a1c390f6c097")://月
+                    canAdd = true;
+                    break;
+                case ("bd18c4f4-6552-4986-ab4e-ba2dffded2b3")://季
                     if (searchTime.Value.Month == 3 || searchTime.Value.Month == 6 || searchTime.Value.Month == 9 || searchTime.Value.Month == 12)
                     {
                         canAdd = true;
                     }
                     break;
-                case "半年":
-                    if (searchTime.Value.Month == 6)
+                case ("24847114-90e4-483d-b290-97781c3fa0c2")://半年
+                    if (searchTime.Value.Month == 6 || searchTime.Value.Month == 12)//12月也有“半年”——“下半年”
                     {
                         canAdd = true;
                     }
                     break;
-                case "全年":
+                case ("ba74e352-0ad5-424b-bf31-738ba5666649")://年
                     if (searchTime.Value.Month == 12)
                     {
                         canAdd = true;
                     }
                     break;
                 default:
-                    canAdd = true;
-                    break;
+                    //canAdd = true;
+                    //break;
+                    throw new Exception("跨度ID不存在。");
             }
             if (canAdd)
             {
@@ -111,7 +115,25 @@ namespace IMS2.Controllers
                 departmentIndicatorValue.DepartmentId = department.DepartmentId;
                 departmentIndicatorValue.IndicatorId = indicator.IndicatorId;
                 departmentIndicatorValue.DepartmentIndicatorValueId = System.Guid.NewGuid();
-                departmentIndicatorValue.Time = searchTime.Value;
+                //departmentIndicatorValue.Time = searchTime.Value;
+                //时间获取方式要修改——时间应为对应跨度时段的首月：
+                switch (indicator.Duration.DurationId.ToString().ToLower())
+                {
+                    case ("d48aa438-ad71-4419-a2a2-a1c390f6c097")://月
+                        departmentIndicatorValue.Time = searchTime.Value;
+                        break;
+                    case ("bd18c4f4-6552-4986-ab4e-ba2dffded2b3")://季
+                        departmentIndicatorValue.Time = new DateTime(searchTime.Value.Year, searchTime.Value.Month - 2, 1);
+                        break;
+                    case ("24847114-90e4-483d-b290-97781c3fa0c2")://半年
+                        departmentIndicatorValue.Time = new DateTime(searchTime.Value.Year, searchTime.Value.Month - 5, 1);
+                        break;
+                    case ("ba74e352-0ad5-424b-bf31-738ba5666649")://年
+                        departmentIndicatorValue.Time = new DateTime(searchTime.Value.Year, searchTime.Value.Month - 11, 1);
+                        break;
+                    default:
+                        throw new Exception("跨度ID不存在。");
+                }
                 //需找到最新的版本号
                 var standardValue = db.DepartmentIndicatorStandards.Where(d => d.DepartmentId == department.DepartmentId && d.IndicatorId == indicator.IndicatorId
                         && d.Version == db.DepartmentIndicatorStandards.Where(i => i.DepartmentId == department.DepartmentId && i.IndicatorId == indicator.IndicatorId).Max(v => v.Version))
@@ -143,7 +165,7 @@ namespace IMS2.Controllers
             {
                 item = departmentIndicatorValue;
                 db.DepartmentIndicatorValues.Add(item);
-               
+
             }
             else
             {
@@ -216,12 +238,12 @@ namespace IMS2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(DateTime? searchTime, Guid? dataSourceSystemID)
         {
-            if(searchTime != null && dataSourceSystemID != null)
+            if (searchTime != null && dataSourceSystemID != null)
             {
                 var sourceSystem = await db.DataSourceSystems.FindAsync(dataSourceSystemID.Value);
                 if (sourceSystem != null)
                 {
-                    Decimal value = 0;
+                    decimal? value = 0;//value可空，表示相关数据不存在，或除数为0等情况。
                     IndicatorValue indicatorValue = new IndicatorValue();
                     //数据来源科室负责的指标，根据指标与指定时间是否在科室指标值表（简称值表）中，如果不在，依次选择指标，追寻到科室类别项目组中的各个科室，再将该指标、科室、时间写入值表中。
                     foreach (var indicator in sourceSystem.Indicators)
@@ -242,7 +264,10 @@ namespace IMS2.Controllers
                                     value = bagl.GetIndicatorValue(department.DepartmentId, indicator.IndicatorId, searchTime.Value);
                                     break;
                                 case "计算":
-                                    value = indicatorValue.GetDepartmentIndicatorValueByCalculate(department.DepartmentId, indicator.IndicatorId, searchTime.Value);
+                                    //value = indicatorValue.GetDepartmentIndicatorValueByCalculate(department.DepartmentId, indicator.IndicatorId, searchTime.Value);
+
+                                    //换新的“算法”函数
+                                    value = ViewModels.Report.AggregateDepartmentIndicatorValueValue(new Models.ImsDbContext(), department.DepartmentId, indicator.IndicatorId, searchTime.Value, searchTime.Value);
 
                                     break;
                                 case "超声影像系统":

@@ -314,7 +314,7 @@ namespace IMS2.Controllers
                 //{
                 try
                 {
-                    if (departmentIdicatorValuequery.Value.HasValue)
+                    if (!departmentIdicatorValue.IsLocked)
                     {
 
                         if (departmentIdicatorValue.Value != departmentIdicatorValuequery.Value)
@@ -337,11 +337,6 @@ namespace IMS2.Controllers
                                 }
                             } while (saveFailed);
                         }
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", String.Format(" 指标\"{0}\"值输入错误，请重新输入！", departmentIdicatorValue.Indicator.IndicatorName));
-
                     }
                 }
                 catch (Exception)

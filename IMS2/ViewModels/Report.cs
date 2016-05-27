@@ -219,7 +219,7 @@ namespace IMS2.ViewModels
                                         if (indicator.DurationId == new Guid("d48aa438-ad71-4419-a2a2-a1c390f6c097"))
                                         //如果为“月”，则为“整合项”。
                                         {
-                                            newReportRowIndicator.Value = AggregateDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, newReportRow.startTime, newReportRow.endTime);
+                                            newReportRowIndicator.Value = AggregateDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, newReportRow.startTime, newReportRow.endTime,false);
                                             newReportRowIndicator.OutOfStandard = null;
                                         }
                                         else if (indicator.DurationId == new Guid("bd18c4f4-6552-4986-ab4e-ba2dffded2b3"))
@@ -285,7 +285,7 @@ namespace IMS2.ViewModels
                                         if (indicator.DurationId == new Guid("d48aa438-ad71-4419-a2a2-a1c390f6c097") || indicator.DurationId == new Guid("bd18c4f4-6552-4986-ab4e-ba2dffded2b3"))
                                         //如果为“月”、“季”，则为“整合项”。
                                         {
-                                            newReportRowIndicator.Value = AggregateDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, newReportRow.startTime, newReportRow.endTime);
+                                            newReportRowIndicator.Value = AggregateDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, newReportRow.startTime, newReportRow.endTime,false);
                                             newReportRowIndicator.OutOfStandard = null;
                                         }
                                         else if (indicator.DurationId == new Guid("24847114-90e4-483d-b290-97781c3fa0c2"))
@@ -351,7 +351,7 @@ namespace IMS2.ViewModels
                                         if (indicator.DurationId == new Guid("d48aa438-ad71-4419-a2a2-a1c390f6c097") || indicator.DurationId == new Guid("bd18c4f4-6552-4986-ab4e-ba2dffded2b3") || indicator.DurationId == new Guid("24847114-90e4-483d-b290-97781c3fa0c2"))
                                         //如果为“月”、“季”、“半年”，则为“整合项”。
                                         {
-                                            newReportRowIndicator.Value = AggregateDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, newReportRow.startTime, newReportRow.endTime);
+                                            newReportRowIndicator.Value = AggregateDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, newReportRow.startTime, newReportRow.endTime,false);
                                             newReportRowIndicator.OutOfStandard = null;
                                         }
                                         else if (indicator.DurationId == new Guid("ba74e352-0ad5-424b-bf31-738ba5666649"))
@@ -414,7 +414,7 @@ namespace IMS2.ViewModels
                                         newReportRowIndicator.IndicatorPriority = indicator.Priority;
 
                                         //不需要判断当前“指标”的“跨度”。均按“整合项”处理。
-                                        newReportRowIndicator.Value = AggregateDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, newReportRow.startTime, newReportRow.endTime);
+                                        newReportRowIndicator.Value = AggregateDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, newReportRow.startTime, newReportRow.endTime,false);
                                         newReportRowIndicator.OutOfStandard = null;
                                     }
                                 }
@@ -433,11 +433,12 @@ namespace IMS2.ViewModels
         /// <param name="indicatorId">“指标ID”。</param>
         /// <param name="startTime">期初时段。</param>
         /// <param name="endTime">期末时段。</param>
+        /// <param name="onlyCalculation">限定仅返回“计算”项的“值”。</param>
         /// <returns>指点时段区间内的指定“科室”的指定“指标”的整合值。</returns>
         /// <exception cref="ArgumentNullException">实参为null。</exception>
         /// <exception cref="Exception">查看内部描述。</exception>
         /// <remarks>不会判断指标的“跨度”。</remarks>
-        private static decimal? AggregateDepartmentIndicatorValueValue(Models.ImsDbContext context, Guid departmentId, Guid indicatorId, DateTime startTime, DateTime endTime)
+        internal static decimal? AggregateDepartmentIndicatorValueValue(Models.ImsDbContext context, Guid departmentId, Guid indicatorId, DateTime startTime, DateTime endTime, bool onlyCalculation = true)
         {
             if (context == null)
             {
@@ -453,8 +454,8 @@ namespace IMS2.ViewModels
                 if (string.IsNullOrEmpty(indicatorAlgorithm.OperationMethod))
                     throw new Exception("操作符为空。");
 
-                decimal? operand1 = AggregateDepartmentIndicatorValueValue(context, departmentId, indicatorAlgorithm.FirstOperandID, startTime, endTime);
-                decimal? operand2 = AggregateDepartmentIndicatorValueValue(context, departmentId, indicatorAlgorithm.SecondOperandID, startTime, endTime);
+                decimal? operand1 = AggregateDepartmentIndicatorValueValue(context, departmentId, indicatorAlgorithm.FirstOperandID, startTime, endTime, false);
+                decimal? operand2 = AggregateDepartmentIndicatorValueValue(context, departmentId, indicatorAlgorithm.SecondOperandID, startTime, endTime, false);
 
                 decimal? result;
 
@@ -485,7 +486,7 @@ namespace IMS2.ViewModels
                 {
                     return Math.Round(result.Value, 2) * 100;
                 }
-                else
+                else//待补充：根据其他“单位”作相应优化小数位
                 {
                     return Math.Round(result.Value, 2);
                 }
@@ -493,6 +494,11 @@ namespace IMS2.ViewModels
             else
             //如果不存在，则查找“科室指标表”。
             {
+                if (onlyCalculation == true)
+                {
+                    return null;
+                }
+
                 var queryDepartmentIndicatorValue = context.DepartmentIndicatorValues.Where(i => i.IndicatorId == indicatorId && i.DepartmentId == departmentId && i.Time <= endTime && i.Time >= startTime);
 
                 if (queryDepartmentIndicatorValue.Any())

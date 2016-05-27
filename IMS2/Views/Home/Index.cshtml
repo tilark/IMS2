@@ -14,11 +14,24 @@
         </legend>
         <ul class="nav nav-pills">
             <li class="col-md-2">@Html.ActionLink("编辑指标值", "Index", "ProvidingDepartmentIndicator", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+            <li class="col-md-2">@Html.ActionLink("查看数据", "Index", "ShowDepartmentIndicatorValue", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+
         </ul>
     </fieldset>
     <p>
         <br />
     </p>
+        <fieldset>
+            <legend>
+                报表
+            </legend>
+            <ul class="nav nav-pills">
+                <li class="col-md-2">@Html.ActionLink("导出报表", "Index", "Reporters", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+            </ul>
+        </fieldset>
+        <p>
+            <br />
+        </p>
 </div>
 @if (User.IsInRole("修改全院指标值") || User.IsInRole("Administrators"))
 {
@@ -31,7 +44,6 @@
             <ul class="nav nav-pills">
                 <li class="col-md-2">@Html.ActionLink("审核指标", "Index", "SearchDepartmentIndicator", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
                 <li class="col-md-2">@Html.ActionLink("添加指标值", "Index", "ProvidingDepartmentIndicator", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
-                <li class="col-md-2">@Html.ActionLink("查看全院数据", "Index", "ShowDepartmentIndicatorValue", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
                 <li class="col-md-2">@Html.ActionLink("自动获取数据", "Index", "AutoGetDataSource", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
                 <li class="col-md-2">@Html.ActionLink("管理标准值", "Index", "DepartmentIndicatorStandards", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
 
@@ -40,17 +52,7 @@
         <p>
             <br />
         </p>
-        <fieldset>
-            <legend>
-                报表
-            </legend>
-            <ul class="nav nav-pills">
-                <li class="col-md-2">@Html.ActionLink("导出报表", "Index", "Reporters", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
-            </ul>
-        </fieldset>
-        <p>
-            <br />
-        </p>
+
         </div>
 }
         <div class="col-md-12">
