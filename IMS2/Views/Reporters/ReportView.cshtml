@@ -5,16 +5,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>报表视图</h2>
+<h2>报表</h2>
 <h3>@Model.Title</h3>
-<h4>@Model.startTime -- @Model.endTime</h4>
+<h4>@Model.startTime.ToString("yyyy年M月") -- @Model.endTime.ToString("yyyy年M月")</h4>
 
 <table class="table table-hover table-bordered">
     <thead>
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td colspan="3"></td>
             @*//第一行指标组*@
             @{
                 var list = Model.reportRows.First().OrderBy(i => i.IndicatorGroupPriority).ThenBy(i => i.IndicatorPriority).Select(c => c.IndicatorGroupName).ToList();
@@ -30,24 +28,24 @@
                     }
                     else
                     {
-                        <td colspan=@(colspan.ToString())>@(previousIndicatorGroupName)</td>
+                        <td colspan=@(colspan.ToString())><strong>@(previousIndicatorGroupName)</strong></td>
                         colspan = 1;
                         previousIndicatorGroupName = list[i];
                     }
                 }
 
-                <td colspan=@(colspan.ToString())>@(previousIndicatorGroupName)</td>
+                <td colspan=@(colspan.ToString())><strong>@(previousIndicatorGroupName)</strong></td>
             }
         </tr>
         <tr>
-            @*//第二行填入指标名称*@
-            <td></td>
-            <td></td>
-            <td></td>
+            @*//第二行填入指标名称*@            
+            <td><strong>科室分类名称</strong></td>
+            <td><strong>科室名称</strong></td>
+            <td><strong>时段</strong></td>
             @foreach (var titleIndicator in Model.reportRows.First().OrderBy(i => i.IndicatorGroupPriority).ThenBy(i => i.IndicatorPriority))
             {
 
-                <td>@titleIndicator.IndicatorName</td>
+                <td><strong>@titleIndicator.IndicatorName</strong></td>
             }
         </tr>
     </thead>
@@ -56,10 +54,10 @@
         @*//第三行开始填入时间时间，科室类别，科室，各指标值*@
         @foreach (var department in Model.OrderBy(i => i.departmentCatetoryPriority).ThenBy(i => i.departmentPriority))
         {
-            <tr>
-                <td>@department.ToStringDateInterval()</td>
-                <td>@department.departmentCategoryName</td>
-                <td>@department.departmentName</td>
+            <tr>                
+                <td><strong>@department.departmentCategoryName</strong></td>
+                <td><strong>@department.departmentName</strong></td>
+                <td><strong>@department.ToStringDateInterval()</strong></td>
                 @foreach (var indicator in department.ReportRowIndicators.OrderBy(i => i.IndicatorGroupPriority).ThenBy(i => i.IndicatorPriority))
                 {
                     var color = indicator.OutOfStandard.HasValue ? indicator.OutOfStandard.Value ? "success" : "danger" : "";

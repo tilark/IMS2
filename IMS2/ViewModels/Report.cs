@@ -107,7 +107,7 @@ namespace IMS2.ViewModels
                     }
 
                     //获取“科室分类”对应的“科室”。
-                    var departments = context.DepartmentCategories.Where(i => i.DepartmentCategoryId == departmentCategoryId).SelectMany(c => c.Departments);
+                    var departments = context.DepartmentCategories.Where(i => i.DepartmentCategoryId == departmentCategoryId).SelectMany(c => c.Departments).ToList();
 
                     //遍历每个“科室”。
                     foreach (var department in departments)
@@ -141,10 +141,10 @@ namespace IMS2.ViewModels
                                     }
 
                                     //获取“指标组”对应的“指标”。
-                                    var queryIndicators = context.IndicatorGroups.Where(i => i.IndicatorGroupId == indicatorGourpId).SelectMany(c => c.IndicatorGroupMapIndicators).Select(c => c.Indicator);
+                                    var Indicators = context.IndicatorGroups.Where(i => i.IndicatorGroupId == indicatorGourpId).SelectMany(c => c.IndicatorGroupMapIndicators).Select(c => c.Indicator).ToList();
 
                                     //遍历“指标”。
-                                    foreach (var indicator in queryIndicators)
+                                    foreach (var indicator in Indicators)
                                     {
                                         //新增“指标列”。
                                         var newReportRowIndicator = new ReportRowIndicator();
@@ -201,10 +201,10 @@ namespace IMS2.ViewModels
                                     }
 
                                     //获取“指标组”对应的“指标”。
-                                    var queryIndicators = context.IndicatorGroups.Where(i => i.IndicatorGroupId == indicatorGourpId).SelectMany(c => c.IndicatorGroupMapIndicators).Select(c => c.Indicator);
+                                    var Indicators = context.IndicatorGroups.Where(i => i.IndicatorGroupId == indicatorGourpId).SelectMany(c => c.IndicatorGroupMapIndicators).Select(c => c.Indicator).ToList();
 
                                     //遍历“指标”。
-                                    foreach (var indicator in queryIndicators)
+                                    foreach (var indicator in Indicators)
                                     {
                                         //新增“指标列”。
                                         var newReportRowIndicator = new ReportRowIndicator();
@@ -267,10 +267,10 @@ namespace IMS2.ViewModels
                                     }
 
                                     //获取“指标组”对应的“指标”。
-                                    var queryIndicators = context.IndicatorGroups.Where(i => i.IndicatorGroupId == indicatorGourpId).SelectMany(c => c.IndicatorGroupMapIndicators).Select(c => c.Indicator);
+                                    var Indicators = context.IndicatorGroups.Where(i => i.IndicatorGroupId == indicatorGourpId).SelectMany(c => c.IndicatorGroupMapIndicators).Select(c => c.Indicator).ToList();
 
                                     //遍历“指标”。
-                                    foreach (var indicator in queryIndicators)
+                                    foreach (var indicator in Indicators)
                                     {
                                         //新增“指标列”。
                                         var newReportRowIndicator = new ReportRowIndicator();
@@ -333,10 +333,10 @@ namespace IMS2.ViewModels
                                     }
 
                                     //获取“指标组”对应的“指标”。
-                                    var queryIndicators = context.IndicatorGroups.Where(i => i.IndicatorGroupId == indicatorGourpId).SelectMany(c => c.IndicatorGroupMapIndicators).Select(c => c.Indicator);
+                                    var Indicators = context.IndicatorGroups.Where(i => i.IndicatorGroupId == indicatorGourpId).SelectMany(c => c.IndicatorGroupMapIndicators).Select(c => c.Indicator).ToList();
 
                                     //遍历“指标”。
-                                    foreach (var indicator in queryIndicators)
+                                    foreach (var indicator in Indicators)
                                     {
                                         //新增“指标列”。
                                         var newReportRowIndicator = new ReportRowIndicator();
@@ -399,10 +399,10 @@ namespace IMS2.ViewModels
                                     }
 
                                     //获取“指标组”对应的“指标”。
-                                    var queryIndicators = context.IndicatorGroups.Where(i => i.IndicatorGroupId == indicatorGourpId).SelectMany(c => c.IndicatorGroupMapIndicators).Select(c => c.Indicator);
+                                    var Indicators = context.IndicatorGroups.Where(i => i.IndicatorGroupId == indicatorGourpId).SelectMany(c => c.IndicatorGroupMapIndicators).Select(c => c.Indicator).ToList();
 
                                     //遍历“指标”。
-                                    foreach (var indicator in queryIndicators)
+                                    foreach (var indicator in Indicators)
                                     {
                                         //新增“指标列”。
                                         var newReportRowIndicator = new ReportRowIndicator();
@@ -456,18 +456,38 @@ namespace IMS2.ViewModels
                 decimal? operand1 = AggregateDepartmentIndicatorValueValue(context, departmentId, indicatorAlgorithm.FirstOperandID, startTime, endTime);
                 decimal? operand2 = AggregateDepartmentIndicatorValueValue(context, departmentId, indicatorAlgorithm.SecondOperandID, startTime, endTime);
 
+                decimal? result;
+
                 switch (indicatorAlgorithm.OperationMethod)
                 {
                     case ("addition"):
-                        return operand1 + operand2;
+                        result = operand1 + operand2;
+                        break;
                     case ("subtraction"):
-                        return operand1 - operand2;
+                        result = operand1 - operand2;
+                        break;
                     case ("multiplication"):
-                        return operand1 * operand2;
+                        result = operand1 * operand2;
+                        break;
                     case ("division"):
-                        return (operand2 == decimal.Zero) ? null : operand1 / operand2; //除数为0时，返回null。
+                        result = (operand2 == decimal.Zero) ? null : operand1 / operand2; //除数为0时，返回null。
+                        break;
                     default:
                         return null;
+                }
+
+                var indicatorUnit = context.Indicators.Where(i => i.IndicatorId == indicatorId).FirstOrDefault().Unit;
+
+                if (result == null)
+                    return null;
+
+                if (indicatorUnit == "百分比")
+                {
+                    return Math.Round(result.Value, 2) * 100;
+                }
+                else
+                {
+                    return Math.Round(result.Value, 2);
                 }
             }
             else
@@ -586,7 +606,7 @@ namespace IMS2.ViewModels
                 else
                     return startTime.Year + "年下半年";
             }
-            else if((startTime.Month==1) && (endTime.Year==startTime.Year && startTime.Month + 11 == endTime.Month))
+            else if ((startTime.Month == 1) && (endTime.Year == startTime.Year && startTime.Month + 11 == endTime.Month))
             {
                 return startTime.Year + "年全年";
             }
@@ -650,7 +670,7 @@ namespace IMS2.ViewModels
         /// 是否超“标准值”。
         /// </summary>
         public bool? OutOfStandard;
-    }    
+    }
 
 }
 
