@@ -52,8 +52,6 @@ namespace IMS2.Controllers
                 ProvideDepartmentIndicatorView viewModel = new ProvideDepartmentIndicatorView();
 
                 //填充ViewModel
-                //List<DepartmentIndicatorCountView> departmentIndicatorCountView = new List<DepartmentIndicatorCountView>();
-                //var provideDepartment = await db.Departments.Include(pd=>pd.ProvidingIndicators).Where(d=>d.DepartmentId == providingDepartment).FirstOrDefaultAsync();
                 var provideDepartment = await db.Departments.FindAsync(providingDepartment);
                 if (provideDepartment != null)
                 {
@@ -83,7 +81,6 @@ namespace IMS2.Controllers
                             DepartmentIndicatorCountView view = new DepartmentIndicatorCountView();
                             view.Department = department;
                             //只显示
-                            //await CreateDepartmentIndicatorList(searchTime, indicator, department);   
                             view.IndicatorCount = await db.DepartmentIndicatorValues.Where(d => d.Indicator.ProvidingDepartmentId == provideDepartment.DepartmentId
                                                                    && d.DepartmentId == department.DepartmentId
                                                                    && d.Time.Year == searchTime.Value.Year
@@ -94,12 +91,9 @@ namespace IMS2.Controllers
                                                                    && d.Time.Month == searchTime.Value.Month
                                                                    && d.Value.HasValue).CountAsync();
                             view.SearchTime = searchTime;
-                            //如果该科室已经在departmentIndicatorCountView中，需合并，将项目总数相加
-                            //if(viewModel.DepartmentIndicatorCountViews.Any<DepartmentIndicatorCountView>(i=>i.Department))
                             viewModel.DepartmentIndicatorCountViews.Add(view);
                         }
                     }
-                    //viewModel.DepartmentIndicatorCountViews = departmentIndicatorCountView;
                     return View(viewModel);
                 }
             }
@@ -225,18 +219,11 @@ namespace IMS2.Controllers
             return View(viewModel);
         }
 
-        // GET: ProvidingDepartmentIndicator/Create
-        public ActionResult Create()
-        {
-            ViewBag.DepartmentId = new SelectList(db.Departments, "DepartmentId", "DepartmentName");
-            ViewBag.IndicatorStandardId = new SelectList(db.DepartmentIndicatorStandards, "DepartmentIndicatorStandardId", "Remarks");
-            ViewBag.IndicatorId = new SelectList(db.Indicators, "IndicatorId", "IndicatorName");
-            return View();
-        }
 
         // POST: ProvidingDepartmentIndicator/Create
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
+        [Authorize(Roles = "创建指标值, Administrators")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(DateTime? searchTime, Guid? departmentID)
@@ -350,31 +337,6 @@ namespace IMS2.Controllers
             return View(viewModel);
         }
 
-        // GET: ProvidingDepartmentIndicator/Delete/5
-        public async Task<ActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            DepartmentIndicatorValue departmentIndicatorValue = await db.DepartmentIndicatorValues.FindAsync(id);
-            if (departmentIndicatorValue == null)
-            {
-                return HttpNotFound();
-            }
-            return View(departmentIndicatorValue);
-        }
-
-        // POST: ProvidingDepartmentIndicator/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(Guid id)
-        {
-            DepartmentIndicatorValue departmentIndicatorValue = await db.DepartmentIndicatorValues.FindAsync(id);
-            db.DepartmentIndicatorValues.Remove(departmentIndicatorValue);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
 
         protected override void Dispose(bool disposing)
         {

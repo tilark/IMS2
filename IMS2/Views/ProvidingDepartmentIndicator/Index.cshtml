@@ -72,7 +72,7 @@
             </div>
         </section>
     }
-    if (User.IsInRole("修改全院指标值") || User.IsInRole("Administrators") || User.IsInRole("创建指标值"))
+    if (User.IsInRole("Administrators") || User.IsInRole("创建指标值"))
     {
         <section>
 
@@ -95,9 +95,11 @@
     }
     if (Model.DepartmentIndicatorCountViews != null)
     {
+        var i = 1;
 <table class="table table-hover">
 
     <tr>
+        <td>序号</td>
         <td>@Html.Label("科室")</td>
         <td>@Html.Label("指标完成度")</td>
         <td>时间</td>
@@ -107,6 +109,7 @@
     @foreach (var item in Model.DepartmentIndicatorCountViews)
             {
         <tr>
+            <td>#@i</td>
             <td>@item.Department.DepartmentName</td>
             <td>@item.HasValueCount / @item.IndicatorCount</td>
             <td>@Model.searchTime.GetDateTimeFormats('y')[0]</td>
@@ -116,6 +119,7 @@
                 @Html.ActionLink("详情", "Details", new { id = item.Department.DepartmentId, time = item.SearchTime, provideDepartment = Model.provideDepartment.DepartmentId }) |
             </td>
         </tr>
+        i++;
     }
 </table>
     }

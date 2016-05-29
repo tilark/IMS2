@@ -25,7 +25,11 @@
 
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("首页", "Index", "Home")</li>
-                    <li>@Html.ActionLink("编辑指标值", "Index", "ProvidingDepartmentIndicator")</li>
+                    @if (User.IsInRole("修改全院指标值") || User.IsInRole("修改科室指标值") || User.IsInRole("Administrators"))
+                    {
+                        <li>@Html.ActionLink("编辑指标值", "Index", "ProvidingDepartmentIndicator")</li>
+
+                    }
                     @if (User.IsInRole("修改全院指标值") || User.IsInRole("Administrators"))
                     {
                         <li>@Html.ActionLink("审核指标", "Index", "SearchDepartmentIndicator")</li>

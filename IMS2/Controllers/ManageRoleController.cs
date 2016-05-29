@@ -12,7 +12,7 @@ using IMS2.Models;
 
 namespace IMS2.Controllers
 {
-    [Authorize(Roles = "修改全院人员信息, Administrators")]
+    [Authorize(Roles = "Administrators")]
 
     public class ManageRoleController : Controller
     {

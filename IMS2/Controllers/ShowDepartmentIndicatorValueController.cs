@@ -15,7 +15,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace IMS2.Controllers
 {
-    [Authorize(Roles = "修改全院指标值,修改科室指标值, Administrators")]
+    [Authorize(Roles = "查看科室指标值,查看全院指标值, Administrators")]
 
     public class ShowDepartmentIndicatorValueController : Controller
     {
@@ -26,7 +26,7 @@ namespace IMS2.Controllers
 
         public async Task<ActionResult> Index(DateTime? searchTime, Guid? department)
         {
-            if(User.IsInRole("修改全院指标值") || User.IsInRole("Administrators"))
+            if(User.IsInRole("查看全院指标值") || User.IsInRole("Administrators"))
             {
                 ViewBag.department = new SelectList(db.Departments.OrderBy(d => d.Priority), "DepartmentId", "DepartmentName");
 
@@ -67,82 +67,58 @@ namespace IMS2.Controllers
         // POST: DepartmentUpdateIndicatorValue/Edit/5
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(Department department, IEnumerable<DepartmentIndicatorValue> departmentIndicatorValues, DateTime? searchTime)
-        {
-            var viewModel = new DepartmentIndicatorCountView();
-            if (department != null)
-            {
-                viewModel.Department = await db.Departments.FindAsync(department.DepartmentId);
-            }
-            viewModel.SearchTime = searchTime;
-            viewModel.DepartmentIndicatorValues = new List<DepartmentIndicatorValue>();
-            foreach (var departmentIdicatorValueQuery in departmentIndicatorValues)
-            {
-                //保存值
-                var departmentIdicatorValue = await db.DepartmentIndicatorValues
-                                             .FindAsync(departmentIdicatorValueQuery.DepartmentIndicatorValueId);
-                try
-                {
-                    if (departmentIdicatorValueQuery.Value != null &&
-                        departmentIdicatorValue.Value != departmentIdicatorValueQuery.Value)
-                    {
-                        departmentIdicatorValue.Value = departmentIdicatorValueQuery.Value;
-                        //database win
-                        bool saveFailed;
-                        do
-                        {
-                            saveFailed = false;
-                            try
-                            {
-                                await db.SaveChangesAsync();
-                            }
-                            catch (DbUpdateConcurrencyException ex)
-                            {
-                                saveFailed = true;
-                                // Update the values of the entity that failed to save from the store 
-                                ex.Entries.Single().Reload();
-                            }
-                        } while (saveFailed);
-                    }
-                }
-                catch (Exception)
-                {
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> Edit(Department department, IEnumerable<DepartmentIndicatorValue> departmentIndicatorValues, DateTime? searchTime)
+        //{
+        //    var viewModel = new DepartmentIndicatorCountView();
+        //    if (department != null)
+        //    {
+        //        viewModel.Department = await db.Departments.FindAsync(department.DepartmentId);
+        //    }
+        //    viewModel.SearchTime = searchTime;
+        //    viewModel.DepartmentIndicatorValues = new List<DepartmentIndicatorValue>();
+        //    foreach (var departmentIdicatorValueQuery in departmentIndicatorValues)
+        //    {
+        //        //保存值
+        //        var departmentIdicatorValue = await db.DepartmentIndicatorValues
+        //                                     .FindAsync(departmentIdicatorValueQuery.DepartmentIndicatorValueId);
+        //        try
+        //        {
+        //            if (departmentIdicatorValueQuery.Value != null &&
+        //                departmentIdicatorValue.Value != departmentIdicatorValueQuery.Value)
+        //            {
+        //                departmentIdicatorValue.Value = departmentIdicatorValueQuery.Value;
+        //                //database win
+        //                bool saveFailed;
+        //                do
+        //                {
+        //                    saveFailed = false;
+        //                    try
+        //                    {
+        //                        await db.SaveChangesAsync();
+        //                    }
+        //                    catch (DbUpdateConcurrencyException ex)
+        //                    {
+        //                        saveFailed = true;
+        //                        // Update the values of the entity that failed to save from the store 
+        //                        ex.Entries.Single().Reload();
+        //                    }
+        //                } while (saveFailed);
+        //            }
+        //        }
+        //        catch (Exception)
+        //        {
 
-                    ModelState.AddModelError("", String.Format("无法更新指标{0}的值！", departmentIdicatorValue.Indicator.IndicatorName));
-                }
-                //}
-                viewModel.DepartmentIndicatorValues.Add(departmentIdicatorValue);
-            }
-            return RedirectToAction("Index", new { searchTime = searchTime, departmentID = department.DepartmentId });
-        }
+        //            ModelState.AddModelError("", String.Format("无法更新指标{0}的值！", departmentIdicatorValue.Indicator.IndicatorName));
+        //        }
+        //        //}
+        //        viewModel.DepartmentIndicatorValues.Add(departmentIdicatorValue);
+        //    }
+        //    return RedirectToAction("Index", new { searchTime = searchTime, departmentID = department.DepartmentId });
+        //}
 
-        // GET: DepartmentUpdateIndicatorValue/Delete/5
-        public async Task<ActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            DepartmentIndicatorValue departmentIndicatorValue = await db.DepartmentIndicatorValues.FindAsync(id);
-            if (departmentIndicatorValue == null)
-            {
-                return HttpNotFound();
-            }
-            return View(departmentIndicatorValue);
-        }
-
-        // POST: DepartmentUpdateIndicatorValue/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(Guid id)
-        {
-            DepartmentIndicatorValue departmentIndicatorValue = await db.DepartmentIndicatorValues.FindAsync(id);
-            db.DepartmentIndicatorValues.Remove(departmentIndicatorValue);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
+       
 
         protected override void Dispose(bool disposing)
         {

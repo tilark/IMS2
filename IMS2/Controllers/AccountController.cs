@@ -151,7 +151,8 @@ namespace IMS2.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.EmployeeNo, Email = model.Email };
+                var email = model.EmployeeNo + "hims.com";
+                var user = new ApplicationUser { UserName = model.EmployeeNo, Email = email };
                 var userInfo = new UserInfo { UserInfoID = System.Guid.NewGuid(), UserName = model.UserName, WorkPhone = model.WorkPhone, EmployeeNo = model.EmployeeNo };
                 using (ApplicationDbContext context = new ApplicationDbContext())
                 {

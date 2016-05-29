@@ -10,10 +10,13 @@ using System.Web.Mvc;
 using IMS2.Models;
 using IMS2.ViewModels;
 using System.Data.Entity.Infrastructure;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace IMS2.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "查看科室报表, 查看全院报表 ,Administrators")]
+
     public class ReportersController : Controller
     {
         private ImsDbContext db = new ImsDbContext();
@@ -79,9 +82,36 @@ namespace IMS2.Controllers
         }
 
         #region AssignedDepartmentCategory
+        private async Task<List<DepartmentCategory>> GetAllDepartmentCategories()
+        {
+            var allDepartmentCategories = new List<DepartmentCategory>();
+            //按权限区分出当前用户管理所在的科室类别
+            //应该选择提供科室名列表，根据成员角色中的科室选择，如果权限为“查看全院报表”，可获取全部科室信息
+
+            if (User.IsInRole("查看全院报表") || User.IsInRole("Administrators"))
+            {
+                allDepartmentCategories = await db.DepartmentCategories.OrderBy(d => d.Priority).ToListAsync();
+            }
+            else
+            {
+                var selectedDepartmentID = new List<Guid>();
+                using (ApplicationDbContext context = new ApplicationDbContext())
+                {
+                    using (UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context)))
+                    {
+                        var user = await userManager.FindByIdAsync(User.Identity.GetUserId());
+                        selectedDepartmentID = user.UserInfo.UserDepartments.Select(u => u.UserDepartmentId).ToList();
+                    }
+                }
+                //根据用户的科室ID，找到相对应的DepartmentCategory
+                allDepartmentCategories = await db.Departments.Where(d => selectedDepartmentID.Contains(d.DepartmentId)).Select(d => d.DepartmentCategory).Distinct().ToListAsync();
+            }
+            return allDepartmentCategories;
+        }
         private async Task InitialAssignedDepartmentCategoryData()
         {
-            var allDepartmentCategories = await db.DepartmentCategories.OrderBy(d => d.Priority).ToListAsync();
+            var allDepartmentCategories = await GetAllDepartmentCategories();
+
             var viewModel = new List<AssignedDepartmentCategoryData>();
 
             foreach (var departmentCategory in allDepartmentCategories)
@@ -98,7 +128,9 @@ namespace IMS2.Controllers
         private async Task PopulateAssignedDepartmentCategoryData(string[] selectedDepartmentCategory)
         {
             var color = BackGroundColorEnum.BurlyWood;
-            var allDepartmentCategories = await db.DepartmentCategories.OrderBy(d => d.Priority).ToListAsync();
+            //var allDepartmentCategories = await db.DepartmentCategories.OrderBy(d => d.Priority).ToListAsync();
+            var allDepartmentCategories = await GetAllDepartmentCategories();
+
             var viewModel = new List<AssignedDepartmentCategoryData>();
             var selectedCategory = new HashSet<Guid>();
             foreach (var category in selectedDepartmentCategory)

@@ -74,10 +74,6 @@ namespace IMS2.Models
         [Display(Name = "工作电话")]
 
         public string WorkPhone { get; set; }
-        [Required]
-        [EmailAddress]
-        [Display(Name = "电子邮件")]
-        public string Email { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "{0} 必须至少包含 {2} 个字符。", MinimumLength = 6)]

@@ -10,6 +10,7 @@ using IMS2.Models;
 using IMS2.ViewModels;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace IMS2.Controllers
 {
@@ -83,9 +84,10 @@ namespace IMS2.Controllers
         {
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
             UserInfo userInfo = null;
+            var roleName = new List<string>();
             using (ApplicationDbContext context = new ApplicationDbContext())
             {
-                userInfo = await context.UserInfos.FindAsync(user.UserInfoID);
+              userInfo = await context.UserInfos.FindAsync(user.UserInfoID);
             }
             if(userInfo == null)
             {
@@ -98,6 +100,7 @@ namespace IMS2.Controllers
                 EmployeeNo = userInfo.EmployeeNo,
                 WorkPhone = userInfo.WorkPhone,
                 HomePhone = userInfo.HomePhone
+                
             };
             PopulateAssignedDepartmentData(userInfo);
             return View(viewModel);

@@ -222,14 +222,6 @@ namespace IMS2.Controllers
             return View(viewModel);
         }
 
-        // GET: AutoGetDataSource/Create
-        public ActionResult Create()
-        {
-            ViewBag.DepartmentId = new SelectList(db.Departments, "DepartmentId", "DepartmentName");
-            ViewBag.IndicatorStandardId = new SelectList(db.DepartmentIndicatorStandards, "DepartmentIndicatorStandardId", "Remarks");
-            ViewBag.IndicatorId = new SelectList(db.Indicators, "IndicatorId", "IndicatorName");
-            return View();
-        }
 
         // POST: AutoGetDataSource/Create
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
@@ -368,31 +360,6 @@ namespace IMS2.Controllers
             return View(viewModel);
         }
 
-        // GET: AutoGetDataSource/Delete/5
-        public async Task<ActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            DepartmentIndicatorValue departmentIndicatorValue = await db.DepartmentIndicatorValues.FindAsync(id);
-            if (departmentIndicatorValue == null)
-            {
-                return HttpNotFound();
-            }
-            return View(departmentIndicatorValue);
-        }
-
-        // POST: AutoGetDataSource/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(Guid id)
-        {
-            DepartmentIndicatorValue departmentIndicatorValue = await db.DepartmentIndicatorValues.FindAsync(id);
-            db.DepartmentIndicatorValues.Remove(departmentIndicatorValue);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
 
         protected override void Dispose(bool disposing)
         {

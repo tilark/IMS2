@@ -15,7 +15,7 @@
                                 }
                             @:<td @(Html.Raw(indicatorGroup.Assigned ? "style=\"background-color:greenyellow\"" : ""))>
                                 <input type="checkbox" name="selectedIndicatorGroup" value="@indicatorGroup.IndicatorGroupId"
-                                       @(Html.Raw(indicatorGroup.Assigned ? "checked = \"checked\"" : ""))  />
+                                       @(Html.Raw(indicatorGroup.Assigned ? "checked = \"checked\"" : ""))  @(Html.Raw(!indicatorGroup.Assigned ? "disabled = \"disabled\"" : "")) />
                                 @: @indicatorGroup.IndicatorGroupName
                                 @:</td>
                             }

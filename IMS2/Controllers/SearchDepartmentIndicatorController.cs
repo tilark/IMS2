@@ -13,7 +13,7 @@ using IMS2.ViewModels;
 using PagedList;
 namespace IMS2.Controllers
 {
-    [Authorize(Roles = "修改全院指标值, Administrators")]
+    [Authorize(Roles = "修改全院指标值, 审核全院指标值, Administrators")]
 
     public class SearchDepartmentIndicatorController : Controller
     {
@@ -38,6 +38,8 @@ namespace IMS2.Controllers
             int pageNumber = (page ?? 1);
             return View(await departmentIndicatorValues.OrderBy(d => d.Indicator.Priority).ToPagedListAsync(pageNumber, pageSize));
         }
+        [Authorize(Roles = "审核全院指标值, Administrators")]
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Index(List<DepartmentIndicatorValue> departmentIndicatorValue, int? page, DateTime? startTime, DateTime? endTime, Guid? department)
@@ -101,35 +103,6 @@ namespace IMS2.Controllers
             return View(departmentIndicatorValue);
         }
 
-        // GET: SearchDepartmentIndicator/Create
-        public ActionResult Create()
-        {
-            ViewBag.DepartmentId = new SelectList(db.Departments, "DepartmentId", "DepartmentName");
-            ViewBag.IndicatorStandardId = new SelectList(db.DepartmentIndicatorStandards, "DepartmentIndicatorStandardId", "Range");
-            ViewBag.IndicatorId = new SelectList(db.Indicators, "IndicatorId", "IndicatorName");
-            return View();
-        }
-
-        // POST: SearchDepartmentIndicator/Create
-        // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
-        // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "DepartmentIndicatorValueId,DepartmentId,IndicatorId,Time,Value,IndicatorStandardId,IsLocked,UpdateTime,TimeStamp")] DepartmentIndicatorValue departmentIndicatorValue)
-        {
-            if (ModelState.IsValid)
-            {
-                departmentIndicatorValue.DepartmentIndicatorValueId = Guid.NewGuid();
-                db.DepartmentIndicatorValues.Add(departmentIndicatorValue);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-
-            ViewBag.DepartmentId = new SelectList(db.Departments, "DepartmentId", "DepartmentName", departmentIndicatorValue.DepartmentId);
-            ViewBag.IndicatorStandardId = new SelectList(db.DepartmentIndicatorStandards, "DepartmentIndicatorStandardId", "Range", departmentIndicatorValue.IndicatorStandardId);
-            ViewBag.IndicatorId = new SelectList(db.Indicators, "IndicatorId", "IndicatorName", departmentIndicatorValue.IndicatorId);
-            return View(departmentIndicatorValue);
-        }
 
         // GET: SearchDepartmentIndicator/Edit/5
         public async Task<ActionResult> Edit(Guid? id)

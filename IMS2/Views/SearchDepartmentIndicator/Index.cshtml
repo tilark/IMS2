@@ -6,7 +6,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>编辑指标值</h2>
+<h2>审核指标值</h2>
 
 @using (Html.BeginForm("Index", "SearchDepartmentIndicator", FormMethod.Get))
 {
@@ -50,7 +50,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
        
         <div class="form-group">
-@if (Model.PageCount > 0)
+@if (Model.PageCount > 0 && (User.IsInRole("Administrators") || User.IsInRole("审核全院指标值")))
 {
             <div class="col-md-offset-10 col-md-2">
                 <input type="submit" value="审核确定" class="btn btn-primary" />
@@ -67,6 +67,7 @@
             @if (Model.PageCount > 0)
             {
             <tr>
+                <th>序号</th>
                 <th>
                     科室
                 </th>
@@ -96,6 +97,7 @@
             @foreach (var item in Model)
             {
                 <tr>
+                    <td>#@(i+1)</td>
                     <td>
                         @Html.Hidden(String.Format("departmentIndicatorValue[{0}].DepartmentIndicatorValueId", i), item.DepartmentIndicatorValueId)
                         @Html.DisplayFor(modelItem => item.Department.DepartmentName)
@@ -111,8 +113,15 @@
                         @Html.DisplayFor(modelItem => item.Value)
                     </td>
                     <td>
-                        @*@Html.DisplayFor(modelItem => item.IsLocked)*@
-                        @Html.CheckBox(String.Format("departmentIndicatorValue[{0}].IsLocked", i), item.IsLocked ? true : false)
+                        @if (User.IsInRole("Administrators") || User.IsInRole("审核全院指标值"))
+                        {
+                            @Html.CheckBox(String.Format("departmentIndicatorValue[{0}].IsLocked", i), item.IsLocked ? true : false)
+
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.IsLocked)
+                        }
                     </td>
 
                     <td>

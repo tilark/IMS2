@@ -34,7 +34,7 @@ namespace IMS2.Controllers
              : "";
             var viewModel = new List<ManageUserViewModel>();
             var userInfos = await db.UserInfos.Include(u => u.UserDepartments).ToListAsync();
-            var users = await db.Users.Include(c => c.UserInfo).ToListAsync();
+            var users = await db.Users.Include(c => c.UserInfo).Where(u => u.UserName != "Administrators").ToListAsync();
 
             foreach (var user in users)
             {
@@ -196,7 +196,8 @@ namespace IMS2.Controllers
             {
                 using (UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db)))
                 {
-                    var user = new ApplicationUser { UserName = model.EmployeeNo, Email = model.Email };
+                    var email = model.EmployeeNo + "@hims.com";
+                    var user = new ApplicationUser { UserName = model.EmployeeNo, Email = email };
                     var userInfo = new UserInfo { UserInfoID = System.Guid.NewGuid(), UserName = model.UserName, WorkPhone = model.WorkPhone, EmployeeNo = model.EmployeeNo };
                     userInfo.UserDepartments = new List<UserDepartment>();
                     await AddUserDepartments(selectedDepartment, userInfo);
