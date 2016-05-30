@@ -12,7 +12,7 @@ using IMS2.ViewModels;
 using System.Data.Entity.Infrastructure;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-
+using Newtonsoft.Json;
 namespace IMS2.Controllers
 {
     [Authorize(Roles = "查看科室指标值,查看全院指标值, Administrators")]
@@ -21,6 +21,82 @@ namespace IMS2.Controllers
     {
         private ImsDbContext db = new ImsDbContext();
 
+        public async Task<ActionResult> IndexAjax()
+        {
+            await InitialDepartment();
+            return View();
+        }
+
+        private async Task InitialDepartment()
+        {
+            if (User.IsInRole("查看全院指标值") || User.IsInRole("Administrators"))
+            {
+                ViewBag.department = new SelectList(db.Departments.OrderBy(d => d.Priority), "DepartmentId", "DepartmentName");
+
+            }
+            else
+            {
+                using (ApplicationDbContext context = new ApplicationDbContext())
+                {
+                    using (UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context)))
+                    {
+                        var user = await userManager.FindByIdAsync(User.Identity.GetUserId());
+                        ViewBag.department = new SelectList(user.UserInfo.UserDepartments, "UserDepartmentId", "UserDepartmentName");
+                    }
+
+                }
+            }
+        }
+        public async Task<ActionResult> IndexJson()
+        {
+            await InitialDepartment();
+            return View();
+        }
+        public async Task<ActionResult> ValueSearchJson(DateTime? searchTime, Guid? department)
+        {
+            //var view =  JsonConvert.DeserializeObject<DepartmentIndicatorValueView>(json);
+            if (searchTime != null && department != null)
+            {
+                var departments = await db.Departments.FindAsync(department.Value);
+                if (departments != null)
+                {
+                    DepartmentIndicatorCountView viewModel = new DepartmentIndicatorCountView();
+                    viewModel.Department = departments;
+                    viewModel.SearchTime = searchTime;
+                    var departmentIndicatorValues = await db.DepartmentIndicatorValues.Where(d => d.DepartmentId == departments.DepartmentId
+                                                    && d.Time.Year == searchTime.Value.Year
+                                                    && d.Time.Month == searchTime.Value.Month).OrderBy(d => d.Indicator.Priority).ToListAsync();
+                    viewModel.DepartmentIndicatorValues = departmentIndicatorValues;
+                    //return View(viewModel);
+                    return PartialView("_valueView", viewModel);
+                }
+            }
+            await InitialDepartment();
+
+            return View();
+        }
+        public async Task<ActionResult> ValueSearch(DateTime? searchTime, Guid? department)
+        {
+            //应该选择提供科室名列表，根据成员角色中的科室选择，如果权限为“创建指标值”，可获取全部科室信息
+            if (searchTime != null && department != null)
+            {
+                var departments = await db.Departments.FindAsync(department.Value);
+                if (departments != null)
+                {
+                    DepartmentIndicatorCountView viewModel = new DepartmentIndicatorCountView();
+                    viewModel.Department = departments;
+                    viewModel.SearchTime = searchTime;
+                    var departmentIndicatorValues = await db.DepartmentIndicatorValues.Where(d => d.DepartmentId == departments.DepartmentId
+                                                    && d.Time.Year == searchTime.Value.Year
+                                                    && d.Time.Month == searchTime.Value.Month).OrderBy(d => d.Indicator.Priority).ToListAsync();
+                    viewModel.DepartmentIndicatorValues = departmentIndicatorValues;
+                    //return View(viewModel);
+                    return PartialView("_valueView", viewModel);
+                }
+            }
+            await InitialDepartment();
+            return View();
+        }
         // GET: DepartmentUpdateIndicatorValue
         [Route("Index/{searchTime}/{providingDepartment}")]
 

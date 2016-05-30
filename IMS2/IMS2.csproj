@@ -273,6 +273,7 @@
     <Compile Include="ViewModels\ReporterView.cs" />
     <Compile Include="ViewModels\ResetPasswordView.cs" />
     <Compile Include="ViewModels\RoleView.cs" />
+    <Compile Include="ViewModels\TimeDepartmentIDView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-datetimepicker.css" />
@@ -297,6 +298,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="Properties\PublishProfiles\Ims2R.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Images\ajax-loader.gif" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -305,6 +307,8 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -434,6 +438,9 @@
     <Content Include="Views\Reporters\_IndicatorGroupPartial.cshtml" />
     <Content Include="Views\Reporters\TestDateTimePicker.cshtml" />
     <Content Include="Views\Reporters\ReportView.cshtml" />
+    <Content Include="Views\ShowDepartmentIndicatorValue\IndexAjax.cshtml" />
+    <Content Include="Views\ShowDepartmentIndicatorValue\_valueView.cshtml" />
+    <Content Include="Views\ShowDepartmentIndicatorValue\IndexJson.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
