@@ -20,9 +20,9 @@ namespace IMS2
             //InitialItemData initialItemData = new InitialItemData();
             //initialItemData.InitialBaseData();
 
-            //RoleAction roleAction = new RoleAction();
+            RoleAction roleAction = new RoleAction();
             //roleAction.InitialRoleName();
-            //roleAction.CreateAdmin();
+            roleAction.CreateAdmin();
         }
     }
 }

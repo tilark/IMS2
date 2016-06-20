@@ -15,7 +15,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Newtonsoft.Json;
 namespace IMS2.Controllers
 {
-    [Authorize(Roles = "查看科室指标值,查看全院指标值, Administrators")]
+    //[Authorize(Roles = "查看科室指标值,查看全院指标值, Administrators")]
 
     public class ShowDepartmentIndicatorValueController : Controller
     {
@@ -52,7 +52,12 @@ namespace IMS2.Controllers
             await InitialDepartment();
             return View();
         }
-        public async Task<ActionResult> ValueSearchJson(DateTime? searchTime, Guid? department)
+        public async Task<ActionResult> IndexJsonToServer()
+        {
+            await InitialDepartment();
+            return View();
+        }
+        public async Task<ActionResult> ValueSearchJson(DateTime? searchTime, Guid? department, string[] arraryTest)
         {
             //var view =  JsonConvert.DeserializeObject<DepartmentIndicatorValueView>(json);
             if (searchTime != null && department != null)
@@ -74,6 +79,45 @@ namespace IMS2.Controllers
             await InitialDepartment();
 
             return View();
+        }
+ 
+        public async Task<ActionResult> JsonToServer(DateTime? searchTime, Guid? department)
+        {
+            if (searchTime != null && department != null)
+            {
+                var departments = await db.Departments.FindAsync(department.Value);
+                if (departments != null)
+                {
+                    DepartmentIndicatorCountView viewModel = new DepartmentIndicatorCountView();
+                    viewModel.Department = departments;
+                    viewModel.SearchTime = searchTime;
+                    var departmentIndicatorValues = await db.DepartmentIndicatorValues.Where(d => d.DepartmentId == departments.DepartmentId
+                                                    && d.Time.Year == searchTime.Value.Year
+                                                    && d.Time.Month == searchTime.Value.Month).OrderBy(d => d.Indicator.Priority).ToListAsync();
+                    viewModel.DepartmentIndicatorValues = departmentIndicatorValues;
+                    var mustacheViewModel = new List<MustacheTestView>();
+                    foreach(var viewItem in departmentIndicatorValues)
+                    {
+                        var view = new MustacheTestView
+                        {
+                            IndicatorName = viewItem.Indicator.IndicatorName,
+                            Value = viewItem.Value,
+                            IsLocked = viewItem.IsLocked,
+                            DurationName = viewItem.Indicator.Duration.DurationName,
+                            Time = viewItem.Time
+                        };
+                        mustacheViewModel.Add(view);
+                    }
+                    //return PartialView("_valueView", viewModel);
+                    //return Json(viewModel, JsonRequestBehavior.AllowGet);
+                    return Json(mustacheViewModel, JsonRequestBehavior.AllowGet);
+
+                }
+            }
+            await InitialDepartment();
+
+            return View();
+
         }
         public async Task<ActionResult> ValueSearch(DateTime? searchTime, Guid? department)
         {

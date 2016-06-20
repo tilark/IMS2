@@ -1,0 +1,33 @@
+﻿@model  IEnumerable<IMS2.ViewModels.SearchDepartmentIndicatorView>
+<div id="searchIndicators">
+    <table class="table table-striped table-hover">
+
+        <tr class="success">
+            <td>序号</td>
+            <td>@Html.Label("科室")</td>
+            <td>@Html.Label("指标完成度")</td>
+            <td>时间</td>
+
+            <td></td>
+        </tr>
+        @{var i = 1; }
+
+        @foreach (var item in Model)
+            {
+            <tr>
+                <td>#@i</td>
+                <td>@item.DepartmentName</td>
+                <td>@item.HasValueCount / @item.IndicatorCount</td>
+                <td>@ViewBag.SearchTime.GetDateTimeFormats('y')[0]</td>
+                <td>
+
+                    @Html.ActionLink("编辑", "Edit", new { id = item.DepartmentID, time = ViewBag.SearchTime, provideDepartment = ViewBag.ProvideDepartmentID }) |
+                    @*@Html.ActionLink("详情", "Details", new { id = item.DepartmentID, time = ViewBag.SearchTime, provideDepartment = ViewBag.ProvideDepartmentID }) |*@
+                    @Html.RouteLink("详情", new { Controller = "ProvidingDepartmentIndicator", Action = "Details", id = item.DepartmentID, time = ViewBag.SearchTime.GetDateTimeFormats('y')[0], provideDepartment = ViewBag.ProvideDepartmentID })
+                    
+                </td>
+            </tr>
+            i++;
+        }
+    </table>
+</div>

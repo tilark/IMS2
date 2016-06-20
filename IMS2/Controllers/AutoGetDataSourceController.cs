@@ -16,6 +16,8 @@ using ImsAutoLib;
 namespace IMS2.Controllers
 {
     [Authorize(Roles = "修改全院指标值, Administrators")]
+    [RoutePrefix("AutoGetDataSource")]
+    [Route("{action = index}/{id?}")]
     public class AutoGetDataSourceController : Controller
     {
         private ImsDbContext db = new ImsDbContext();
@@ -195,7 +197,7 @@ namespace IMS2.Controllers
             return item;
         }
         // GET: AutoGetDataSource/Details/5
-        [Route("Details/{id}/{time}/{dataSourceSystem}")]
+        [Route("Details/{id}/{time}/{dataSourceSystemID}")]
 
         public async Task<ActionResult> Details(Guid? id, DateTime? time, Guid? dataSourceSystemID)
         {
@@ -275,7 +277,7 @@ namespace IMS2.Controllers
         }
 
         // GET: AutoGetDataSource/Edit/5
-        [Route("Details/{id}/{time}/{dataSourceSystem}")]
+        [Route("Edit/{id}/{time}/{dataSourceSystemIDs}")]
 
         public async Task<ActionResult> Edit(Guid? id, DateTime? time, Guid? dataSourceSystemID)
         {

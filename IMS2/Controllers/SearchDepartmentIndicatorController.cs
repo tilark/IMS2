@@ -14,13 +14,14 @@ using PagedList;
 namespace IMS2.Controllers
 {
     [Authorize(Roles = "修改全院指标值, 审核全院指标值, Administrators")]
-
+    [RoutePrefix("SearchDepartmentIndicator")]
+    [Route("{action}/{id?}")]
     public class SearchDepartmentIndicatorController : Controller
     {
         private ImsDbContext db = new ImsDbContext();
 
         // GET: SearchDepartmentIndicator
-        [Route("{startTime}/{endTime}/{department}/{page}")]
+        [Route("Index/{startTime}/{endTime}/{department}/{page}")]
         public async Task<ActionResult> Index(DateTime? startTime, DateTime? endTime, Guid? department, int? page)
         {
             ViewBag.startTime = startTime;

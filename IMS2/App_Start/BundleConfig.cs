@@ -23,8 +23,9 @@ namespace IMS2
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
             bundles.Add(new ScriptBundle("~/bundles/datetimepicker").Include(
-                   "~/Scripts/bootstrap-datetimepicker.js",
-                   "~/Scripts/moment-with-locales.js"
+                   "~/Scripts/moment-with-locales.js",
+
+                   "~/Scripts/bootstrap-datetimepicker.js"
                 ));
             bundles.Add(new StyleBundle("~/Content/datetimepickerCss").Include(
                 "~/Content/bootstrap-datetimepicker.css"

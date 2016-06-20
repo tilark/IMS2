@@ -1,0 +1,96 @@
+﻿
+@{
+    ViewBag.Title = "IndexJsonToServer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+@section Styles{
+    <link href="~/Content/themes/base/datepicker.css" rel="stylesheet" />
+@*@Styles.Render("~/Content/datetimepickerCss")*@
+}
+<h2>IndexJsonToServer</h2>
+<fieldset>
+
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @*<form id="valueSearch" method="get" action="@Url.Action("JsonToServer", "ShowDepartmentIndicatorValue")">*@
+        <div class="dl-horizontal">
+            <div class="form-group">
+                @Html.Label("选择时间", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <input name="searchTime" id="searchTimeID" type="month" class="form-control" data-val="true" data-val-date="字段 '选择时间' 是必须的"
+                           data-val-required="选择时间 字段是必需的。" />
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("科室", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DropDownList("department", null, htmlAttributes: new { @class = "form-control", id = "departmentID" })
+                </div>
+                <div class="col-md-6">
+                    <input type="submit" value="查询" class="btn btn-info" id="testSubmit" src="@Url.Action("JsonToServer", "ShowDepartmentIndicatorValue")" />
+                    <img id="ajax-loader" src="@Url.Content("~/Images/ajax-loader.gif")" style="display:none" />
+                </div>
+            </div>
+
+
+        </div>
+    @*</form>*@
+</fieldset>
+<section id="calendar">
+    <div class="page-header">
+        <h1>日期选择器</h1>
+    </div>
+    <p>Date: <input type="text" id="datepicker"></p>
+    </section>
+    <p>
+        <br />
+    </p>
+    <div id="showresults"></div>
+<script id="resultTemplate" type="text/html">
+    <table class="table table-hover">
+        <tr>
+            <td>序号</td>
+            <th>指标</th>
+            <th>值</th>
+            <th>时间</th>
+            <th>审核</th>
+            <th>跨度</th>
+        </tr>
+        {{#mustacheTest}}
+        <tr>
+            <td></td>
+            <td>{{IndicatorName}}</td>
+            <td>
+                {{Value}}
+            </td>
+            <td>
+                {{Time}}
+            </td>
+          
+            @*审核状态*@
+            <td>
+                {{IsLocked}}
+            </td>
+            <td>
+               {{DurationName}}
+            </td>
+            @*<td>
+                @Html.DisplayFor(model => item.Indicator.Duration.DurationName)
+            </td>*@
+        </tr>
+        {{/mustacheTest}}
+            
+    </table>
+</script>
+    @section Scripts{
+        @Scripts.Render("~/bundles/jqueryval")
+@*@Scripts.Render("~/bundles/datetimepicker")*@
+
+        <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+        <script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+        <script src="~/Scripts/mustache.js"></script>
+        <script src="~/Scripts/datepicker-zh-CN.js"></script>
+        <script src="~/Scripts/ImsAjax.js"></script>
+
+    }

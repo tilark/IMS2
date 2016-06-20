@@ -67,10 +67,10 @@
     </div>
 
     <p class="col-md-offset-1 col-md-11">
-        @{
+        @*@{
             var providingDepartmentID = ViewBag.provideDepartment;
-        }
-        @Html.ActionLink("编辑", "Edit", new { id = Model.Department.DepartmentId, time = Model.SearchTime, provideDepartment = providingDepartmentID }) |
-        @Html.ActionLink("返回列表", "Index", new { searchTime = Model.SearchTime, providingDepartment = providingDepartmentID })
+        }*@
+        @Html.ActionLink("编辑", "Edit", new { id = Model.Department.DepartmentId, time = Model.SearchTime, provideDepartment = ViewBag.provideDepartment }) |
+        @Html.ActionLink("返回列表", "IndexAjax", new { searchTime = Model.SearchTime, providingDepartmentID = ViewBag.provideDepartment })
     </p>
 </section>

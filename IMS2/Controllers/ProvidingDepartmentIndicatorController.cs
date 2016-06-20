@@ -16,13 +16,152 @@ using Microsoft.AspNet.Identity.EntityFramework;
 namespace IMS2.Controllers
 {
     [Authorize(Roles = "修改全院指标值,修改科室指标值, Administrators")]
-
+    [RoutePrefix("providingdepartmentindicator")]
     public class ProvidingDepartmentIndicatorController : Controller
     {
         private ImsDbContext db = new ImsDbContext();
+        [Route("")]
+        [Route("indexajax")]
+        public async Task<ActionResult> IndexAjax()
+        {
+            if (User.IsInRole("修改全院指标值") || User.IsInRole("Administrators"))
+            {
+                ViewBag.providingDepartmentID = new SelectList(db.Indicators.Select(i => i.ProvidingDepartment).Distinct().OrderBy(d => d.Priority), "DepartmentId", "DepartmentName");
+            }
+            else
+            {
+                //应该选择提供科室名列表，根据成员角色中的科室选择，如果权限为“创建指标值”，可获取全部科室信息
+                using (ApplicationDbContext context = new ApplicationDbContext())
+                {
+                    using (UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context)))
+                    {
+                        var user = await userManager.FindByIdAsync(User.Identity.GetUserId());
+                        ViewBag.providingDepartmentID = new SelectList(user.UserInfo.UserDepartments, "UserDepartmentId", "UserDepartmentName");
+                    }
 
+                }
+            }
+            return View();
+
+        }
+        [Route("IndexAjax/{searchTime:datetime}/{providingDepartmentID:guid}")]
+        public async Task<ActionResult> IndexAjax(DateTime searchTime, Guid providingDepartmentID)
+        {
+            var provideDepartment = await db.Departments.FindAsync(providingDepartmentID);
+            var providingDepartmentView = new ProvidingDepartmentView();
+
+            if (provideDepartment != null)
+            {
+                providingDepartmentView.SearchTime = searchTime;
+                providingDepartmentView.ProvidingDepartmentID = providingDepartmentID;
+                providingDepartmentView.ProvidingDepartmentName = provideDepartment.DepartmentName;
+                providingDepartmentView.SearchDepartmentIndicatorViews = await GetSearchDepartmentIndicatorViewList(searchTime, providingDepartmentID);
+                providingDepartmentView.IndicatorDurationViews = new List<IndicatorDurationView>();
+                foreach (var name in provideDepartment.ProvidingIndicators)
+                {
+                    var item = new IndicatorDurationView
+                    {
+                        IndicatorName = name.IndicatorName,
+                        DurationName = name.Duration.DurationName
+                    };
+                    providingDepartmentView.IndicatorDurationViews.Add(item);
+                }
+            }
+            return View(providingDepartmentView);
+
+        }
+
+
+        public async Task<ActionResult> SearchIndicator(DateTime searchTime, Guid providingDepartmentID)
+        {
+            if ( !providingDepartmentID.Equals(Guid.Empty))
+            {
+
+                ViewBag.ProvideDepartmentID = providingDepartmentID;
+                ViewBag.SearchTime = searchTime;
+                var viewModel = await GetSearchDepartmentIndicatorViewList(searchTime, providingDepartmentID);
+                //填充ViewModel
+                return PartialView("_searchIndicator", viewModel);
+            }
+            return PartialView("_searchIndicator", null);
+        }
+
+        private async Task<List<SearchDepartmentIndicatorView>> GetSearchDepartmentIndicatorViewList(DateTime? searchTime, Guid providingDepartmentID)
+        {
+            var viewModel = new List<SearchDepartmentIndicatorView>();
+
+            var provideDepartment = await db.Departments.FindAsync(providingDepartmentID);
+            if (provideDepartment != null)
+            {
+                //数据来源科室负责的指标，根据指标与指定时间是否在科室指标值表（简称值表）中，如果不在，依次选择指标，追寻到科室类别项目组中的各个科室，再将该指标、科室、时间写入值表中。
+                foreach (var indicator in provideDepartment.ProvidingIndicators)
+                {
+
+                    var departmentCollection = indicator.IndicatorGroupMapIndicators.Select(i => i.IndicatorGroup)
+                        .SelectMany(i => i.DepartmentCategoryMapIndicatorGroups)
+                        .Select(d => d.DepartmentCategory)
+                        .SelectMany(d => d.Departments).Distinct();
+                    foreach (var department in departmentCollection)
+                    {
+                        var view = new SearchDepartmentIndicatorView();
+
+                        //需查看这个department是否在viewModel.DepartmentIndicatorCountViews中
+                        var query = viewModel.Where(d => d.DepartmentID == department.DepartmentId).FirstOrDefault();
+                        if (query != null)
+                        {
+                            continue;
+                        }
+                        view.DepartmentName = department.DepartmentName;
+                        view.DepartmentID = department.DepartmentId;
+                        //只显示
+                        view.IndicatorCount = await db.DepartmentIndicatorValues.Where(d => d.Indicator.ProvidingDepartmentId == provideDepartment.DepartmentId
+                                                               && d.DepartmentId == department.DepartmentId
+                                                               && d.Time.Year == searchTime.Value.Year
+                                                              && d.Time.Month == searchTime.Value.Month).CountAsync();
+                        view.HasValueCount = await db.DepartmentIndicatorValues.Where(d => d.Indicator.ProvidingDepartmentId == provideDepartment.DepartmentId
+                                                                && d.DepartmentId == department.DepartmentId
+                                                                && d.Time.Year == searchTime.Value.Year
+                                                               && d.Time.Month == searchTime.Value.Month
+                                                               && d.Value.HasValue).CountAsync();
+                        viewModel.Add(view);
+                    }
+                }
+            }
+            return viewModel;
+        }
+        public ActionResult Message()
+        {
+            ViewBag.Message = "This is a partial view";
+            return PartialView();
+        }
+
+        public async Task<ActionResult> IndicatorDetails(string providingDepartmentID)
+        {
+            if (String.IsNullOrWhiteSpace(providingDepartmentID))
+            {
+                ViewBag.ProvidingDepartmentName = "空";
+                ViewBag.IndicatorDetails = new List<string>();
+                return PartialView("_indicatorDetails");
+
+            }
+            try
+            {
+                Guid provideDepartmentID;
+                if (Guid.TryParse(providingDepartmentID, out provideDepartmentID))
+                {
+                    var provideDepartment = await db.Departments.FindAsync(provideDepartmentID);
+                    ViewBag.ProvidingDepartmentName = provideDepartment.DepartmentName;
+                    ViewBag.IndicatorDetails = provideDepartment.ProvidingIndicators.Select(i => i.IndicatorName).ToList();
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return PartialView("_indicatorDetails");
+
+        }
         // GET: ProvidingDepartmentIndicator
-        [Route("Index/{searchTime}/{providingDepartment}")]
+        //[Route("Index/{searchTime}/{providingDepartment}")]
 
         public async Task<ActionResult> Index(DateTime? searchTime, Guid? providingDepartment)
         {
@@ -193,16 +332,16 @@ namespace IMS2.Controllers
         }
 
         // GET: ProvidingDepartmentIndicator/Details/5
-        [Route("Details/{id}/{time}/{provideDepartment}")]
-        public async Task<ActionResult> Details(Guid? id, DateTime? time, Guid? provideDepartment)
+        [Route("Details/{id:guid}/{time:datetime}/{provideDepartment:guid}")]
+        public async Task<ActionResult> Details(Guid id, DateTime time, Guid provideDepartment)
         {
-            if (id == null)
+            if (id.Equals(Guid.Empty))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             ViewBag.provideDepartment = provideDepartment;
             //查找到该department       
-            var department = await db.Departments.FindAsync(id.Value);
+            var department = await db.Departments.FindAsync(id);
             DepartmentIndicatorCountView viewModel = new DepartmentIndicatorCountView();
             viewModel.DepartmentIndicatorValues = new List<DepartmentIndicatorValue>();
             viewModel.Department = department;
@@ -210,7 +349,7 @@ namespace IMS2.Controllers
             viewModel.SearchTime = time;
             var departmentIndicatorValues = await db.Departments.SelectMany(c => c.DepartmentIndicatorValues).Include(d => d.Indicator.Duration)
                                                 .Where(d => d.DepartmentId == department.DepartmentId
-                                                && d.Time.Year == time.Value.Year && d.Time.Month == time.Value.Month
+                                                && d.Time.Year == time.Year && d.Time.Month == time.Month
                                                 && d.Indicator.ProvidingDepartmentId == provideDepartment).OrderBy(d => d.Indicator.Priority).ToListAsync();
             foreach (var departmentIndicatorValue in departmentIndicatorValues)
             {
@@ -218,14 +357,74 @@ namespace IMS2.Controllers
             }
             return View(viewModel);
         }
+        //public async Task<ActionResult> Details(Guid? id, DateTime? time, Guid? provideDepartment)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    ViewBag.provideDepartment = provideDepartment;
+        //    //查找到该department       
+        //    var department = await db.Departments.FindAsync(id.Value);
+        //    DepartmentIndicatorCountView viewModel = new DepartmentIndicatorCountView();
+        //    viewModel.DepartmentIndicatorValues = new List<DepartmentIndicatorValue>();
+        //    viewModel.Department = department;
+        //    //从DepartmentIndicatorValue找值
+        //    viewModel.SearchTime = time;
+        //    var departmentIndicatorValues = await db.Departments.SelectMany(c => c.DepartmentIndicatorValues).Include(d => d.Indicator.Duration)
+        //                                        .Where(d => d.DepartmentId == department.DepartmentId
+        //                                        && d.Time.Year == time.Value.Year && d.Time.Month == time.Value.Month
+        //                                        && d.Indicator.ProvidingDepartmentId == provideDepartment).OrderBy(d => d.Indicator.Priority).ToListAsync();
+        //    foreach (var departmentIndicatorValue in departmentIndicatorValues)
+        //    {
+        //        viewModel.DepartmentIndicatorValues.Add(departmentIndicatorValue);
+        //    }
+        //    return View(viewModel);
+        //}
 
+        //[Authorize(Roles = "创建指标值, Administrators")]
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
 
+        public async Task<ActionResult> CreateIndicators(DateTime? searchTime, Guid? providingDepartmentID)
+        {
+
+            if (searchTime.HasValue && !providingDepartmentID.Value.Equals(Guid.Empty))
+            {
+                ViewBag.ProvideDepartmentID = providingDepartmentID.Value;
+                ViewBag.SearchTime = searchTime.Value;
+                var provideDepartment = await db.Departments.FindAsync(providingDepartmentID);
+                if (provideDepartment != null)
+                {
+                    //数据来源科室负责的指标，根据指标与指定时间是否在科室指标值表（简称值表）中，如果不在，依次选择指标，追寻到科室类别项目组中的各个科室，再将该指标、科室、时间写入值表中。
+                    foreach (var indicator in provideDepartment.ProvidingIndicators)
+                    {
+
+                        var departmentCollection = indicator.IndicatorGroupMapIndicators.Select(i => i.IndicatorGroup)
+                            .SelectMany(i => i.DepartmentCategoryMapIndicatorGroups)
+                            .Select(d => d.DepartmentCategory)
+                            .SelectMany(d => d.Departments).Distinct();
+                        foreach (var department in departmentCollection)
+                        {
+                            //添加
+                            await CreateDepartmentIndicatorList(searchTime, indicator, department);
+                        }
+                    }
+                }
+                var viewModel = await GetSearchDepartmentIndicatorViewList(searchTime, providingDepartmentID.Value);
+                //return RedirectToAction("SearchIndicator", new { searchTime = searchTime, providingDepartmentID = providingDepartmentID });
+                return PartialView("_searchIndicator", viewModel);
+            }
+            return PartialView("_searchIndicator", null);
+        }
         // POST: ProvidingDepartmentIndicator/Create
         // 为了防止“过多发布”攻击，请启用要绑定到的特定属性，有关 
         // 详细信息，请参阅 http://go.microsoft.com/fwlink/?LinkId=317598。
         [Authorize(Roles = "创建指标值, Administrators")]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Create/{searchTime}/{departmentID}")]
+
         public async Task<ActionResult> Create(DateTime? searchTime, Guid? departmentID)
         {
             var provideDepartment = await db.Departments.FindAsync(departmentID);
@@ -249,7 +448,7 @@ namespace IMS2.Controllers
             return RedirectToAction("Index", new { searchTime = searchTime, providingDepartment = departmentID });
         }
         // GET: ProvidingDepartmentIndicator/Edit/5
-        [Route("Index/{id}/{time}/{provideDepartment}")]
+        [Route("Edit/{id}/{time}/{provideDepartment}")]
 
         public async Task<ActionResult> Edit(Guid? id, DateTime? time, Guid? provideDepartment)
         {

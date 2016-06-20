@@ -37,8 +37,6 @@ function searchFailed() {
 $("#valueSearch").submit(function (event){
     event.preventDefault();
     var form = $(this);
-    
-
     $.ajax({
         url: form.attr("action"),
         data: form.serialize(),
@@ -52,3 +50,4 @@ $("#valueSearch").submit(function (event){
         
     });
 });
+

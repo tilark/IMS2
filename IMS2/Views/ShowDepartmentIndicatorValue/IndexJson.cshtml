@@ -7,8 +7,8 @@
 <h2>IndexJson</h2>
 <fieldset>
 
-    
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <form id="valueSearch" method="get" action="@Url.Action("ValueSearchJson", "ShowDepartmentIndicatorValue")">
         <div class="dl-horizontal">
             <div class="form-group">
@@ -21,7 +21,7 @@
             <div class="form-group">
                 @Html.Label("科室", htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-4">
-                    @Html.DropDownList("department", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.DropDownList("department", null, htmlAttributes: new { @class = "form-control", id = "departmentID" })
                 </div>
                 <div class="col-md-6">
                     <input type="submit" value="查询" class="btn btn-info" />

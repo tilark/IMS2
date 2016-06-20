@@ -1,0 +1,29 @@
+﻿<div class="col-md-offset-2 col-md-10">
+    <button id="hideitem" class="btn btn-default btn-xs"><span class="label label-primary">隐藏项目</span></button>
+    <button id="showitem" class="btn btn-default btn-xs"><span class="label label-primary" hidden="hidden">显示项目</span></button>
+
+</div>
+<section id="provideitem">
+    <div class="col-md-2 pitem">
+        @Html.Encode("负责项目：")
+
+    </div>
+    <div class="col-md-10 pitem">
+        <table class="table table-hover">
+            <tbody>
+                @{int i = 1; }
+                @foreach (var indicatorName in (ViewBag.IndicatorDetails as IEnumerable<string>))
+                {
+
+                    <tr>
+                        <td># @i</td>
+                        <td>@indicatorName</td>
+                    </tr>
+                    i++;
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+<script src="~/Scripts/ImsAjax.js"></script>
+

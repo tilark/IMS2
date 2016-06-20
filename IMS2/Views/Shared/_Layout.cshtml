@@ -7,7 +7,9 @@
     <title>@ViewBag.Title - 惠州市第一人民医院指标监测系统</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    @Styles.Render("~/Content/datetimepickerCss")
+    @*@Styles.Render("~/Content/datetimepickerCss")*@
+    @RenderSection("styles", required: false)
+
 
 </head>
 <body>
