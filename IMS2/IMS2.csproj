@@ -206,12 +206,14 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AutoGetDataSourceController.cs" />
+    <Compile Include="Controllers\DataSourceSystemBaseController.cs" />
     <Compile Include="Controllers\DataSourceSystemController.cs" />
     <Compile Include="Controllers\DepartmentCategoryController.cs" />
     <Compile Include="Controllers\DepartmentCategoryMapIndicatorGroupsController.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\DepartmentIndicatorStandardsController.cs" />
     <Compile Include="Controllers\DepartmentIndicatorValuesController.cs" />
+    <Compile Include="Controllers\GenericDataSourceSystemsController.cs" />
     <Compile Include="Controllers\ManageRoleController.cs" />
     <Compile Include="Controllers\ManageUserController.cs" />
     <Compile Include="Controllers\ReportersController.cs" />
@@ -226,11 +228,20 @@
     <Compile Include="Controllers\ProvidingDepartmentIndicatorController.cs" />
     <Compile Include="Controllers\SearchDepartmentIndicatorController.cs" />
     <Compile Include="DAL\BaseRepository.cs" />
+    <Compile Include="DAL\DataSourceSystemRepository.cs" />
     <Compile Include="DAL\DepartmentIndicatorDAL.cs" />
+    <Compile Include="DAL\GenericRepository.cs" />
+    <Compile Include="DAL\GenericUnitOfWork.cs" />
     <Compile Include="DAL\IBaseRepository.cs" />
+    <Compile Include="DAL\IDataSourceSystemRepository.cs" />
     <Compile Include="DAL\IndicatorValue.cs" />
     <Compile Include="DAL\InitialItemData.cs" />
+    <Compile Include="DAL\Interface\IBaseRepositoryAsnyc.cs" />
+    <Compile Include="DAL\Interface\IUnitOfWork.cs" />
+    <Compile Include="DAL\IRepository.cs" />
     <Compile Include="DAL\RoleAction.cs" />
+    <Compile Include="DAL\UnitOfWork.cs" />
+    <Compile Include="DAL\UnitOfWorkT.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -498,6 +509,16 @@
     <Content Include="Views\ProvidingDepartmentIndicator\Message.cshtml" />
     <Content Include="Views\ProvidingDepartmentIndicator\_indicatorDetails.cshtml" />
     <Content Include="Views\ProvidingDepartmentIndicator\_createIndicators.cshtml" />
+    <Content Include="Views\DataSourceSystemBase\Create.cshtml" />
+    <Content Include="Views\DataSourceSystemBase\Delete.cshtml" />
+    <Content Include="Views\DataSourceSystemBase\Details.cshtml" />
+    <Content Include="Views\DataSourceSystemBase\Edit.cshtml" />
+    <Content Include="Views\DataSourceSystemBase\Index.cshtml" />
+    <Content Include="Views\GenericDataSourceSystems\Create.cshtml" />
+    <Content Include="Views\GenericDataSourceSystems\Delete.cshtml" />
+    <Content Include="Views\GenericDataSourceSystems\Details.cshtml" />
+    <Content Include="Views\GenericDataSourceSystems\Edit.cshtml" />
+    <Content Include="Views\GenericDataSourceSystems\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
