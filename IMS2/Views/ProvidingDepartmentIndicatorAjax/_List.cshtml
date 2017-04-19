@@ -1,0 +1,71 @@
+﻿@model IEnumerable<IMS2.ViewModels.ProvidingDepartmentIndicatorView.DepartmentIndicatorStatus>
+
+<div id="indicator-list-id">
+    <fieldset class="col-md-12 panel panel-default">
+        @if (Model != null && Model.Count() > 0)
+        {
+            if (User.IsInRole("Administrators") || User.IsInRole("创建指标值"))
+            {
+                if (Model.First().IndicatorCount <= 0)
+                {
+                    <div class="col-md-7 col-md-offset-5">
+
+                        @using (Ajax.BeginForm("_Create", "ProvidingDepartmentIndicatorAjax", new AjaxOptions() { HttpMethod = "Post", UpdateTargetId = "indicator-list-id", LoadingElementId = "create-indicator-info-ajax" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input name="searchTime" hidden="hidden" value="@ViewBag.SearchTime" />
+                            <input name="departmentID" hidden="hidden" value="@ViewBag.DepartmentID" />
+
+                            <div class="form-group">
+                                <div class="col-md-10 pitem">
+                                    <input type="submit" value="添加管理项目" class="btn btn-warning" />
+
+                                    <img src="~/Images/ajax-loader.gif" style="display:none" id="create-indicator-info-ajax" />
+
+                                </div>
+                            </div>
+                            <p></p>
+                        }
+
+                    </div>
+                }
+            }
+            var i = 1;
+
+            <legend class="text-primary">指标详情</legend>
+            <table class="table table-hover">
+                <tr>
+                    <td>序号</td>
+                    <td>@Html.Label("科室")</td>
+                    <td>@Html.Label("指标完成度")</td>
+                    <td>时间</td>
+
+                    <td></td>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>#@i</td>
+                        <td>@item.DepartmentName</td>
+                        <td>@item.HasValueCount / @item.IndicatorCount</td>
+                        <td>
+                            @*@item.SearchTime*@
+                            @item.SearchTime.GetDateTimeFormats('y')[0]
+                        </td>
+                        <td>
+
+                            @Ajax.ActionLink("编辑", "_Edit", "ProvidingDepartmentIndicatorAjax", new { id = item.DepartmentID, time = item.SearchTime, provideDepartment = ViewBag.DepartmentID }, new AjaxOptions() { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, UpdateTargetId = "edit-department-indicator-id", OnBegin = "imsSelectBeginPrev($(this))", OnSuccess = "ListSelectSuccess" }, new { @class = "btn btn-primary", data_scroll_target = "edit-department-indicator-id" })
+
+                        </td>
+                    </tr>
+                    i++;
+                }
+            </table>
+        }
+        else
+        {
+            <h3>该科无负责的项目</h3>
+        }
+    </fieldset>
+    <div id="edit-department-indicator-id" class="col-md-12"></div>
+</div>
