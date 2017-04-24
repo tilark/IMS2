@@ -214,6 +214,7 @@
     <Compile Include="Controllers\DepartmentIndicatorStandardsController.cs" />
     <Compile Include="Controllers\DepartmentIndicatorValuesController.cs" />
     <Compile Include="Controllers\GenericDataSourceSystemsController.cs" />
+    <Compile Include="Controllers\ImportDepartmentIndicatorsController.cs" />
     <Compile Include="Controllers\ManageRoleController.cs" />
     <Compile Include="Controllers\ManageUserController.cs" />
     <Compile Include="Controllers\ProvidingDepartmentIndicatorAjaxController.cs" />
@@ -228,6 +229,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProvidingDepartmentIndicatorController.cs" />
     <Compile Include="Controllers\SearchDepartmentIndicatorController.cs" />
+    <Compile Include="Controllers\VerifyDepartmentIndicatorsController.cs" />
     <Compile Include="DAL\BaseRepository.cs" />
     <Compile Include="DAL\DataSourceSystemRepository.cs" />
     <Compile Include="DAL\DepartmentIndicatorDAL.cs" />
@@ -299,6 +301,7 @@
     <Compile Include="ViewModels\ResetPasswordView.cs" />
     <Compile Include="ViewModels\RoleView.cs" />
     <Compile Include="ViewModels\TimeDepartmentIDView.cs" />
+    <Compile Include="ViewModels\VerifyDepartmentIndicatorView\VerifySearchCondition.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-datetimepicker.css" />
@@ -309,6 +312,7 @@
     <Content Include="Content\1bootstrap-old.css" />
     <Content Include="Content\1bootstrap-old.min.css" />
     <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\dataTables.bootstrap.min.css" />
     <Content Include="Content\select2.min.css" />
     <Content Include="Content\sweetalert.css" />
     <Content Include="Content\themes\base\accordion.css" />
@@ -357,12 +361,15 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="Properties\PublishProfiles\Ims2R.pubxml" />
+    <Content Include="Scripts\chinese.datatable.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Images\ajax-loader.gif" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\dataTables.bootstrap.min.js" />
+    <Content Include="Scripts\dataTables.foundation.min.js" />
     <Content Include="Scripts\datepicker-zh-CN.js" />
     <Content Include="Scripts\i18n\ar.js" />
     <Content Include="Scripts\i18n\az.js" />
@@ -418,6 +425,7 @@
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-ui-1.11.4.js" />
     <Content Include="Scripts\jquery-ui-1.11.4.min.js" />
+    <Content Include="Scripts\jquery.dataTables.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -578,6 +586,9 @@
     <Content Include="Views\ProvidingDepartmentIndicatorAjax\Index.cshtml" />
     <Content Include="Views\ProvidingDepartmentIndicatorAjax\_Edit.cshtml" />
     <Content Include="Views\ProvidingDepartmentIndicatorAjax\_List.cshtml" />
+    <Content Include="Views\VerifyDepartmentIndicators\Index.cshtml" />
+    <Content Include="Views\VerifyDepartmentIndicators\_VerifyList.cshtml" />
+    <Content Include="Views\ImportDepartmentIndicators\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

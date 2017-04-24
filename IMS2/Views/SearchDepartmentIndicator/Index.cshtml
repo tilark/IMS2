@@ -8,7 +8,7 @@
 
 <h2>审核指标值</h2>
 
-@using (Html.BeginForm("Index", "SearchDepartmentIndicator", FormMethod.Get))
+@using (Html.BeginForm("_List", "SearchDepartmentIndicator", FormMethod.Get))
 {
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 

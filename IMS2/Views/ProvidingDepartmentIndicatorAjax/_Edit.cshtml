@@ -2,7 +2,7 @@
 
 <div id="edit-department-Indicator">
 
-    @using (Ajax.BeginForm("_Edit", "ProvidingDepartmentIndicatorAjax", new AjaxOptions() { HttpMethod = "Post", UpdateTargetId = "edit-department-Indicator", LoadingElementId = "edit-indicator-info-ajax", OnSuccess = "editItemSuccess" }))
+    @using (Ajax.BeginForm("_Edit", "ProvidingDepartmentIndicatorAjax", new AjaxOptions() { HttpMethod = "Post", UpdateTargetId = "edit-department-Indicator", LoadingElementId = "edit-indicator-info-ajax", OnSuccess = "editItemSuccess" }, new { id="edit-department-indicator-id"}))
     {
     @Html.AntiForgeryToken()
     <fieldset class="col-md-12 panel panel-default">
@@ -31,7 +31,7 @@
         @if (Model.DepartmentIndicatorValues.Count > 0)
         {
             int i = 0;
-            <table class="table table-hover">
+            <table class="table table-hover" id="edit-indicator-value-id">
                 <tr>
                     <th>序号</th>
                     <th>指标</th>
@@ -57,9 +57,10 @@
                             }
                             else
                             {
-                                @Html.TextBox(String.Format("departmentIndicatorValues[{0}].Value", i), item.Value)
-                                @Html.ValidationMessageFor(model => item.Value, "", new { @class = "text-danger" })
-
+                                @Html.TextBox(String.Format("departmentIndicatorValues[{0}].Value", i), item.Value, new { @class = "form-control valueinput" })
+                                @*@Html.ValidationMessageFor(model => item.Value, "", new { @class = "text-danger" })*@
+                                @*<input  type="text" value="@item.Value" class="form-control valueinput" data-id="@item.DepartmentIndicatorValueId" name="@String.Format("departmentIndicatorValues[{0}].Value", i)"/>*@
+                                <span class="bg-danger" style="display:none">请输入正确数值！</span>
                             }
                         </td>
                         @*审核状态*@

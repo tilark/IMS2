@@ -235,7 +235,6 @@ namespace IMS2.Controllers
         public async Task<ActionResult> _Edit(Department department, IEnumerable<DepartmentIndicatorValue> departmentIndicatorValues, DateTime? searchTime, Guid? provideDepartment)
         {
             ViewBag.provideDepartment = provideDepartment;
-
             var viewModel = new DepartmentIndicatorCountView();
             if (department != null)
             {
@@ -294,6 +293,44 @@ namespace IMS2.Controllers
                 }
             }
             return PartialView("_Edit", viewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public  ActionResult _EditEmpty(Department department, IEnumerable<DepartmentIndicatorValue> departmentIndicatorValues, DateTime? searchTime, Guid? provideDepartment)
+        {
+            return Json(new { success = true });
+        }
+        [HttpPost]
+        public async Task<ActionResult> _EditValue(decimal value, Guid id)
+        {
+            var departmentIdicatorValue = await db.DepartmentIndicatorValues
+                                            .FindAsync(id);
+            if (departmentIdicatorValue.IsLocked)
+            {
+                return Json(new { success = false, errorMessage = "已审核，无法再修改！" });
+            }
+            else
+            {
+                departmentIdicatorValue.Value = value;
+                //database win
+                bool saveFailed;
+                do
+                {
+                    saveFailed = false;
+                    try
+                    {
+                        await db.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException ex)
+                    {
+                        saveFailed = true;
+                        // Update the values of the entity that failed to save from the store 
+                        ex.Entries.Single().Reload();
+                    }
+                } while (saveFailed);
+
+                return Json(new { success = true, errorMessage = "修改成功！" });
+            }
         }
         #endregion
 

@@ -52,6 +52,15 @@ namespace IMS2
             bundles.Add(new ScriptBundle("~/bundles/sweetAlert").Include(
                    "~/Scripts/sweetalert.min.js"
                    ));
+
+            //datatable
+            bundles.Add(new StyleBundle("~/Content/datatable").Include(
+              "~/Content/dataTables.bootstrap.min.css"
+             ));
+            bundles.Add(new ScriptBundle("~/bundles/datatable").Include(
+                 "~/Scripts/jquery.dataTables.min.js",
+                   "~/Scripts/dataTables.bootstrap.min.js"
+                   ));
         }
     }
 }
