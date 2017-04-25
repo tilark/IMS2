@@ -1,0 +1,82 @@
+﻿@model IMS2.ViewModels.VerifyDepartmentIndicatorView.VerifySearchCondition
+
+@{
+    ViewBag.Title = "审核指标";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>审核指标</h2>
+
+<fieldset class="col-md-12 panel panel-default">
+    <legend class="text-primary">查找条件</legend>
+    @*@using (Html.BeginForm("Index", "ProvidingDepartmentIndicator", FormMethod.Get))*@
+    @using (Ajax.BeginForm("_VerifyList", "VerifyDepartmentIndicators", new AjaxOptions() { HttpMethod = "Get", UpdateTargetId = "indicator-info-list", LoadingElementId = "search-indicator-info-ajax", OnSuccess = "searchIndicatorInfoSuccess" }))
+    {
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-horizontal">
+            <div class="form-group">
+                @Html.LabelFor(model => model.SearchStartTime, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.EditorFor(model => model.SearchStartTime, new { htmlAttributes = new { @class = "form-control datetimepicker2", id = "search-indicator-start-time-id" } })
+                </div>
+
+                @Html.LabelFor(model => model.SearchEndTime, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.EditorFor(model => model.SearchEndTime, new { htmlAttributes = new { @class = "form-control datetimepicker2", id = "search-indicator-end-time-id" } })
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.DepartmentId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @*@Html.DropDownList("providingDepartment", null, htmlAttributes: new { @class = "form-control" })*@
+
+                    @Html.DropDownListFor(model => model.DepartmentId, ViewBag.DepartmentSelect as SelectList, "-全选-", htmlAttributes: new { @class = "form-control", id = "search-indicator-department-id" })
+                </div>
+                @Html.LabelFor(model => model.LockStatus, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @*@Html.DropDownList("providingDepartment", null, htmlAttributes: new { @class = "form-control" })*@
+                    @Html.EnumDropDownListFor(model => model.LockStatus, htmlAttributes: new { @class = "form-control", id = "search-indicator-locked-id" })
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-5 col-md-7">
+                    @*<input type="submit" value="查询" class="btn btn-info" id="refresh-search-indicator-list-id" style="display:none" />*@
+                    <button type="submit" class="btn btn-info" id="refresh-search-indicator-list-id" style="display:none">查询</button>
+                    <img src="~/Images/ajax-loader.gif" style="display:none" id="search-indicator-info-ajax" />
+                </div>
+            </div>
+        </div>
+    }
+</fieldset>
+
+<div id="indicator-info-list" class="col-md-12">
+</div>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryajax")
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#search-indicator-department-id").select2();
+            //选择科室后自动提交表单，列出设备列表
+            $("#search-indicator-department-id").on("change", function (event, data) {
+                $(this).submit();
+            });
+            $("#search-indicator-start-time-id").on("focusout", function (event, data) {
+                $(this).submit();
+            });
+            $("#search-indicator-end-time-id").on("focusout", function (event, data) {
+                $(this).submit();
+            });
+            $("#search-indicator-locked-id").on("change", function (event, data) {
+                $(this).submit();
+            });
+        })
+    </script>
+}

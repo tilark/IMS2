@@ -26,7 +26,11 @@ namespace IMS2.Controllers
             await InitialDepartment();
             return View();
         }
-
+        public async Task<ActionResult> Index()
+        {
+            await InitialDepartment();
+            return View();
+        }
         private async Task InitialDepartment()
         {
             if (User.IsInRole("查看全院指标值") || User.IsInRole("Administrators"))

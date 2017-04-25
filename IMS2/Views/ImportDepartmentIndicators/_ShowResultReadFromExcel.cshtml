@@ -1,0 +1,9 @@
+﻿@model IMS2.ViewModels.UploadFileViews.ReadExcelMessage
+@{
+    ViewBag.Title = "导入数据结果";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>导入数据结果</h2>
+<h3 class="text-warning">@Html.DisplayNameFor(model => model.Message) : @Html.DisplayFor(model => model.Message)</h3>
+<h3 class="text-warning">@Html.DisplayNameFor(model => model.ErrorMessage) : @Html.DisplayFor(model => model.ErrorMessage)</h3>

@@ -23,6 +23,8 @@ namespace IMS2
             RoleAction roleAction = new RoleAction();
             //roleAction.InitialRoleName();
             roleAction.CreateAdmin();
+
+            System.Web.Mvc.DependencyResolver.SetResolver(new App_Start.NinjectDependencyResolver());
         }
     }
 }

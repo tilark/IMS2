@@ -19,20 +19,48 @@ namespace IMS2
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
 
+            bundles.Add(new StyleBundle("~/Content/css").Include(
+                     "~/Content/bootstrap.css",
+                     "~/Content/site.css"));
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
-            bundles.Add(new ScriptBundle("~/bundles/datetimepicker").Include(
-                   "~/Scripts/moment-with-locales.js",
+            //site
+            bundles.Add(new ScriptBundle("~/bundles/site").Include(
+                   "~/Scripts/site.js"));
+            //ajax
+            bundles.Add(new ScriptBundle("~/bundles/jqueryajax").Include(
+                    "~/Scripts/jquery.unobtrusive-ajax.min.js"));
 
-                   "~/Scripts/bootstrap-datetimepicker.js"
+            //datetimepicker
+            bundles.Add(new ScriptBundle("~/bundles/datetimepicker").Include(
+                   "~/Scripts/moment-with-locales.min.js",
+
+                   "~/Scripts/bootstrap-datetimepicker.min.js"
                 ));
-            bundles.Add(new StyleBundle("~/Content/datetimepickerCss").Include(
-                "~/Content/bootstrap-datetimepicker.css"
-                ));
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+            bundles.Add(new StyleBundle("~/Content/datetimepicker").Include("~/Content/bootstrap-datetimepicker.min.css"));
+
+            //select2
+            bundles.Add(new StyleBundle("~/Content/select2").Include("~/Content/select2.min.css"));
+            bundles.Add(new ScriptBundle("~/bundles/select2").Include(
+                       "~/Scripts/select2.min.js",
+                       "~/Scripts/i18n/zh-CN.js"));
+            //sweetAlert
+            bundles.Add(new StyleBundle("~/Content/sweetAlert").Include(
+               "~/Content/sweetalert.css"
+              ));
+            bundles.Add(new ScriptBundle("~/bundles/sweetAlert").Include(
+                   "~/Scripts/sweetalert.min.js"
+                   ));
+
+            //datatable
+            bundles.Add(new StyleBundle("~/Content/datatable").Include(
+              "~/Content/dataTables.bootstrap.min.css"
+             ));
+            bundles.Add(new ScriptBundle("~/bundles/datatable").Include(
+                 "~/Scripts/jquery.dataTables.min.js",
+                   "~/Scripts/dataTables.bootstrap.min.js"
+                   ));
         }
     }
 }

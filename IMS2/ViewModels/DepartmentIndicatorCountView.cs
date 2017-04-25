@@ -14,6 +14,9 @@ namespace IMS2.ViewModels
         public List<Indicator> Indicators { get; set; }
         public int IndicatorCount { get; set; }
         public int HasValueCount { get; set; }
+
+        [Display(Name = "时间")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM}", ApplyFormatInEditMode = true)]
         public DateTime? SearchTime { get; set; }
         public DateTime Time { get; set; }
         public List<DepartmentIndicatorValue> DepartmentIndicatorValues { get; set; }

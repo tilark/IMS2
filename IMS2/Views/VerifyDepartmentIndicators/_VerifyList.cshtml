@@ -1,0 +1,125 @@
+﻿@model  IEnumerable<IMS2.Models.DepartmentIndicatorValue>
+@{
+    int i = 0;
+}
+<div id="verify-list-id">
+
+    <div class="form-group">
+        <div class="col-md-offset-3 col-md-3">
+            @if ((User.IsInRole("Administrators") || User.IsInRole("审核全院指标值")))
+            {
+                using (Ajax.BeginForm("_VerifyAllList", "VerifyDepartmentIndicators", new AjaxOptions() { HttpMethod = "Post", UpdateTargetId = "verify-list-id",OnBegin = "verifyIndicatorInfoBegin", OnSuccess = "verifyIndicatorInfoSuccess" }))
+                {
+
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <input hidden="hidden" value="@ViewBag.startTime" name="startTime" />
+                    <input hidden="hidden" value="@ViewBag.endTime" name="endTime" />
+                    <input hidden="hidden" value="@ViewBag.department" name="departmentID" />
+                    <div class="col-md-offset-5 col-md-7">
+                        <input type="submit" value="一键审核" class="btn btn-primary" />
+                    </div>
+
+                }
+            }
+        </div>
+        <div class="col-md-6">
+            @if ((User.IsInRole("Administrators") || User.IsInRole("审核全院指标值")))
+            {
+                using (Ajax.BeginForm("_CancelVerifyAllList", "VerifyDepartmentIndicators", new AjaxOptions() { HttpMethod = "Post", UpdateTargetId = "verify-list-id", OnBegin = "verifyIndicatorInfoBegin", OnSuccess = "verifyIndicatorInfoSuccess" }))
+                {
+
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <input hidden="hidden" value="@ViewBag.startTime" name="startTime" />
+                    <input hidden="hidden" value="@ViewBag.endTime" name="endTime" />
+                    <input hidden="hidden" value="@ViewBag.department" name="departmentID" />
+                    <div class="col-md-offset-5 col-md-7">
+                        <input type="submit" value="一键取消审核" class="btn btn-warning" />
+                    </div>
+
+                }
+            }
+        </div>
+    </div>
+    <table class="table table-hover" id="verify-indicator-list-table">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>
+                    科室
+                </th>
+                <th>
+
+                    指标
+                </th>
+                <th>
+                    时间
+                </th>
+                <th>
+                    值
+                </th>
+                <th>
+                    审核
+                </th>
+                <th>
+                    时段
+                </th>
+                <th>
+                    备注
+                </th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@(i + 1)</td>
+                    <td>
+                        @Html.Hidden(String.Format("departmentIndicatorValue[{0}].DepartmentIndicatorValueId", i), item.DepartmentIndicatorValueId)
+                        @Html.Hidden(String.Format("departmentIndicatorValue[{0}].TimeStamp", i), item.TimeStamp)
+                        @Html.DisplayFor(modelItem => item.Department.DepartmentName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Indicator.IndicatorName)
+                    </td>
+                    <td>
+
+                        @Html.Label(String.Format("departmentIndicatorValue[{0}].Time", i), String.Format("{0:Y}", item.Time))
+                    </td>
+                    <td>
+                        @Html.Hidden(String.Format("departmentIndicatorValue[{0}].Value", i), item.Value)
+                        @Html.DisplayFor(modelItem => item.Value)
+                    </td>
+                    <td>
+                        @if (item.Value.HasValue && User.IsInRole("Administrators") || User.IsInRole("审核全院指标值"))
+                        {
+                            @*@Html.CheckBox(String.Format("departmentIndicatorValue[{0}].IsLocked", i), item.IsLocked ? true : false, new { data_id = item.DepartmentIndicatorValueId })*@
+                        string isChecked = item.IsLocked ? "checked" : " ";
+                        <input type="checkbox" @isChecked data-id=@item.DepartmentIndicatorValueId />
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.IsLocked)
+                        }
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Indicator.Duration.DurationName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DepartmentIndicatorStandard.Remarks)
+                    </td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+
+    <br />
+    @*}*@
+</div>
