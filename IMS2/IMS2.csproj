@@ -44,6 +44,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EPPlus, Version=4.1.0.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
     <Reference Include="ImsAutoLib">
       <HintPath>..\ImsAutoLib\ImsAutoLib.dll</HintPath>
     </Reference>
@@ -63,6 +66,9 @@
     <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.168.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="Nustache.Core, Version=1.16.0.1, Culture=neutral, PublicKeyToken=efd6f3d8f76ecd9f, processorArchitecture=MSIL">
       <HintPath>..\packages\Nustache.1.16.0.1\lib\net20\Nustache.Core.dll</HintPath>
@@ -202,6 +208,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\NinjectDependencyResolver.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -229,6 +236,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProvidingDepartmentIndicatorController.cs" />
     <Compile Include="Controllers\SearchDepartmentIndicatorController.cs" />
+    <Compile Include="Controllers\UploadFilesController.cs" />
     <Compile Include="Controllers\VerifyDepartmentIndicatorsController.cs" />
     <Compile Include="DAL\BaseRepository.cs" />
     <Compile Include="DAL\DataSourceSystemRepository.cs" />
@@ -272,6 +280,27 @@
     <Compile Include="Models\IndicatorGroup.cs" />
     <Compile Include="Models\IndicatorGroupMapIndicator.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="PublicOperations\IFileUpload.cs" />
+    <Compile Include="PublicOperations\Implements\MedicalRecordStatisticalFromExcelRepo.cs" />
+    <Compile Include="PublicOperations\Interfaces\FromExcelToDataBase.cs" />
+    <Compile Include="RepositoryAsync\DepartmentIndicatorValueRepositoryAsync.cs" />
+    <Compile Include="RepositoryAsync\DepartmentRepositoryAsync.cs" />
+    <Compile Include="RepositoryAsync\DomainRepositoryAsync.cs" />
+    <Compile Include="RepositoryAsync\DomainUnitOfWork.cs" />
+    <Compile Include="RepositoryAsync\IDomainRepositoryAsync.cs" />
+    <Compile Include="RepositoryAsync\IDomainUnitOfWork.cs" />
+    <Compile Include="RepositoryAsync\IndicatorRepositoryAsync.cs" />
+    <Compile Include="ViewModels\ImportDepartmentIndicatorViews\AnesthesiologyFromExcel.cs" />
+    <Compile Include="ViewModels\ImportDepartmentIndicatorViews\ClinicFromExcel.cs" />
+    <Compile Include="ViewModels\ImportDepartmentIndicatorViews\ExamineFromExcel.cs" />
+    <Compile Include="ViewModels\ImportDepartmentIndicatorViews\FinanceFromExcel.cs" />
+    <Compile Include="ViewModels\ImportDepartmentIndicatorViews\InfectionManagementFromExcel.cs" />
+    <Compile Include="ViewModels\ImportDepartmentIndicatorViews\MedicalRecordStatisticalFromExcel.cs" />
+    <Compile Include="ViewModels\ImportDepartmentIndicatorViews\PathologyFromExcel.cs" />
+    <Compile Include="ViewModels\ImportDepartmentIndicatorViews\PharmaceuticalFromExcel.cs" />
+    <Compile Include="ViewModels\ImportDepartmentIndicatorViews\RadiologyFromExcel.cs" />
+    <Compile Include="ViewModels\ImportDepartmentIndicatorViews\RehabilitationFromExcel.cs" />
+    <Compile Include="ViewModels\ImportDepartmentIndicatorViews\UltrasoundFromExcel.cs" />
     <Compile Include="ViewModels\ProvidingDepartmentIndicatorView\DepartmentIndicatorEditView.cs" />
     <Compile Include="ViewModels\ProvidingDepartmentIndicatorView\DepartmentIndicatorStatus.cs" />
     <Compile Include="ViewModels\ProvidingDepartmentIndicatorView\SearchCondition.cs" />
@@ -301,6 +330,8 @@
     <Compile Include="ViewModels\ResetPasswordView.cs" />
     <Compile Include="ViewModels\RoleView.cs" />
     <Compile Include="ViewModels\TimeDepartmentIDView.cs" />
+    <Compile Include="ViewModels\UploadFileViews\ReadExcelMessage.cs" />
+    <Compile Include="ViewModels\UploadFileViews\UploadFileView.cs" />
     <Compile Include="ViewModels\VerifyDepartmentIndicatorView\VerifySearchCondition.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -589,6 +620,8 @@
     <Content Include="Views\VerifyDepartmentIndicators\Index.cshtml" />
     <Content Include="Views\VerifyDepartmentIndicators\_VerifyList.cshtml" />
     <Content Include="Views\ImportDepartmentIndicators\Index.cshtml" />
+    <Content Include="Views\UploadFiles\_UploadFile.cshtml" />
+    <Content Include="Views\ImportDepartmentIndicators\_ShowResultReadFromExcel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -610,6 +643,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ExcelEntityOperation\ExcelEntityOperation.csproj">
+      <Project>{40e06fa0-31ac-482a-af60-94fada4fcfe5}</Project>
+      <Name>ExcelEntityOperation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OperateExcel\OperateExcel.csproj">
       <Project>{bc00582a-4992-4dca-a3ae-51c3e7da6382}</Project>
       <Name>OperateExcel</Name>

@@ -20,6 +20,10 @@ function searchIndicatorInfoSuccess(data, status, jqXHR) {
     }
 
 }
+
+function verifyIndicatorInfoBegin() {
+    UpdateBeginAlert();
+}
 function verifyIndicatorInfoSuccess(data, status, jqXHR) {
 
     ResponseStatusSuccessTriggerClick(jqXHR.status, "#refresh-search-indicator-list-id");
@@ -126,6 +130,14 @@ function UpdateFailedAlert() {
         text: "请检查输入项",
         type: "error",
         showConfirmButton: true
+    });
+}
+function UpdateBeginAlert() {
+    swal({
+        title: "正在处理中!",
+        text: "请稍后……",       
+        type: "success",   
+        showConfirmButton: false
     });
 }
 function setDataTable(element) {

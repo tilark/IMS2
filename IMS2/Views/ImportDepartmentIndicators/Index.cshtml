@@ -1,1 +1,61 @@
-﻿
+﻿@{
+    ViewBag.Title = "导入指标值";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>导入指标值</h2>
+
+<div class="col-md-12">
+
+    @Ajax.ActionLink("病案统计室", "_UploadFile", "UploadFiles", new { actionName = "_MedicalRecordStatistical", controllerName = "ImportDepartmentIndicators", importExcelName = "病案统计室" }, new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, LoadingElementId = "import-ajax", UpdateTargetId = "import-excel-id" }, new { @class = "btn btn-primary"})
+
+
+    @Ajax.ActionLink("病理科", "_UploadFile", "UploadFiles", new { actionName = "_PathologyStatistical", controllerName = "ImportDepartmentIndicators", importExcelName = "病理科" }, new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, LoadingElementId = "import-ajax", UpdateTargetId = "import-excel-id" }, new { @class = "btn btn-primary"})
+
+    @Ajax.ActionLink("财务部", "_UploadFile", "UploadFiles", new { actionName = "_FinanceStatistical", controllerName = "ImportDepartmentIndicators", importExcelName = "财务部" }, new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, LoadingElementId = "import-ajax", UpdateTargetId = "import-excel-id" }, new { @class = "btn btn-primary"})
+
+    @Ajax.ActionLink("超声科", "_UploadFile", "UploadFiles", new { actionName = "_UltrasoundStatistical", controllerName = "ImportDepartmentIndicators", importExcelName = "超声科" }, new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, LoadingElementId = "import-ajax", UpdateTargetId = "import-excel-id" }, new { @class = "btn btn-primary" })
+
+    @Ajax.ActionLink("放射科", "_UploadFile", "UploadFiles", new { actionName = "_RadiologyStatistical", controllerName = "ImportDepartmentIndicators", importExcelName = "放射科" }, new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, LoadingElementId = "import-ajax", UpdateTargetId = "import-excel-id" }, new { @class = "btn btn-primary" })
+
+    @Ajax.ActionLink("感染管理部", "_UploadFile", "UploadFiles", new { actionName = "_InfectionManagementStatistical", controllerName = "ImportDepartmentIndicators", importExcelName = "感染管理部" }, new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, LoadingElementId = "import-ajax", UpdateTargetId = "import-excel-id" }, new { @class = "btn btn-primary" })
+
+    @Ajax.ActionLink("检验科", "_UploadFile", "UploadFiles", new { actionName = "_ExamineStatistical", controllerName = "ImportDepartmentIndicators", importExcelName = "检验科" }, new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, LoadingElementId = "import-ajax", UpdateTargetId = "import-excel-id" }, new { @class = "btn btn-primary" })
+
+    @Ajax.ActionLink("康复医学科", "_UploadFile", "UploadFiles", new { actionName = "_RehabilitationStatistical", controllerName = "ImportDepartmentIndicators", importExcelName = "康复医学科" }, new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, LoadingElementId = "import-ajax", UpdateTargetId = "import-excel-id" }, new { @class = "btn btn-primary" })
+
+    @Ajax.ActionLink("麻醉科", "_UploadFile", "UploadFiles", new { actionName = "_AnesthesiologyStatistical", controllerName = "ImportDepartmentIndicators", importExcelName = "麻醉科" }, new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, LoadingElementId = "import-ajax", UpdateTargetId = "import-excel-id" }, new { @class = "btn btn-primary" })
+
+    @Ajax.ActionLink("门诊部", "_UploadFile", "UploadFiles", new { actionName = "_ClinicStatistical", controllerName = "ImportDepartmentIndicators", importExcelName = "门诊部" }, new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, LoadingElementId = "import-ajax", UpdateTargetId = "import-excel-id" }, new { @class = "btn btn-primary" })
+
+    @Ajax.ActionLink("药学部", "_UploadFile", "UploadFiles", new { actionName = "_PharmaceuticalStatistical", controllerName = "ImportDepartmentIndicators", importExcelName = "药学部" }, new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, LoadingElementId = "import-ajax", UpdateTargetId = "import-excel-id" }, new { @class = "btn btn-primary" })
+
+</div>
+<div class="col-md-12" id="import-excel-id"></div>
+<div>
+    <img src="~/Images/ajax-loader.gif" style="display:none" id="import-ajax" />
+</div>
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryajax")
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#search-indicator-department-id").select2();
+            //选择科室后自动提交表单，列出设备列表
+            $("#search-indicator-department-id").on("change", function (event, data) {
+                $(this).submit();
+            });
+            $("#search-indicator-start-time-id").on("focusout", function (event, data) {
+                $(this).submit();
+            });
+            $("#search-indicator-end-time-id").on("focusout", function (event, data) {
+                $(this).submit();
+            });
+            $("#search-indicator-locked-id").on("change", function (event, data) {
+                $(this).submit();
+            });
+        })
+    </script>
+}

@@ -82,7 +82,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\ProvidingDepartmentIndicatorControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
   </ItemGroup>
@@ -94,7 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IMS2\IMS2.csproj">
-      <Project>{5B8A24F1-89E4-4FA1-8C8B-4886C21F1F4C}</Project>
+      <Project>{5b8a24f1-89e4-4fa1-8c8b-4886c21f1f4c}</Project>
       <Name>IMS2</Name>
     </ProjectReference>
   </ItemGroup>

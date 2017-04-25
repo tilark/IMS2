@@ -8,7 +8,7 @@
         <div class="col-md-offset-3 col-md-3">
             @if ((User.IsInRole("Administrators") || User.IsInRole("审核全院指标值")))
             {
-                using (Ajax.BeginForm("_VerifyAllList", "VerifyDepartmentIndicators", new AjaxOptions() { HttpMethod = "Post", UpdateTargetId = "verify-list-id", OnSuccess = "verifyIndicatorInfoSuccess" }))
+                using (Ajax.BeginForm("_VerifyAllList", "VerifyDepartmentIndicators", new AjaxOptions() { HttpMethod = "Post", UpdateTargetId = "verify-list-id",OnBegin = "verifyIndicatorInfoBegin", OnSuccess = "verifyIndicatorInfoSuccess" }))
                 {
 
                     @Html.AntiForgeryToken()
@@ -27,7 +27,7 @@
         <div class="col-md-6">
             @if ((User.IsInRole("Administrators") || User.IsInRole("审核全院指标值")))
             {
-                using (Ajax.BeginForm("_CancelVerifyAllList", "VerifyDepartmentIndicators", new AjaxOptions() { HttpMethod = "Post", UpdateTargetId = "verify-list-id", OnSuccess = "verifyIndicatorInfoSuccess" }))
+                using (Ajax.BeginForm("_CancelVerifyAllList", "VerifyDepartmentIndicators", new AjaxOptions() { HttpMethod = "Post", UpdateTargetId = "verify-list-id", OnBegin = "verifyIndicatorInfoBegin", OnSuccess = "verifyIndicatorInfoSuccess" }))
                 {
 
                     @Html.AntiForgeryToken()
