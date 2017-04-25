@@ -219,7 +219,7 @@ namespace IMS2.ViewModels
                                         if (indicator.DurationId == new Guid("d48aa438-ad71-4419-a2a2-a1c390f6c097"))
                                         //如果为“月”，则为“整合项”。
                                         {
-                                            newReportRowIndicator.Value = AggregateDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, newReportRow.startTime, newReportRow.endTime,false);
+                                            newReportRowIndicator.Value = AggregateDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, newReportRow.startTime, newReportRow.endTime, false);
                                             newReportRowIndicator.OutOfStandard = null;
                                         }
                                         else if (indicator.DurationId == new Guid("bd18c4f4-6552-4986-ab4e-ba2dffded2b3"))
@@ -285,7 +285,7 @@ namespace IMS2.ViewModels
                                         if (indicator.DurationId == new Guid("d48aa438-ad71-4419-a2a2-a1c390f6c097") || indicator.DurationId == new Guid("bd18c4f4-6552-4986-ab4e-ba2dffded2b3"))
                                         //如果为“月”、“季”，则为“整合项”。
                                         {
-                                            newReportRowIndicator.Value = AggregateDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, newReportRow.startTime, newReportRow.endTime,false);
+                                            newReportRowIndicator.Value = AggregateDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, newReportRow.startTime, newReportRow.endTime, false);
                                             newReportRowIndicator.OutOfStandard = null;
                                         }
                                         else if (indicator.DurationId == new Guid("24847114-90e4-483d-b290-97781c3fa0c2"))
@@ -351,7 +351,7 @@ namespace IMS2.ViewModels
                                         if (indicator.DurationId == new Guid("d48aa438-ad71-4419-a2a2-a1c390f6c097") || indicator.DurationId == new Guid("bd18c4f4-6552-4986-ab4e-ba2dffded2b3") || indicator.DurationId == new Guid("24847114-90e4-483d-b290-97781c3fa0c2"))
                                         //如果为“月”、“季”、“半年”，则为“整合项”。
                                         {
-                                            newReportRowIndicator.Value = AggregateDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, newReportRow.startTime, newReportRow.endTime,false);
+                                            newReportRowIndicator.Value = AggregateDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, newReportRow.startTime, newReportRow.endTime, false);
                                             newReportRowIndicator.OutOfStandard = null;
                                         }
                                         else if (indicator.DurationId == new Guid("ba74e352-0ad5-424b-bf31-738ba5666649"))
@@ -414,7 +414,7 @@ namespace IMS2.ViewModels
                                         newReportRowIndicator.IndicatorPriority = indicator.Priority;
 
                                         //不需要判断当前“指标”的“跨度”。均按“整合项”处理。
-                                        newReportRowIndicator.Value = AggregateDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, newReportRow.startTime, newReportRow.endTime,false);
+                                        newReportRowIndicator.Value = AggregateDepartmentIndicatorValueValue(context, department.DepartmentId, indicator.IndicatorId, newReportRow.startTime, newReportRow.endTime, false);
                                         newReportRowIndicator.OutOfStandard = null;
                                     }
                                 }
@@ -484,7 +484,7 @@ namespace IMS2.ViewModels
 
                 if (indicatorUnit == "百分比")
                 {
-                    return Math.Round(result.Value, 2) * 100;
+                    return Math.Round(result.Value * 100, 2);
                 }
                 else//待补充：根据其他“单位”作相应优化小数位
                 {

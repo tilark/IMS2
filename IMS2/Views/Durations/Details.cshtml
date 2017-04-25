@@ -1,34 +1,49 @@
 ﻿@model IMS2.Models.Duration
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "跨度 详细信息";
 }
 
-<h2>详情</h2>
+<h2>跨度 详细信息</h2>
 
-<div>
-    <h4>跨度</h4>
+<div class="container-fluid">
+    <h4>@Html.DisplayFor(model => model.DurationName)</h4>
+
     <hr />
+
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.DurationName)
+            @Html.DisplayNameFor(model => model.DurationId)
         </dt>
-
         <dd>
-            @Html.DisplayFor(model => model.DurationName)
+            @Html.DisplayFor(model => model.DurationId)
         </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.Remarks)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Remarks)
         </dd>
 
+        <dt>
+            指标（未实现，需添加特定的Index）
+        </dt>
+        <dd>
+            @Html.ActionLink("指标", "Index", "Indicators", Model.Indicators, new { })
+        </dd>
     </dl>
+
+    <hr />
 </div>
+
 <p>
-    @Html.ActionLink("编辑", "Edit", new { id = Model.DurationId }) |
-    @Html.ActionLink("返回列表", "Index")
+    <a href="@Url.Action("Index")"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>返回</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;    
+    <a href="@Url.Action("Edit",new { id=Model.DurationId})"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>编辑</a>
 </p>
+
+@*<p>
+        @Html.ActionLink("编辑", "Edit", new { id = Model.DurationId }) |
+        @Html.ActionLink("返回列表", "Index")
+    </p>*@

@@ -1,92 +1,97 @@
 ﻿@model PagedList.IPagedList<IMS2.Models.Indicator>
 @using PagedList.Mvc;
 @using PagedList;
+
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "指标";
 }
 
-<h2>列表</h2>
-<p class="text-success">@ViewBag.StatusMessage</p>
+<h2>指标</h2>
+
+<p class="text-info">@ViewBag.StatusMessage</p>
 
 <p>
-    @Html.ActionLink("新建项目", "Create")
+    <div class="btn">@Html.ActionLink("添加", "Create")</div>
 </p>
-<table class="table">
-    <tr>
-        <th>
-            指标
-        </th>
-        <th>
-            自动获取
-        </th>
-        <th>
-            数据来源系统
-        </th>
 
-        <th>
-            数据来源科室
-        </th>
-        <th>
-            单位
-        </th>
-        <th>
-            跨度
-        </th>
-        <th>
-            责任科室
-        </th>
+<table class="table table-bordered table-hover table-responsive">
+    <thead>
+        <tr>
+            <th>
+                指标名称
+            </th>
+            <th>
+                自动获取
+            </th>
+            <th>
+                数据来源系统
+            </th>
 
-        <th>
-            优先级
-        </th>
-        <th>
-            备注
-        </th>
-        <th></th>
-    </tr>
+            <th>
+                数据来源科室
+            </th>
+            <th>
+                单位
+            </th>
+            <th>
+                跨度
+            </th>
+            <th>
+                责任科室
+            </th>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.IndicatorName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsAutoGetData)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DataSourceSystem.DataSourceSystemName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProvidingDepartment.DepartmentName)
-        </td>
+            <th>
+                优先级
+            </th>
+            <th>
+                备注
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IndicatorName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsAutoGetData)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataSourceSystem.DataSourceSystemName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProvidingDepartment.DepartmentName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Unit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Duration.DurationName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Department.DepartmentName)
+                </td>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.Unit)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Duration.DurationName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Department.DepartmentName)
-        </td>
-
-        <td>
-            @Html.DisplayFor(modelItem => item.Priority)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Remarks)
-        </td>
-        <td>
-            @Html.ActionLink("编辑", "Edit", new { id=item.IndicatorId }) |
-            @Html.ActionLink("详情", "Details", new { id=item.IndicatorId }) |
-            @Html.ActionLink("删除", "Delete", new { id=item.IndicatorId })
-        </td>
-    </tr>
-}
-
+                <td>
+                    @Html.DisplayFor(modelItem => item.Priority)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Remarks)
+                </td>
+                <td>
+                    @Html.ActionLink("编辑", "Edit", new { id = item.IndicatorId }) |
+                    @Html.ActionLink("详情", "Details", new { id = item.IndicatorId }) |
+                    @Html.ActionLink("删除", "Delete", new { id = item.IndicatorId })
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
 @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index",
             new
             {
-                page                
+                page
             }))
