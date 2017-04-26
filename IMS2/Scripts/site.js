@@ -20,7 +20,7 @@ function searchIndicatorInfoSuccess(data, status, jqXHR) {
     }
 
 }
-
+//verify begin
 function verifyIndicatorInfoBegin() {
     UpdateBeginAlert();
 }
@@ -41,6 +41,15 @@ function bindVerifyIndicatorValueChecked() {
         $.post("VerifyDepartmentIndicators/_VerifyLocked", postData, function (data) {
         });
     });
+}
+//--verify end
+
+//--绑定uploadFile中上传铵钮
+function bindUploadFileSubmit() {
+    $("#upload-file-submit-id").on("click", function () {
+        UpdateBeginAlert();
+    });
+  
 }
 //选取设备时，修改该行的背景色
 function imsSelectBeginPrev(element) {
@@ -133,6 +142,7 @@ function UpdateFailedAlert() {
     });
 }
 function UpdateBeginAlert() {
+    console.log("enter beginalert");
     swal({
         title: "正在处理中!",
         text: "请稍后……",       
