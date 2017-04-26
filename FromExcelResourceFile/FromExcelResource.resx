@@ -1,0 +1,388 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AnesthesiologyData1" xml:space="preserve">
+    <value>麻醉相关死亡人数</value>
+    <comment>麻醉科</comment>
+  </data>
+  <data name="AnesthesiologyData10" xml:space="preserve">
+    <value>椎管内麻醉神经并发症截瘫发生例数</value>
+    <comment>麻醉科</comment>
+  </data>
+  <data name="AnesthesiologyData2" xml:space="preserve">
+    <value>硬膜外阻滞成功例数</value>
+    <comment>麻醉科</comment>
+  </data>
+  <data name="AnesthesiologyData3" xml:space="preserve">
+    <value>硬膜外阻滞总例数</value>
+    <comment>麻醉科</comment>
+  </data>
+  <data name="AnesthesiologyData4" xml:space="preserve">
+    <value>神经阻滞麻醉成功例数</value>
+    <comment>麻醉科</comment>
+  </data>
+  <data name="AnesthesiologyData5" xml:space="preserve">
+    <value>神经阻滞麻醉总例数</value>
+    <comment>麻醉科</comment>
+  </data>
+  <data name="AnesthesiologyData6" xml:space="preserve">
+    <value>硬膜外麻醉硬脊膜穿破发生例数</value>
+    <comment>麻醉科</comment>
+  </data>
+  <data name="AnesthesiologyData7" xml:space="preserve">
+    <value>硬膜外麻醉总例数</value>
+    <comment>麻醉科</comment>
+  </data>
+  <data name="AnesthesiologyData8" xml:space="preserve">
+    <value>椎管内麻醉神经并发症发生例数</value>
+    <comment>麻醉科</comment>
+  </data>
+  <data name="AnesthesiologyData9" xml:space="preserve">
+    <value>椎管内麻醉总例数</value>
+    <comment>麻醉科</comment>
+  </data>
+  <data name="ClinicData1" xml:space="preserve">
+    <value>预约诊疗总人次</value>
+    <comment>门诊部</comment>
+  </data>
+  <data name="ClinicData2" xml:space="preserve">
+    <value>预约号源数</value>
+    <comment>门诊部</comment>
+  </data>
+  <data name="ExamineData1" xml:space="preserve">
+    <value>POCT项目对比例数</value>
+    <comment>检验科</comment>
+  </data>
+  <data name="ExamineData2" xml:space="preserve">
+    <value>POCT项目总数</value>
+    <comment>检验科</comment>
+  </data>
+  <data name="ExamineData3" xml:space="preserve">
+    <value>危急值报告及时例数</value>
+    <comment>检验科</comment>
+  </data>
+  <data name="ExamineData4" xml:space="preserve">
+    <value>危急值总例数</value>
+    <comment>检验科</comment>
+  </data>
+  <data name="FinanceData1" xml:space="preserve">
+    <value>药品总费用</value>
+    <comment>财务部</comment>
+  </data>
+  <data name="FinanceData2" xml:space="preserve">
+    <value>总费用</value>
+    <comment>财务部</comment>
+  </data>
+  <data name="InfectionManagementData1" xml:space="preserve">
+    <value>医院感染新发病人数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData10" xml:space="preserve">
+    <value>正确的洗手人数【抽查】</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData11" xml:space="preserve">
+    <value>洗手总人数【抽查】</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData12" xml:space="preserve">
+    <value>实际实施手卫生次数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData13" xml:space="preserve">
+    <value>应实施手卫生次数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData14" xml:space="preserve">
+    <value>手术部位感染上报例数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData15" xml:space="preserve">
+    <value>I类切口手术部位感染例数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData16" xml:space="preserve">
+    <value>血管内导管相关血流感染发病例数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData17" xml:space="preserve">
+    <value>血管内导管留置总天数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData18" xml:space="preserve">
+    <value>呼吸机相关肺炎发病例数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData19" xml:space="preserve">
+    <value>呼吸机使用总天数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData2" xml:space="preserve">
+    <value>医院感染总例次</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData20" xml:space="preserve">
+    <value>导尿管相关泌尿系感染发病例数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData21" xml:space="preserve">
+    <value>导尿管使用总天数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData22" xml:space="preserve">
+    <value>医院感染现患人数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData23" xml:space="preserve">
+    <value>医院感染现患检测时间住院人数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData3" xml:space="preserve">
+    <value>医院感染漏报例次</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData4" xml:space="preserve">
+    <value>使用非限制级抗菌药物前病原学送检例数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData5" xml:space="preserve">
+    <value>使用非限制级抗菌药物总例数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData6" xml:space="preserve">
+    <value>使用限制级抗菌药物前病原学送检例数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData7" xml:space="preserve">
+    <value>使用限制级抗菌药物总例数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData8" xml:space="preserve">
+    <value>使用特殊级抗菌药物前病原学送检例数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="InfectionManagementData9" xml:space="preserve">
+    <value>使用特殊级抗菌药物总例数</value>
+    <comment>感染管理部门</comment>
+  </data>
+  <data name="MedicalRecordStatisticalData1" xml:space="preserve">
+    <value>病历回收数</value>
+    <comment>病案统计室</comment>
+  </data>
+  <data name="MedicalRecordStatisticalData2" xml:space="preserve">
+    <value>手术冰冻与石蜡诊断符合例数</value>
+    <comment>病案统计室</comment>
+  </data>
+  <data name="MedicalRecordStatisticalData3" xml:space="preserve">
+    <value>手术冰冻与石蜡诊报告总例数</value>
+    <comment>病案统计室</comment>
+  </data>
+  <data name="PathologyData1" xml:space="preserve">
+    <value>常规诊断报告准确例数【抽查】</value>
+    <comment>病理科</comment>
+  </data>
+  <data name="PathologyData2" xml:space="preserve">
+    <value>常规诊断报告总例数【抽查】</value>
+    <comment>病理科</comment>
+  </data>
+  <data name="PathologyData3" xml:space="preserve">
+    <value>病理诊断报告在5个工作日内发出例数</value>
+    <comment>病理科</comment>
+  </data>
+  <data name="PathologyData4" xml:space="preserve">
+    <value>病理诊断报告总例数</value>
+    <comment>病理科</comment>
+  </data>
+  <data name="PathologyData5" xml:space="preserve">
+    <value>病理报告书内容与格式书写合格例数【抽查】</value>
+    <comment>病理科</comment>
+  </data>
+  <data name="PathologyData6" xml:space="preserve">
+    <value>病理报告总例数【抽查】</value>
+    <comment>病理科</comment>
+  </data>
+  <data name="PharmaceuticalData1" xml:space="preserve">
+    <value>住院病人抗菌药物使用人数</value>
+    <comment>药学部</comment>
+  </data>
+  <data name="PharmaceuticalData2" xml:space="preserve">
+    <value>抗菌药物消耗量</value>
+    <comment>药学部</comment>
+  </data>
+  <data name="PharmaceuticalData3" xml:space="preserve">
+    <value>基药总费用</value>
+    <comment>药学部</comment>
+  </data>
+  <data name="PharmaceuticalData4" xml:space="preserve">
+    <value>药品总费用【基药】</value>
+    <comment>药学部</comment>
+  </data>
+  <data name="PharmaceuticalData5" xml:space="preserve">
+    <value>I类切口手术抗菌药物预防使用例数</value>
+    <comment>药学部</comment>
+  </data>
+  <data name="PharmaceuticalData6" xml:space="preserve">
+    <value>除外治疗性用药的Ⅰ类切口手术例数</value>
+    <comment>药学部</comment>
+  </data>
+  <data name="PharmaceuticalData7" xml:space="preserve">
+    <value>门诊使用抗菌药物人数</value>
+    <comment>药学部</comment>
+  </data>
+  <data name="PharmaceuticalData8" xml:space="preserve">
+    <value>急诊使用抗菌药物人数</value>
+    <comment>药学部</comment>
+  </data>
+  <data name="RadiologyData1" xml:space="preserve">
+    <value>医学影像诊断与手术后符合例数【放射】【抽查】</value>
+    <comment>放射科</comment>
+  </data>
+  <data name="RadiologyData2" xml:space="preserve">
+    <value>医学影像诊断例数【放射】【抽查】</value>
+    <comment>放射科</comment>
+  </data>
+  <data name="RehabilitationData1" xml:space="preserve">
+    <value>康复治疗有效患者数</value>
+    <comment>康复医学科</comment>
+  </data>
+  <data name="RehabilitationData2" xml:space="preserve">
+    <value>康复治疗患者数</value>
+    <comment>康复医学科</comment>
+  </data>
+  <data name="RehabilitationData3" xml:space="preserve">
+    <value>住院患者康复功能评定例数</value>
+    <comment>康复医学科</comment>
+  </data>
+  <data name="RehabilitationData4" xml:space="preserve">
+    <value>完好设备数</value>
+    <comment>康复医学科</comment>
+  </data>
+  <data name="RehabilitationData5" xml:space="preserve">
+    <value>设备总数</value>
+    <comment>康复医学科</comment>
+  </data>
+  <data name="UltrasoundData1" xml:space="preserve">
+    <value>医学影像诊断与手术后符合例数【超声】【抽查】</value>
+    <comment>超声科</comment>
+  </data>
+  <data name="UltrasoundData2" xml:space="preserve">
+    <value>医学影像诊断例数【超声】【抽查】</value>
+    <comment>超声科</comment>
+  </data>
+</root>

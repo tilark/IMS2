@@ -647,6 +647,10 @@
       <Project>{40e06fa0-31ac-482a-af60-94fada4fcfe5}</Project>
       <Name>ExcelEntityOperation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FromExcelResourceFile\FromExcelResourceFile.csproj">
+      <Project>{b3c52a5d-f5d5-4f15-9eec-e708163df4ee}</Project>
+      <Name>FromExcelResourceFile</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OperateExcel\OperateExcel.csproj">
       <Project>{bc00582a-4992-4dca-a3ae-51c3e7da6382}</Project>
       <Name>OperateExcel</Name>
