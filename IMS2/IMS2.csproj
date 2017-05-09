@@ -44,14 +44,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <Reference Include="EPPlus, Version=4.1.0.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
       <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
-=======
+    </Reference>
     <Reference Include="BaglLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\IMS\Lib\BaglLib.dll</HintPath>
->>>>>>> origin/master
     </Reference>
     <Reference Include="ImsAutoLib">
       <HintPath>..\ImsAutoLib\ImsAutoLib.dll</HintPath>
