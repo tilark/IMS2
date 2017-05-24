@@ -16,12 +16,9 @@ using Microsoft.AspNet.Identity.EntityFramework;
 namespace IMS2.Controllers
 {
     [Authorize(Roles = "修改全院指标值,修改科室指标值, Administrators")]
-    [RoutePrefix("providingdepartmentindicator")]
     public class ProvidingDepartmentIndicatorController : Controller
     {
         private ImsDbContext db = new ImsDbContext();
-        [Route("")]
-        [Route("indexajax")]
         public async Task<ActionResult> IndexAjax()
         {
             if (User.IsInRole("修改全院指标值") || User.IsInRole("Administrators"))
@@ -44,7 +41,6 @@ namespace IMS2.Controllers
             return View();
 
         }
-        [Route("IndexAjax/{searchTime:datetime}/{providingDepartmentID:guid}")]
         public async Task<ActionResult> IndexAjax(DateTime searchTime, Guid providingDepartmentID)
         {
             var provideDepartment = await db.Departments.FindAsync(providingDepartmentID);
@@ -332,7 +328,6 @@ namespace IMS2.Controllers
         }
 
         // GET: ProvidingDepartmentIndicator/Details/5
-        [Route("Details/{id:guid}/{time:datetime}/{provideDepartment:guid}")]
         public async Task<ActionResult> Details(Guid id, DateTime time, Guid provideDepartment)
         {
             if (id.Equals(Guid.Empty))
@@ -423,7 +418,6 @@ namespace IMS2.Controllers
         [Authorize(Roles = "创建指标值, Administrators")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("Create/{searchTime}/{departmentID}")]
 
         public async Task<ActionResult> Create(DateTime? searchTime, Guid? departmentID)
         {
@@ -448,7 +442,6 @@ namespace IMS2.Controllers
             return RedirectToAction("Index", new { searchTime = searchTime, providingDepartment = departmentID });
         }
         // GET: ProvidingDepartmentIndicator/Edit/5
-        [Route("Edit/{id}/{time}/{provideDepartment}")]
 
         public async Task<ActionResult> Edit(Guid? id, DateTime? time, Guid? provideDepartment)
         {
