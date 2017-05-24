@@ -15,7 +15,7 @@
             业务处理
         </legend>
         <ul class="nav nav-pills">
-            <li class="col-md-2">@Html.ActionLink("编辑指标值", "Index", "ProvidingDepartmentIndicator", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+            <li class="col-md-2">@Html.ActionLink("编辑指标值", "Index", "ProvidingDepartmentIndicatorAjax", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
         </ul>
     </fieldset>
 }
@@ -57,7 +57,7 @@
                 指标监测
             </legend>
             <ul class="nav nav-pills">
-                <li class="col-md-2">@Html.ActionLink("添加指标值", "Index", "ProvidingDepartmentIndicator", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
+                <li class="col-md-2">@Html.ActionLink("添加指标值", "Index", "ProvidingDepartmentIndicatorAjax", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
                 <li class="col-md-2">@Html.ActionLink("自动获取数据", "Index", "AutoGetDataSource", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
                 <li class="col-md-2">@Html.ActionLink("管理标准值", "Index", "DepartmentIndicatorStandards", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })</li>
 

@@ -6,10 +6,9 @@
         {
             if (User.IsInRole("Administrators") || User.IsInRole("创建指标值"))
             {
-                if (Model.First().IndicatorCount <= 0)
-                {
-                    <div class="col-md-7 col-md-offset-5">
-
+                //if (Model.First().IndicatorCount <= 0)
+                //{
+                    <div class="col-md-12 panel panel-default">                        
                         @using (Ajax.BeginForm("_Create", "ProvidingDepartmentIndicatorAjax", new AjaxOptions() { HttpMethod = "Post", UpdateTargetId = "indicator-list-id", LoadingElementId = "create-indicator-info-ajax" }))
                         {
                             @Html.AntiForgeryToken()
@@ -17,7 +16,7 @@
                             <input name="departmentID" hidden="hidden" value="@ViewBag.DepartmentID" />
 
                             <div class="form-group">
-                                <div class="col-md-10 pitem">
+                                <div class="col-md-offset-5 pitem">
                                     <input type="submit" value="添加管理项目" class="btn btn-warning" />
 
                                     <img src="~/Images/ajax-loader.gif" style="display:none" id="create-indicator-info-ajax" />
@@ -28,9 +27,9 @@
                         }
 
                     </div>
+                    //}
                 }
-            }
-            var i = 1;
+                var i = 1;
 
             <legend class="text-primary">指标详情</legend>
             <table class="table table-hover">
