@@ -29,13 +29,13 @@ namespace IMS2.RepositoryAsync
             }
         }
 
-        public ImsDbContext dbContext
-        {
-            get
-            {
-                return this._db;
-            }
-        }
+        //public ImsDbContext dbContext
+        //{
+        //    get
+        //    {
+        //        return this._db;
+        //    }
+        //}
 
         public async Task SaveChangesClientWinAsync()
         {

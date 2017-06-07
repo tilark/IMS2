@@ -215,6 +215,9 @@
     <Compile Include="App_Start\NinjectDependencyResolver.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="BusinessModel\SatisticsValueModel\ISatisticsValue.cs" />
+    <Compile Include="BusinessModel\SatisticsValueModel\SatisticsValue.cs" />
+    <Compile Include="CachedKeyEntry.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AutoGetDataSourceController.cs" />
     <Compile Include="Controllers\DataSourceSystemBaseController.cs" />
@@ -240,6 +243,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProvidingDepartmentIndicatorController.cs" />
     <Compile Include="Controllers\SearchDepartmentIndicatorController.cs" />
+    <Compile Include="Controllers\StatisticsDepartmentIndicatorValueController.cs" />
     <Compile Include="Controllers\UploadFilesController.cs" />
     <Compile Include="Controllers\VerifyDepartmentIndicatorsController.cs" />
     <Compile Include="DAL\BaseRepository.cs" />
@@ -274,6 +278,7 @@
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\DepartmentCategory.cs" />
     <Compile Include="Models\DepartmentCategoryMapIndicatorGroup.cs" />
+    <Compile Include="Models\DepartmentIndicatorDurationVirtualValue.cs" />
     <Compile Include="Models\DepartmentIndicatorStandard.cs" />
     <Compile Include="Models\DepartmentIndicatorValue.cs" />
     <Compile Include="Models\Duration.cs" />
@@ -285,14 +290,19 @@
     <Compile Include="Models\IndicatorGroupMapIndicator.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="PublicOperations\IFileUpload.cs" />
+    <Compile Include="BusinessModel\AlgorithmModel\AlgorithmOperationImpl.cs" />
     <Compile Include="PublicOperations\Implements\MedicalRecordStatisticalFromExcelRepo.cs" />
     <Compile Include="PublicOperations\Interfaces\FromExcelToDataBase.cs" />
+    <Compile Include="BusinessModel\AlgorithmModel\IAlgorithmOperation.cs" />
+    <Compile Include="RepositoryAsync\DepartmentIndicatorDurationValueRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\DepartmentIndicatorValueRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\DepartmentRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\DomainRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\DomainUnitOfWork.cs" />
+    <Compile Include="RepositoryAsync\DurationRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\IDomainRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\IDomainUnitOfWork.cs" />
+    <Compile Include="RepositoryAsync\IndicatorAlgorithmRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\IndicatorRepositoryAsync.cs" />
     <Compile Include="ViewModels\ImportDepartmentIndicatorViews\AnesthesiologyFromExcel.cs" />
     <Compile Include="ViewModels\ImportDepartmentIndicatorViews\ClinicFromExcel.cs" />
@@ -333,6 +343,7 @@
     <Compile Include="ViewModels\ReporterView.cs" />
     <Compile Include="ViewModels\ResetPasswordView.cs" />
     <Compile Include="ViewModels\RoleView.cs" />
+    <Compile Include="ViewModels\StatisticsDepartmentIndicatorValueViews\DepartmentIndicatorDurationTime.cs" />
     <Compile Include="ViewModels\TimeDepartmentIDView.cs" />
     <Compile Include="ViewModels\UploadFileViews\ReadExcelMessage.cs" />
     <Compile Include="ViewModels\UploadFileViews\UploadFileView.cs" />
@@ -631,6 +642,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\StatisticsDepartmentIndicatorValue\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

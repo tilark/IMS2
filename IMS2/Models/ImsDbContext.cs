@@ -19,6 +19,7 @@ namespace IMS2.Models
         public virtual DbSet<DepartmentCategoryMapIndicatorGroup> DepartmentCategoryMapIndicatorGroups { get; set; }
         public virtual DbSet<DepartmentIndicatorStandard> DepartmentIndicatorStandards { get; set; }
         public virtual DbSet<DepartmentIndicatorValue> DepartmentIndicatorValues { get; set; }
+        public virtual DbSet<DepartmentIndicatorDurationVirtualValue> DepartmentIndicatorDurationVirtualValues { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Duration> Durations { get; set; }
         public virtual DbSet<IndicatorAlgorithm> IndicatorAlgorithms { get; set; }
