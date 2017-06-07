@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews;
 using IMS2.Models;
 using IMS2.ViewModels;
-using IMS2.PublicOperations.Interfaces;
 using IMS2.RepositoryAsync;
 using System.Data.Entity;
 using IMS2.BusinessModel.SatisticsValueModel;
@@ -46,7 +45,7 @@ namespace IMS2.Controllers
             if (IsValidInput(departmentIndicatorDurationTime))
             {
                 //获得值
-                departmentIndicatorDurationTime.Value = await GetDepartmentIndicatorTimeValue2(departmentIndicatorDurationTime);
+                departmentIndicatorDurationTime.Value = await GetDepartmentIndicatorTimeValue(departmentIndicatorDurationTime);
                 //存入数据库，存入到新值表中
                await AddToNewDepartmentIndicatorValueDataTable(departmentIndicatorDurationTime);
             }
@@ -59,7 +58,7 @@ namespace IMS2.Controllers
             return View(departmentIndicatorDurationTime);
         }
 
-        public async Task<decimal?> GetDepartmentIndicatorTimeValue2(DepartmentIndicatorDurationTime departmentIndicatorDurationTime)
+        public async Task<decimal?> GetDepartmentIndicatorTimeValue(DepartmentIndicatorDurationTime departmentIndicatorDurationTime)
         {
             return await this.satisticsValue.GetSatisticsValue(departmentIndicatorDurationTime);
         }

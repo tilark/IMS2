@@ -35,20 +35,20 @@ namespace IMS2.Models
         #region Method
         public bool IsYearDuration()
         {
-            return this.DurationName == "年";
+            return this.DurationId == CachedKeyEntry.YearDurationID;
         }
 
         public bool HalfYearDuration()
         {
-            return this.DurationName == "半年";
+            return this.DurationId == CachedKeyEntry.HalftYearDurationID;
         }
         public bool SeasonDuration()
         {
-            return this.DurationName == "季";
+            return this.DurationId == CachedKeyEntry.SeasonDurationID;
         }
         public bool MonthDuration()
         {
-            return this.DurationName == "月";
+            return this.DurationId == CachedKeyEntry.MonthDurationID;
         }
         public int NextLevel()
         {
