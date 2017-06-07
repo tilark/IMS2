@@ -343,7 +343,7 @@
     <Compile Include="ViewModels\ReporterView.cs" />
     <Compile Include="ViewModels\ResetPasswordView.cs" />
     <Compile Include="ViewModels\RoleView.cs" />
-    <Compile Include="ViewModels\StatisticsDepartmentIndicatorValueViews\DepartmentIndicatorDurationTime.cs" />
+    <Compile Include="BusinessModel\SatisticsValueModel\DepartmentIndicatorDurationTime.cs" />
     <Compile Include="ViewModels\TimeDepartmentIDView.cs" />
     <Compile Include="ViewModels\UploadFileViews\ReadExcelMessage.cs" />
     <Compile Include="ViewModels\UploadFileViews\UploadFileView.cs" />
@@ -642,6 +642,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="ViewModels\StatisticsDepartmentIndicatorValueViews\" />
     <Folder Include="Views\StatisticsDepartmentIndicatorValue\" />
   </ItemGroup>
   <ItemGroup>

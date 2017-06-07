@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews
+namespace IMS2.BusinessModel.SatisticsValueModel
 {
     public class DepartmentIndicatorDurationTime
     {

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews;
+using IMS2.BusinessModel.SatisticsValueModel;
 using IMS2.Models;
 using IMS2.ViewModels;
 using IMS2.RepositoryAsync;
 using System.Data.Entity;
-using IMS2.BusinessModel.SatisticsValueModel;
+
 using System.Threading.Tasks;
 
 namespace IMS2.Controllers
@@ -33,7 +33,16 @@ namespace IMS2.Controllers
             return View();
         }
 
-        
+        /// <summary>
+        /// 创建新值表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ActionResult> Create(DepartmentIndicatorDurationTime departmentIndicatorDurationTime)
+        {
+            await AddToNewDepartmentIndicatorValueDataTable(departmentIndicatorDurationTime);
+            return View();
+        }
+
         /// <summary>
         /// 计算出科室指标时段的值
         /// </summary>
@@ -58,7 +67,7 @@ namespace IMS2.Controllers
             return View(departmentIndicatorDurationTime);
         }
 
-        public async Task<decimal?> GetDepartmentIndicatorTimeValue(DepartmentIndicatorDurationTime departmentIndicatorDurationTime)
+        private async Task<decimal?> GetDepartmentIndicatorTimeValue(DepartmentIndicatorDurationTime departmentIndicatorDurationTime)
         {
             return await this.satisticsValue.GetSatisticsValue(departmentIndicatorDurationTime);
         }

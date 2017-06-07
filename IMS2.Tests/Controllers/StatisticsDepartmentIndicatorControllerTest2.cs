@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews;
+using IMS2.BusinessModel.SatisticsValueModel;
 using IMS2.BusinessModel.AlgorithmModel;
 using IMS2.Controllers;
 using IMS2.BusinessModel.SatisticsValueModel;

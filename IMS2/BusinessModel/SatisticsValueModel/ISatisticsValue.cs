@@ -1,4 +1,4 @@
-﻿using IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews;
+﻿using IMS2.BusinessModel.SatisticsValueModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;

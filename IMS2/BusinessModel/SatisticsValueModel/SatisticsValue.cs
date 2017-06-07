@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews;
+using IMS2.BusinessModel.SatisticsValueModel;
 using System.Threading.Tasks;
 using IMS2.Models;
 using IMS2.ViewModels;

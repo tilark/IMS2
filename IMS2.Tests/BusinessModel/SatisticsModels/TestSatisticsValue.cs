@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using IMS2.BusinessModel.AlgorithmModel;
 using IMS2.BusinessModel.SatisticsValueModel;
-using IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews;
 namespace IMS2.Tests.BusinessModel.SatisticsModels
 {
 
