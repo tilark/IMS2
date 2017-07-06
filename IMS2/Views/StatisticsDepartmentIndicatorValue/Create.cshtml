@@ -1,0 +1,30 @@
+﻿@model IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews.DepartmentIndicatorDurationVirtualValueEdit
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>计算算法表的结果指标值</h2>
+@using (Html.BeginForm("_CaculateAlgorithmResult", "StatisticsDepartmentIndicatorValue"))
+{
+    @Html.AntiForgeryToken()
+<div class="form-horizontal">
+    <div class="form-group">
+        @Html.LabelFor(model => model.DurationId, new { @class = "col-md-2 label-control" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.DurationId, ViewBag.DurationSelect as SelectList, "-请选择-", htmlAttributes: new { @class = "form-control", id = "search-indicator-department-id" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Time, new { @class = "col-md-2 label-control" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Time, new { htmlAttributes = new { @class = "form-control datetimepicker2", id = "indicator-time-id" } })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-5 col-md-7">
+            <button type="submit" class="btn btn-primary">提交</button>
+        </div>
+    </div>
+</div>
+}

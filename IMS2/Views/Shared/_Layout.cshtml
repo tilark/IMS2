@@ -34,6 +34,7 @@
                     @if (User.IsInRole("修改全院指标值") || User.IsInRole("修改科室指标值") || User.IsInRole("Administrators"))
                     {
                         <li>@Html.ActionLink("编辑指标值", "Index", "ProvidingDepartmentIndicatorAjax")</li>
+                        <li>@Html.ActionLink("计算指标值", "Create", "StatisticsDepartmentIndicatorValue")</li>
                     }
                     @if (User.IsInRole("修改全院指标值") || User.IsInRole("Administrators"))
                     {

@@ -7,6 +7,8 @@ using ExcelEntityOperation;
 using IMS2.RepositoryAsync;
 using IMS2.BusinessModel.SatisticsValueModel;
 using IMS2.BusinessModel.AlgorithmModel;
+using IMS2.BusinessModel.IndicatorDepartmentModel;
+
 namespace IMS2.App_Start
 {
     public class NinjectDependencyResolver : System.Web.Mvc.IDependencyResolver
@@ -26,6 +28,8 @@ namespace IMS2.App_Start
             this.kernel.Bind<IReadFromExcel>().To<ReadFromExcel>();
             this.kernel.Bind<IAlgorithmOperation>().To<AlgorithmOperationImpl>();
             this.kernel.Bind<ISatisticsValue>().To<SatisticsValue>();
+            this.kernel.Bind<IIndicatorDepartment>().To<IndicatorDepartmentImpl>();
+
             ////this.kernel.Bind<ITodoRepository>().To<TodoRepository1>().Named("type1");
             ////this.kernel.Bind<ITodoRepository>().To<TodoRepository2>().Named("type2");
             ////this.kernel.Bind<IMessage>().To<Message1>().Named("message1");

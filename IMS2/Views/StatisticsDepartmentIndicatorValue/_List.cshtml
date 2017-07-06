@@ -1,0 +1,59 @@
+﻿@model IEnumerable<IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews.DepartmentIndicatorDurationVirtualValueView>
+
+<div id="satistics-indicator-list-id">
+    <fieldset class="col-md-12 panel panel-default">
+        @if (Model != null && Model.Count() > 0)
+        {
+            if (User.IsInRole("Administrators"))
+            {
+                <table class="table table-hover" id="satistics-indicator-list-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.Label("序号")
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DepartmentName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IndicatorName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DurationName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Time)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Value)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CreateTime)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.UpdateTime)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int i = 1;}
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@i</td>
+                                <td>@Html.DisplayFor(model => item.DepartmentName)</td>
+                                <td>@Html.DisplayFor(model => item.IndicatorName)</td>
+                                <td>@Html.DisplayFor(model => item.DurationName)</td>
+                                <td>@Html.DisplayFor(model => item.Time)</td>
+                                <td>@Html.DisplayFor(model => item.Value)</td>
+                                <td>@Html.DisplayFor(model => item.CreateTime)</td>
+                                <td>@Html.DisplayFor(model => item.UpdateTime)</td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+                                }
+                            }
+    </fieldset>
+</div>

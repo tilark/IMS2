@@ -2,6 +2,8 @@
     console.log("ready1!");
 
     $(document).on("focusin", ".datetimepicker2", setdatetimepicker2);
+    $(document).on("focusin", ".yearpicker", setdatetimepickerYear);
+
 });
 function setdatetimepicker2() {
     $(this).datetimepicker({
@@ -9,7 +11,19 @@ function setdatetimepicker2() {
         format: 'YYYY-MM'
     });
 }
-
+function setdatetimepickerYear() {
+    $(this).datetimepicker({
+        locale: 'zh-cn',
+        format: 'YYYY'
+    });
+}
+//筛选统计指标值列表成功后
+function searchSatisticsIndicatorInfoSuccess(data, status, jqXHR) {
+    if (jqXHR.status != 203) {
+        setDataTable("#satistics-indicator-list-table");
+        bindVerifyIndicatorValueChecked();
+    }
+}
 //筛选科室指标值列表成功后
 function searchIndicatorInfoSuccess(data, status, jqXHR) {
     if (jqXHR.status != 203) {

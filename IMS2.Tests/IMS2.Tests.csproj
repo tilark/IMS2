@@ -94,8 +94,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusinessModel\IndicatorDepartmentModel\IndicatorDepartmentImplTests.cs" />
     <Compile Include="BusinessModel\SatisticsModels\TestSatisticsValue.cs" />
-    <Compile Include="Controllers\StatisticsDepartmentIndicatorControllerTest2.cs" />
+    <Compile Include="Controllers\StatisticsDepartmentIndicatorValueControllerTests.cs" />
     <Compile Include="MockUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
