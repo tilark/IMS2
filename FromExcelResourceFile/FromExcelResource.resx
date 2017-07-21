@@ -281,6 +281,22 @@
     <value>使用特殊级抗菌药物总例数</value>
     <comment>感染管理部门</comment>
   </data>
+  <data name="MaterialsStatisticalData1" xml:space="preserve">
+    <value>总卫生材料收入</value>
+    <comment>物资办</comment>
+  </data>
+  <data name="MaterialsStatisticalData2" xml:space="preserve">
+    <value>【物资】总收入</value>
+    <comment>物资办</comment>
+  </data>
+  <data name="MaterialsStatisticalData3" xml:space="preserve">
+    <value>卫材总领用</value>
+    <comment>物资办</comment>
+  </data>
+  <data name="MaterialsStatisticalData4" xml:space="preserve">
+    <value>【物资】不含药品收入</value>
+    <comment>物资办</comment>
+  </data>
   <data name="MedicalRecordStatisticalData1" xml:space="preserve">
     <value>病历回收数</value>
     <comment>病案统计室</comment>

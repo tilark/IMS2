@@ -302,6 +302,7 @@
     <Compile Include="ViewModels\ImportDepartmentIndicatorViews\ExamineFromExcel.cs" />
     <Compile Include="ViewModels\ImportDepartmentIndicatorViews\FinanceFromExcel.cs" />
     <Compile Include="ViewModels\ImportDepartmentIndicatorViews\InfectionManagementFromExcel.cs" />
+    <Compile Include="ViewModels\ImportDepartmentIndicatorViews\MaterialsFromExcel.cs" />
     <Compile Include="ViewModels\ImportDepartmentIndicatorViews\MedicalRecordStatisticalFromExcel.cs" />
     <Compile Include="ViewModels\ImportDepartmentIndicatorViews\PathologyFromExcel.cs" />
     <Compile Include="ViewModels\ImportDepartmentIndicatorViews\PharmaceuticalFromExcel.cs" />

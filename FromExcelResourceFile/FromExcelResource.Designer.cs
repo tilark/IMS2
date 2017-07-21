@@ -430,6 +430,42 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
+        ///   查找类似 总卫生材料收入 的本地化字符串。
+        /// </summary>
+        public static string MaterialsStatisticalData1 {
+            get {
+                return ResourceManager.GetString("MaterialsStatisticalData1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 【物资】总收入 的本地化字符串。
+        /// </summary>
+        public static string MaterialsStatisticalData2 {
+            get {
+                return ResourceManager.GetString("MaterialsStatisticalData2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 卫材总领用 的本地化字符串。
+        /// </summary>
+        public static string MaterialsStatisticalData3 {
+            get {
+                return ResourceManager.GetString("MaterialsStatisticalData3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 【物资】不含药品收入 的本地化字符串。
+        /// </summary>
+        public static string MaterialsStatisticalData4 {
+            get {
+                return ResourceManager.GetString("MaterialsStatisticalData4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 病历回收数 的本地化字符串。
         /// </summary>
         public static string MedicalRecordStatisticalData1 {
