@@ -301,7 +301,7 @@
     <Compile Include="PublicOperations\Implements\MedicalRecordStatisticalFromExcelRepo.cs" />
     <Compile Include="PublicOperations\Interfaces\FromExcelToDataBase.cs" />
     <Compile Include="BusinessModel\AlgorithmModel\IAlgorithmOperation.cs" />
-    <Compile Include="RepositoryAsync\DepartmentIndicatorDurationValueRepositoryAsync.cs" />
+    <Compile Include="RepositoryAsync\DepartmentIndicatorDurationVirtualValueRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\DepartmentIndicatorValueRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\DepartmentRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\DomainRepositoryAsync.cs" />

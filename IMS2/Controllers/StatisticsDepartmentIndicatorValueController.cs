@@ -14,17 +14,20 @@ using IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews;
 using IMS2.BusinessModel.IndicatorDepartmentModel;
 namespace IMS2.Controllers
 {
+    /// <summary>
+    /// 统计科室指标值
+    /// </summary>
     public class StatisticsDepartmentIndicatorValueController : Controller
     {
         private IDomainUnitOfWork unitOfWork;
         private ISatisticsValue satisticsValue;
         private IIndicatorDepartment indicatorDepartment;
         // GET: StatisticsDepartmentIndicatorValue
-        private DepartmentIndicatorDurationValueRepositoryAsync repo;
+        private DepartmentIndicatorDurationVirtualValueRepositoryAsync repo;
         public StatisticsDepartmentIndicatorValueController(IDomainUnitOfWork unitOfWork, ISatisticsValue satisticsValue, IIndicatorDepartment indicatorDepartment)
         {
             this.unitOfWork = unitOfWork;
-            this.repo = new DepartmentIndicatorDurationValueRepositoryAsync(this.unitOfWork);
+            this.repo = new DepartmentIndicatorDurationVirtualValueRepositoryAsync(this.unitOfWork);
             this.satisticsValue = satisticsValue;
             this.indicatorDepartment = indicatorDepartment;
         }
@@ -187,12 +190,11 @@ namespace IMS2.Controllers
 
         private bool IsValidEditInput(DepartmentIndicatorDurationVirtualValueEdit valueEdit)
         {
-            //if (TryUpdateModel(valueEdit))
-            //{
-            //    return true;
-            //}
-            //else { return false; }
-            return true;
+            if (ModelState.IsValid)
+            {
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -266,7 +268,10 @@ namespace IMS2.Controllers
                 //获得值
                 departmentIndicatorDurationTime.Value = await GetDepartmentIndicatorTimeValue(departmentIndicatorDurationTime);
                 //存入数据库，存入到新值表中
-                await AddToNewDepartmentIndicatorValueDataTable(departmentIndicatorDurationTime);
+                if (departmentIndicatorDurationTime.Value.HasValue)
+                {
+                    await AddToNewDepartmentIndicatorValueDataTable(departmentIndicatorDurationTime);
+                }
             }
             else
             {

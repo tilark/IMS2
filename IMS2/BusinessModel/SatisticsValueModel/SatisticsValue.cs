@@ -26,7 +26,7 @@ namespace IMS2.BusinessModel.SatisticsValueModel
         }
         public async Task<decimal?> GetSatisticsValue(DepartmentIndicatorDurationTime departmentIndicatorDurationTime)
         {
-            decimal? result = 0M;
+            decimal? result =null;
             //查找算法
             IndicatorAlgorithm algorithm = await GetAlgorithm(departmentIndicatorDurationTime.IndicatorID);
             if (algorithm != null)
@@ -48,10 +48,10 @@ namespace IMS2.BusinessModel.SatisticsValueModel
                         //是最初级别,通过算法计算出值
                         result = await GetDepartmentIndicatorTimeValueFromAlgorithm(departmentIndicatorDurationTime, algorithm);
                         return result;
-                    }
+                    }                   
                     else
                     {
-                        //不是最初级别
+                        //不是最初级别， 也有可能是低级别
                         //说明是聚合指标，需获得该跨度的下一级别，如年需获得半年，半年下一级为季
                         result = await CalculateAggregationDepartmentIndicatorTimeValue(departmentIndicatorDurationTime);
                         return result;
@@ -174,7 +174,76 @@ namespace IMS2.BusinessModel.SatisticsValueModel
         private Guid GetLowerLevelDurationID(Guid durationId, DateTime time, out DateTime[] times)
         {
             times = new DateTime[3];
-            return GetDurationIDFromTest1(durationId, time, out times);
+            var duration = this.DurationList.FirstOrDefault(a => a.DurationId == durationId);
+            if (duration != null)
+            {
+                if (duration.IsYearDuration())
+                {
+                    if (time.Month == 1)
+                    {
+                        //全年
+                        times[0] = new DateTime(time.Year, 1, 1);
+                        times[1] = new DateTime(time.Year, 7, 1);
+                    }
+                }
+                if (duration.HalfYearDuration())
+                {
+                    //上半年
+                    if (time.Month == 1)
+                    {
+                        times[0] = new DateTime(time.Year, 1, 1);
+                        times[1] = new DateTime(time.Year, 4, 1);
+                    }
+                    else if (time.Month == 7)
+                    {
+                        //下半年               
+                        times[0] = new DateTime(time.Year, 7, 1);
+                        times[1] = new DateTime(time.Year, 10, 1);
+                    }
+                }
+                if (duration.SeasonDuration())
+                {
+                    if (time.Month == 1)
+                    {
+                        //第一季度
+                        times[0] = new DateTime(time.Year, 1, 1);
+                        times[1] = new DateTime(time.Year, 2, 1);
+                        times[2] = new DateTime(time.Year, 3, 1);
+                    }
+                    else if (time.Month == 4)
+                    {
+                        //第二季度
+                        times[0] = new DateTime(time.Year, 4, 1);
+                        times[1] = new DateTime(time.Year, 5, 1);
+                        times[2] = new DateTime(time.Year, 6, 1);
+                    }
+                    else if (time.Month == 7)
+                    {
+                        //第三季度
+                        times[0] = new DateTime(time.Year, 7, 1);
+                        times[1] = new DateTime(time.Year, 8, 1);
+                        times[2] = new DateTime(time.Year, 9, 1);
+                    }
+                    else if (time.Month == 10)
+                    {
+                        //第四季度
+                        times[0] = new DateTime(time.Year, 10, 1);
+                        times[1] = new DateTime(time.Year, 11, 1);
+                        times[2] = new DateTime(time.Year, 12, 1);
+                    }
+                }
+
+                if (duration.MonthDuration())
+                {
+                    times[0] = new DateTime(time.Year, time.Month, 1);
+                }
+
+                return duration.NextLevel() != 0 ? this.DurationList.Find(a => a.Level == duration.NextLevel()).DurationId : Guid.Empty;
+            }
+            else
+            {
+                return Guid.Empty;
+            }
         }
 
 
