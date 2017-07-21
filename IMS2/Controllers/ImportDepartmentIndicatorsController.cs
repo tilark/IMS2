@@ -64,7 +64,7 @@ namespace IMS2.Controllers
             filePath = filePath.Replace("\\", "/");
             filePath = HttpContext.Server.MapPath(filePath);
 
-            uploadFileView.ReporterDate = (new DateTime(uploadFileView.ReporterDate.Year, uploadFileView.ReporterDate.Month, 1)).AddMonths(1).AddSeconds(-1);          
+            //uploadFileView.StandardrizeReporterDate();          
            
             try
             {
@@ -94,8 +94,6 @@ namespace IMS2.Controllers
                  return Json(new { success = false, errorMessage = "File is of wrong format." });
             }
 
-            uploadFileView.ReporterDate = (new DateTime(uploadFileView.ReporterDate.Year, uploadFileView.ReporterDate.Month, 1)).AddMonths(1).AddSeconds(-1);
-
             try
             {
                 var viewModel = new FromExcelToDataBase<PathologyFromExcel>(uploadFileView.ReporterDate, this.unitOfWork, this.readFromExcel).WriteDataToDataBase(filePath, "", "B2", 1, 1);
@@ -120,8 +118,6 @@ namespace IMS2.Controllers
             {
                 return Json(new { success = false, errorMessage = "File is of wrong format." });
             }
-
-            uploadFileView.ReporterDate = (new DateTime(uploadFileView.ReporterDate.Year, uploadFileView.ReporterDate.Month, 1)).AddMonths(1).AddSeconds(-1);
 
             try
             {
@@ -148,8 +144,6 @@ namespace IMS2.Controllers
                 return Json(new { success = false, errorMessage = "File is of wrong format." });
             }
 
-            uploadFileView.ReporterDate = (new DateTime(uploadFileView.ReporterDate.Year, uploadFileView.ReporterDate.Month, 1)).AddMonths(1).AddSeconds(-1);
-
             try
             {
                 var viewModel = new FromExcelToDataBase<UltrasoundFromExcel>(uploadFileView.ReporterDate, this.unitOfWork, this.readFromExcel).WriteDataToDataBase(filePath, "", "B2", 1, 1);
@@ -175,7 +169,6 @@ namespace IMS2.Controllers
                 return Json(new { success = false, errorMessage = "File is of wrong format." });
             }
 
-            uploadFileView.ReporterDate = (new DateTime(uploadFileView.ReporterDate.Year, uploadFileView.ReporterDate.Month, 1)).AddMonths(1).AddSeconds(-1);
 
             try
             {
@@ -201,8 +194,6 @@ namespace IMS2.Controllers
             {
                 return Json(new { success = false, errorMessage = "File is of wrong format." });
             }
-
-            uploadFileView.ReporterDate = (new DateTime(uploadFileView.ReporterDate.Year, uploadFileView.ReporterDate.Month, 1)).AddMonths(1).AddSeconds(-1);
 
             try
             {
@@ -230,8 +221,6 @@ namespace IMS2.Controllers
                 return Json(new { success = false, errorMessage = "File is of wrong format." });
             }
 
-            uploadFileView.ReporterDate = (new DateTime(uploadFileView.ReporterDate.Year, uploadFileView.ReporterDate.Month, 1)).AddMonths(1).AddSeconds(-1);
-
             try
             {
                 var viewModel = new FromExcelToDataBase<ExamineFromExcel>(uploadFileView.ReporterDate, this.unitOfWork, this.readFromExcel).WriteDataToDataBase(filePath, "", "B2", 1, 1);
@@ -256,9 +245,6 @@ namespace IMS2.Controllers
             {
                 return Json(new { success = false, errorMessage = "File is of wrong format." });
             }
-
-            uploadFileView.ReporterDate = (new DateTime(uploadFileView.ReporterDate.Year, uploadFileView.ReporterDate.Month, 1)).AddMonths(1).AddSeconds(-1);
-
             try
             {
                 var viewModel = new FromExcelToDataBase<RehabilitationFromExcel>(uploadFileView.ReporterDate, this.unitOfWork, this.readFromExcel).WriteDataToDataBase(filePath, "", "B2", 1, 1);
@@ -285,7 +271,7 @@ namespace IMS2.Controllers
                 return Json(new { success = false, errorMessage = "File is of wrong format." });
             }
 
-            uploadFileView.ReporterDate = (new DateTime(uploadFileView.ReporterDate.Year, uploadFileView.ReporterDate.Month, 1)).AddMonths(1).AddSeconds(-1);
+             
 
             try
             {
@@ -313,7 +299,7 @@ namespace IMS2.Controllers
                 return Json(new { success = false, errorMessage = "File is of wrong format." });
             }
 
-            uploadFileView.ReporterDate = (new DateTime(uploadFileView.ReporterDate.Year, uploadFileView.ReporterDate.Month, 1)).AddMonths(1).AddSeconds(-1);
+             
 
             try
             {
@@ -341,7 +327,7 @@ namespace IMS2.Controllers
                 return Json(new { success = false, errorMessage = "File is of wrong format." });
             }
 
-            uploadFileView.ReporterDate = (new DateTime(uploadFileView.ReporterDate.Year, uploadFileView.ReporterDate.Month, 1)).AddMonths(1).AddSeconds(-1);
+             
 
             try
             {
