@@ -34,17 +34,32 @@
                     @if (User.IsInRole("修改全院指标值") || User.IsInRole("修改科室指标值") || User.IsInRole("Administrators"))
                     {
                         <li>@Html.ActionLink("编辑指标值", "Index", "ProvidingDepartmentIndicatorAjax")</li>
-                        <li>@Html.ActionLink("计算指标值", "Create", "StatisticsDepartmentIndicatorValue")</li>
+                        
                     }
                     @if (User.IsInRole("修改全院指标值") || User.IsInRole("Administrators"))
                     {
                         <li>@Html.ActionLink("审核指标", "Index", "VerifyDepartmentIndicators")</li>
-                        
+                        <li>@Html.ActionLink("计算指标值", "Index", "StatisticsDepartmentIndicatorValue")</li>
                         <li>@Html.ActionLink("导入指标", "Index", "ImportDepartmentIndicators")</li>
                         <li>@Html.ActionLink("查看全院数据", "Index", "ShowDepartmentIndicatorValue")</li>
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+   
+
+    <!-- Modal -->
+    <div class="modal fade" id="waitingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">                   
+                    <h4 class="modal-title" id="myModalLabel">请耐心等待</h4>
+                </div>
+                <div class="modal-body">
+                    正在创建中,请等待...<img src="~/Images/ajax-loader.gif" />
+                </div>               
             </div>
         </div>
     </div>

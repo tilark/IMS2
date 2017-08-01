@@ -17,6 +17,9 @@ namespace IMS2.Controllers
     /// <summary>
     /// 统计科室指标值
     /// </summary>
+    /// 
+    [Authorize(Roles = "修改全院指标值, Administrators")]
+
     public class StatisticsDepartmentIndicatorValueController : Controller
     {
         private IDomainUnitOfWork unitOfWork;
@@ -39,7 +42,8 @@ namespace IMS2.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-
+            PoPulateDeaprtmentList();
+            GetDurationSelect();
             return View();
         }
 
@@ -75,7 +79,7 @@ namespace IMS2.Controllers
             if (searchCondition.DepartmentID.HasValue)
             {
                 var exDepartmentID = Expression.Property(satisticParam, "DepartmentID");
-                var searchDepartmentID = Expression.Convert(Expression.Constant(searchCondition.DepartmentID), exDepartmentID.Type);
+                var searchDepartmentID = Expression.Convert(Expression.Constant(searchCondition.DepartmentID.Value), exDepartmentID.Type);
 
                 var equalDepartmentID = Expression.Equal(exDepartmentID, searchDepartmentID);
                 finalSearch = Expression.AndAlso(finalSearch, equalDepartmentID);
@@ -86,7 +90,7 @@ namespace IMS2.Controllers
             if (searchCondition.IndicatorID.HasValue)
             {
                 var exIndicatorID = Expression.Property(satisticParam, "IndicatorID");
-                var searchIndicatorID = Expression.Convert(Expression.Constant(searchCondition.IndicatorID), exIndicatorID.Type);
+                var searchIndicatorID = Expression.Convert(Expression.Constant(searchCondition.IndicatorID.Value), exIndicatorID.Type);
 
                 var equalIndicatorID = Expression.Equal(exIndicatorID, searchIndicatorID);
                 finalSearch = Expression.AndAlso(finalSearch, equalIndicatorID);
@@ -97,7 +101,7 @@ namespace IMS2.Controllers
             if (searchCondition.DurationID.HasValue)
             {
                 var exDurationID = Expression.Property(satisticParam, "DurationID");
-                var searchDurationID = Expression.Convert(Expression.Constant(searchCondition.DurationID), exDurationID.Type);
+                var searchDurationID = Expression.Convert(Expression.Constant(searchCondition.DurationID.Value), exDurationID.Type);
 
                 var equalDurationID = Expression.Equal(exDurationID, searchDurationID);
                 finalSearch = Expression.AndAlso(finalSearch, equalDurationID);
@@ -112,6 +116,10 @@ namespace IMS2.Controllers
             finalSearch = Expression.AndAlso(finalSearch, equalTime);
             #endregion
 
+            if (finalSearch != null)
+            {
+                expressionDeviceSearch = Expression.Lambda<Func<T, bool>>(finalSearch, satisticParam);
+            }
             return expressionDeviceSearch;
         }
         #endregion
@@ -123,16 +131,12 @@ namespace IMS2.Controllers
         /// <returns></returns>
         public ActionResult Create()
         {
-            ViewBag.DurationSelect = GetDurationSelect();
+            GetDurationSelect();
+            PoPulateProvideDepartmentList();
             return View();
         }
 
-        private SelectList GetDurationSelect()
-        {
-            var durationRepo = new DurationRepositoryAsync(this.unitOfWork);
-            var result = new SelectList(durationRepo.GetAll().ToList(), "DurationId", "DurationName");
-            return result;
-        }
+      
 
         /// <summary>
         /// 根据跨度，指标，计算出该算法表中为Result的指标所对应的所有科室在该跨度下的对应值
@@ -159,7 +163,7 @@ namespace IMS2.Controllers
             {
                 try
                 {
-                    item.Value = await this.satisticsValue.GetSatisticsValue(item);
+                    item.Value = await this.satisticsValue.GetSatisticsValue(item.IndicatorID, item.DurationId, item.DepartmentId, item.Time);
                 }
                 catch (Exception e)
                 {
@@ -197,40 +201,7 @@ namespace IMS2.Controllers
             return false;
         }
 
-        /// <summary>
-        /// 将计算出来的DepartmentIndicatorDurationTime的值写入到数据库
-        /// </summary>
-        /// <param name="departmentDurationValue"></param>
-        /// <returns></returns>
-        private async Task SaveDepartmentIndicatorDurationVirtualValueToDatabase(List<DepartmentIndicatorDurationTime> departmentDurationValue)
-        {
-            foreach (var item in departmentDurationValue)
-            {
-                if(item.Value!= null)
-                {
-                    var temp = new DepartmentIndicatorDurationVirtualValue
-                    {
-                        DepartmentId = item.DepartmentId,
-                        IndicatorId = item.IndicatorID,
-                        DurationId = item.DurationId,
-                        Time = item.Time,
-                        Value = item.Value,
-                        CreateTime = DateTime.Now,
-                        UpdateTime = System.DateTime.Now
-                    };
-                    this.repo.Add(temp);
-                    try
-                    {
-                        await this.unitOfWork.SaveChangesClientWinAsync();
-                    }
-                    catch (Exception)
-                    {
-                        throw;
-                    }
-                }
-               
-            }
-        }
+      
 
         private List<DepartmentIndicatorDurationTime> TransferToDepartmentIndicatorDurationTime(DepartmentIndicatorDurationVirtualValueEdit valueEdit, List<IndicatorDepartment> indicatorDepartmentList)
         {
@@ -253,6 +224,207 @@ namespace IMS2.Controllers
         }
         #endregion
 
+        #region 创建新值表
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// 
+        public ActionResult CreateVirtualValue()
+        {
+            //创建跨度表和来源科室的下拉列表
+            GetDurationSelect();
+            PoPulateProvideDepartmentList();
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateVirtualValue(DepartmentIndicatorDurationVirtualValueCreate departmentIndicatorDurationVirtualValueCreate)
+        {
+            if (ModelState.IsValid)
+            {
+                //获得来源科室对应的指标，再获得该指标对应的科室，构成指标、科室集合
+                var indicatorDepartmentList = await GetIndictorDepartmentList(departmentIndicatorDurationVirtualValueCreate.ProvidingDepartmentId);
+
+                //获得指定的Duration集合
+                var durationList = await GetDurationSelect(departmentIndicatorDurationVirtualValueCreate.DurationId);
+
+                //将指标科室集合、Duration集合和时间组建成科室、指标、跨度、时间的集合
+                var indicatorDepartmentDurationTimeList = TransferToIndicatorDepartmentDurationTimeList(indicatorDepartmentList, durationList, departmentIndicatorDurationVirtualValueCreate.Time);
+
+                //从Satistics中获得值
+                if(indicatorDepartmentDurationTimeList != null && indicatorDepartmentDurationTimeList.Count > 0)
+                {
+                   
+                    foreach(var item in indicatorDepartmentDurationTimeList)
+                    {
+                        try
+                        {
+                            item.Value = await this.satisticsValue.GetSatisticsValue(item.IndicatorID, item.DurationId, item.DepartmentId, item.Time);
+                        }
+                        catch (NullReferenceException)
+                        {
+                            continue;
+                        }
+                        catch (Exception)
+                        {
+
+                            item.Value = null;
+                        }
+                       
+                    }
+                    //写入数据库的新值表中保存
+                    await SaveDepartmentIndicatorDurationVirtualValueToDatabase(indicatorDepartmentDurationTimeList);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ModelState.AddModelError(String.Empty, "创建指标科室跨度时间集合失败！");
+                }
+            }
+            GetDurationSelect();
+            PoPulateProvideDepartmentList();
+            return View(departmentIndicatorDurationVirtualValueCreate);
+        }
+
+
+        /// <summary>
+        /// 通过指标科室集合，跨度集合和时间，组建成指标科室跨度时间集合
+        /// </summary>
+        /// <param name="indicatorDepartmentList"></param>
+        /// <param name="durationList"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        private List<DepartmentIndicatorDurationTime> TransferToIndicatorDepartmentDurationTimeList(List<IndicatorDepartmentViewModel> indicatorDepartmentList, List<Duration> durationList, DateTime time)
+        {
+            //var result = new List<DepartmentIndicatorDurationTime>();
+            var result = (from i in indicatorDepartmentList.AsParallel()
+                          from d in durationList.AsParallel()
+                          select new DepartmentIndicatorDurationTime
+                          {
+                              IndicatorID = i.IndicatorId,
+                              DepartmentId = i.DepartmentId,
+                              DurationId = d.DurationId,
+                              Time = time
+                          }).WithMergeOptions(ParallelMergeOptions.NotBuffered).ToList();
+            //if (indicatorDepartmentList != null && durationList != null)
+            //{
+            //    Parallel.ForEach(indicatorDepartmentList, indicatorDepartment =>
+            //    {
+            //       foreach(var duration in durationList)
+            //        {
+            //            var temp = new DepartmentIndicatorDurationTime
+            //            {
+            //                IndicatorID = indicatorDepartment.IndicatorId,
+            //                DepartmentId = indicatorDepartment.DepartmentId,
+            //                DurationId = duration.DurationId,
+            //                Time = time
+            //            };
+            //            result.Add(temp);
+            //        };
+            //    });
+            //}           
+            return result;
+        }
+
+        /// <summary>
+        /// 获得指定的跨度集合，如果指定的DurationId不存在，则获得所有的跨度集合
+        /// </summary>
+        /// <param name="durationId"></param>
+        /// <returns></returns>
+        private async Task<List<Duration>> GetDurationSelect(Guid? durationId)
+        {
+            var durationRepo = new DurationRepositoryAsync(this.unitOfWork);
+            var durationList = durationRepo.GetAll();
+            if (durationId.HasValue)
+            {
+
+                durationList = durationList.Where(a => a.DurationId == durationId.Value);
+            }
+            return await durationList.ToListAsync();
+        }
+
+        /// <summary>
+        /// 根据来源科室获得所管的指标及该指标对应的所有科室，组建成指标-科室集合。
+        /// </summary>
+        /// <param name="providingDepartmentId"></param>
+        /// <returns>List<IndicatorDepartmentViewModel></returns>
+        private async Task<List<IndicatorDepartmentViewModel>> GetIndictorDepartmentList(Guid? providingDepartmentId)
+        {
+            List<IndicatorDepartmentViewModel> result = new List<IndicatorDepartmentViewModel>();
+            //如果providingDepartmentId的值是Guid.Empty，则直接返回Null
+            if (providingDepartmentId.HasValue && providingDepartmentId.Value.Equals(Guid.Empty))
+            {
+                return null;
+            }
+            var departmentRepo = new DepartmentRepositoryAsync(this.unitOfWork);
+            var indicatorRepo = new IndicatorRepositoryAsync(this.unitOfWork);
+            //需获得所有科室的所管指标
+            var providingDepartmentCollection = departmentRepo.GetAll().Include(a => a.ProvidingIndicators);
+            if (providingDepartmentId.HasValue)
+            {
+                //如果指定了来源科室，则直接获得该科室的所管指标
+                providingDepartmentCollection = providingDepartmentCollection.Where(a => a.DepartmentId == providingDepartmentId.Value);
+            }
+            
+            foreach(var provideDepartment in await providingDepartmentCollection.ToListAsync())
+            {
+               foreach(var indicatorId in provideDepartment.ProvidingIndicators.Select(a => a.IndicatorId).ToList())
+                {
+                    var departmentIdCollection =  indicatorRepo.GetAll(a => a.IndicatorId == indicatorId).First().IndicatorGroupMapIndicators.Select(i => i.IndicatorGroup)
+                        .SelectMany(i => i.DepartmentCategoryMapIndicatorGroups)
+                        .Select(d => d.DepartmentCategory)
+                        .SelectMany(d => d.Departments).Select(a => a.DepartmentId).ToList();
+                    foreach(var departmentId in departmentIdCollection)
+                    {
+                        result.Add(new IndicatorDepartmentViewModel
+                        {
+                            IndicatorId = indicatorId,
+                            DepartmentId = departmentId
+                        });
+                    }
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 将计算出来的DepartmentIndicatorDurationTime的值写入到数据库
+        /// </summary>
+        /// <param name="departmentDurationValue"></param>
+        /// <returns></returns>
+        private async Task SaveDepartmentIndicatorDurationVirtualValueToDatabase(List<DepartmentIndicatorDurationTime> departmentDurationValue)
+        {
+            foreach (var item in departmentDurationValue)
+            {
+                if (item.Value != null)
+                {
+                    var temp = new DepartmentIndicatorDurationVirtualValue
+                    {
+                        DepartmentIndicatorDurationVirtualValueID = Guid.NewGuid(),
+                        DepartmentId = item.DepartmentId,
+                        IndicatorId = item.IndicatorID,
+                        DurationId = item.DurationId,
+                        Time = item.Time,
+                        Value = item.Value,
+                        CreateTime = DateTime.Now,
+                        UpdateTime = System.DateTime.Now
+                    };
+                    this.repo.Add(temp);
+                    try
+                    {
+                        await this.unitOfWork.SaveChangesClientWinAsync();
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                }
+
+            }
+        }
+        #endregion
 
 
         /// <summary>
@@ -284,7 +456,7 @@ namespace IMS2.Controllers
 
         private async Task<decimal?> GetDepartmentIndicatorTimeValue(DepartmentIndicatorDurationTime departmentIndicatorDurationTime)
         {
-            return await this.satisticsValue.GetSatisticsValue(departmentIndicatorDurationTime);
+            return await this.satisticsValue.GetSatisticsValue(departmentIndicatorDurationTime.IndicatorID, departmentIndicatorDurationTime.DurationId, departmentIndicatorDurationTime.DepartmentId, departmentIndicatorDurationTime.Time);
         }
 
         /// <summary>
@@ -386,5 +558,28 @@ namespace IMS2.Controllers
         }
 
 
+        #region 下拉列表
+        private void GetDurationSelect()
+        {
+            var durationRepo = new DurationRepositoryAsync(this.unitOfWork);
+            ViewBag.DurationSelect = new SelectList(durationRepo.GetAll().ToList(), "DurationId", "DurationName");
+            
+        }
+
+        /// <summary>
+        /// 来源科室的列表
+        /// </summary>
+        private void PoPulateProvideDepartmentList()
+        {
+            var indicatorRepo = new IndicatorRepositoryAsync(this.unitOfWork);
+            ViewBag.ProvideDepartmentSelect = new SelectList(indicatorRepo.GetAll().Select(i => i.ProvidingDepartment).Distinct().OrderBy(d => d.Priority).Select(a => new SelectListItem { Text = a.DepartmentName, Value = a.DepartmentId.ToString() }), "Value", "Text");
+        }
+
+        private void PoPulateDeaprtmentList()
+        {
+            var departmentRepo = new DepartmentRepositoryAsync(this.unitOfWork);
+            ViewBag.DepartmentSelect = new SelectList(departmentRepo.GetAll().OrderBy(a => a.DepartmentName).Select(a => new SelectListItem { Text = a.DepartmentName, Value = a.DepartmentId.ToString() }), "Value", "Text");
+        }
+        #endregion
     }
 }

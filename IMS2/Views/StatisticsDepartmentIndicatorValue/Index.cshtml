@@ -5,44 +5,63 @@
 }
 
 <h2>统计指标列表</h2>
+<p>@Html.ActionLink("创建新值表", "CreateVirtualValue", "StatisticsDepartmentIndicatorValue")</p>
 <fieldset class="col-md-12 panel panel-default">
     <legend class="text-primary">查找条件</legend>
-    @using (Ajax.BeginForm("_List", "StatisticsDepartmentIndicatorValue", new AjaxOptions() { HttpMethod = "Get", UpdateTargetId = "statistics-indicator-info-list", LoadingElementId = "search-statistics-indicator-info-ajax", OnSuccess = "searchSatisticsIndicatorInfoSuccess" }))
+    @using (Ajax.BeginForm("_List", "StatisticsDepartmentIndicatorValue", new AjaxOptions() { HttpMethod = "Get", UpdateTargetId = "statistics-indicator-info-list", InsertionMode = InsertionMode.ReplaceWith ,LoadingElementId = "search-statistics-indicator-info-ajax", OnSuccess = "searchSatisticsIndicatorInfoSuccess" }))
     {
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        <div class="dl-horizontal">
-            <div class="form-group">
-                @Html.LabelFor(model => model.IndicatorID, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="form-horizontal">
+            <div class="form-group">               
+                @Html.Label("科室", htmlAttributes: new { @class = "col-md-2 control-label" })
                 <div class="col-md-4">
-                    @Html.DropDownListFor(model => model.IndicatorID, ViewBag.DepartmentSelect as SelectList, "-请选择-", htmlAttributes: new { @class = "form-control" })
+                    @Html.DropDownListFor(model => model.DepartmentID, ViewBag.DepartmentSelect as SelectList, "-全选-", htmlAttributes: new { @class = "form-control multiple-select2-bind", id = "search-department-id" })
                 </div>
-                @Html.Label("科室", htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.DurationID, htmlAttributes: new { @class = "col-md-2 control-label" })
                 <div class="col-md-4">
-                    @Html.DropDownListFor(model => model.DepartmentID, ViewBag.DepartmentSelect as SelectList, "-请选择-", htmlAttributes: new { @class = "form-control", id = "search-indicator-department-id" })
-                </div>
-
+                    @Html.DropDownListFor(model => model.DurationID, ViewBag.DurationSelect as SelectList, "-全选-", htmlAttributes: new { @class = "form-control multiple-select2-bind", id="search-duration-id" })
+                </div> 
             </div>
-            <div class="form-group">
-               @Html.LabelFor(model => model.DurationID, htmlAttributes: new {@class = "control-label col-md-2" })
-                <div class="col-md-4">
-                    @Html.DropDownListFor(model => model.DurationID, ViewBag.DepartmentSelect as SelectList, "-请选择-", htmlAttributes: new { @class = "form-control"})
-                </div>              
+            <div class="form-group">                           
                 @Html.Label("选择时间", htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-4">
-                    @Html.EditorFor(model => model.SearchTime, new { htmlAttributes = new { @class = "form-control datetimepicker2", id = "search-indicator-time-id" } })
+                    @Html.EditorFor(model => model.SearchTime, new { htmlAttributes = new { @class = "form-control datetimepicker2", id = "search-time-id" } })
                 </div>
             </div>
             <div class="form-group">
-
-                <div class="col-md-6">
-                    <input type="submit" value="查询" class="btn btn-info" id="refresh-search-statistics-indicator-list-id" style="display:none" />
+                <div class="col-md-offset-5 col-md-7">
+                    <input type="submit" value="查询" class="btn btn-primary" id="refresh-search-statistics-indicator-list-id" />
                     <img src="~/Images/ajax-loader.gif" style="display:none" id="search-statistics-indicator-info-ajax" />
                 </div>
-            </div>
+            </div>           
         </div>
     }
 </fieldset>
 
 <div id="statistics-indicator-info-list" class="col-md-12">
 </div>
+
+@section Scripts{
+@Scripts.Render("~/bundles/jqueryajax")
+@Scripts.Render("~/bundles/datatable")
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(".multiple-select2-bind").select2();
+            $("#search-department-id").on("change", function (event, data) {
+                $(this).submit();
+            });
+            $("#search-duration-id").on("change", function (event, data) {
+                $(this).submit();
+            });
+            $("#search-time-id").on("focusout", function (event, data) {
+                $(this).submit();
+            });
+          
+        });
+
+    </script>
+}

@@ -179,42 +179,52 @@ namespace IMS2.Tests
                 IndicatorId = Guid.ParseExact("{0C326BC3-6D95-4E63-BBBB-EABC0B0AE344}", "B"),
                 DutyDepartmentId = DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = CachedKeyEntry.MonthDurationID,
-                IndicatorName = "X"
+                IndicatorName = "X",
+                Duration = DurationList.Find(a => a.DurationId == CachedKeyEntry.MonthDurationID)
             },
               new Indicator
             {
                 IndicatorId = Guid.ParseExact("{B2BDE3D8-BDAE-4549-A867-01981369A50C}", "B"),
                 DutyDepartmentId = DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = CachedKeyEntry.MonthDurationID,
-                IndicatorName = "Y"
+                IndicatorName = "Y",
+                 Duration = DurationList.Find(a => a.DurationId == CachedKeyEntry.MonthDurationID)
             },
               new Indicator
             {
                 IndicatorId = Guid.ParseExact("{B4D4968E-EF53-43BC-AA0C-FDA749ED2061}", "B"),
                 DutyDepartmentId = DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = CachedKeyEntry.MonthDurationID,
-                IndicatorName = "Z"
+                IndicatorName = "Z",
+                 Duration = DurationList.Find(a => a.DurationId == CachedKeyEntry.MonthDurationID)
+
             },
               new Indicator
             {
                 IndicatorId = Guid.ParseExact("{963376CF-032D-436E-9B45-466C4610B50F}", "B"),
                 DutyDepartmentId = DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = CachedKeyEntry.MonthDurationID,
-                IndicatorName = "A"
+                IndicatorName = "A",
+                 Duration = DurationList.Find(a => a.DurationId == CachedKeyEntry.MonthDurationID)
+
             },
                new Indicator
             {
                 IndicatorId = Guid.ParseExact("{5AD61CEB-4F99-4C81-8FC6-CD603C8A695E}", "B"),
                 DutyDepartmentId = DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = CachedKeyEntry.MonthDurationID,
-                IndicatorName = "B"
+                IndicatorName = "B",
+                 Duration = DurationList.Find(a => a.DurationId == CachedKeyEntry.MonthDurationID)
+
             },
                new Indicator
             {
                 IndicatorId = Guid.ParseExact("{B9733E7D-87DD-4B04-956C-C22C24E93D00}", "B"),
                 DutyDepartmentId = DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = CachedKeyEntry.MonthDurationID,
-                IndicatorName = "C"
+                IndicatorName = "C",
+                 Duration = DurationList.Find(a => a.DurationId == CachedKeyEntry.MonthDurationID)
+
             }
           };
             foreach (var item in indicatorList)

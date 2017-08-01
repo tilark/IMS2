@@ -279,6 +279,10 @@
     <Compile Include="ImsDbContextMigrations\201706090328401_AddNewDepartmentIndicatorVirtualValueTable.Designer.cs">
       <DependentUpon>201706090328401_AddNewDepartmentIndicatorVirtualValueTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="ImsDbContextMigrations\201707281426265_DurationLevelRequired.cs" />
+    <Compile Include="ImsDbContextMigrations\201707281426265_DurationLevelRequired.Designer.cs">
+      <DependentUpon>201707281426265_DurationLevelRequired.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImsDbContextMigrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\DataSourceSystem.cs" />
@@ -351,8 +355,10 @@
     <Compile Include="ViewModels\ResetPasswordView.cs" />
     <Compile Include="ViewModels\RoleView.cs" />
     <Compile Include="BusinessModel\SatisticsValueModel\DepartmentIndicatorDurationTime.cs" />
+    <Compile Include="ViewModels\StatisticsDepartmentIndicatorValueViews\DepartmentIndicatorDurationVirtualValueCreate.cs" />
     <Compile Include="ViewModels\StatisticsDepartmentIndicatorValueViews\DepartmentIndicatorDurationVirtualValueEdit.cs" />
     <Compile Include="ViewModels\StatisticsDepartmentIndicatorValueViews\DepartmentIndicatorDurationVirtualValueView.cs" />
+    <Compile Include="ViewModels\StatisticsDepartmentIndicatorValueViews\IndicatorDepartmentViewModel.cs" />
     <Compile Include="ViewModels\StatisticsDepartmentIndicatorValueViews\SatisticsIndicatorHandleMessage.cs" />
     <Compile Include="ViewModels\StatisticsDepartmentIndicatorValueViews\SatisticsSearchCondition.cs" />
     <Compile Include="ViewModels\TimeDepartmentIDView.cs" />
@@ -652,7 +658,7 @@
     <Content Include="Views\ImportDepartmentIndicators\_ShowResultReadFromExcel.cshtml" />
     <Content Include="Views\StatisticsDepartmentIndicatorValue\Index.cshtml" />
     <Content Include="Views\StatisticsDepartmentIndicatorValue\_List.cshtml" />
-    <Content Include="Views\StatisticsDepartmentIndicatorValue\Create.cshtml" />
+    <Content Include="Views\StatisticsDepartmentIndicatorValue\CreateVirtualValue.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -674,6 +680,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ImsDbContextMigrations\201706090328401_AddNewDepartmentIndicatorVirtualValueTable.resx">
       <DependentUpon>201706090328401_AddNewDepartmentIndicatorVirtualValueTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImsDbContextMigrations\201707281426265_DurationLevelRequired.resx">
+      <DependentUpon>201707281426265_DurationLevelRequired.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -12,6 +12,7 @@ namespace IMS2.BusinessModel.SatisticsValueModel
     /// </summary>
     public interface ISatisticsValue
     {
-       Task<decimal?> GetSatisticsValue(DepartmentIndicatorDurationTime departmentIndicatorDurationTime);
+
+        Task<decimal?> GetSatisticsValue(Guid indicatorID, Guid durationId, Guid departmentId, DateTime time);
     }
 }

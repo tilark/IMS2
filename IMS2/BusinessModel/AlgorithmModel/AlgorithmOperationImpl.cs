@@ -10,9 +10,9 @@ namespace IMS2.BusinessModel.AlgorithmModel
 {
     public class AlgorithmOperationImpl : IAlgorithmOperation
     {
-        public decimal GetAlgorithmOperationValue(decimal operand1, decimal operand2, string operationMethod)
+        public decimal? GetAlgorithmOperationValue(decimal operand1, decimal operand2, string operationMethod)
         {
-            decimal result = 0M;
+            decimal? result = null;
             switch ((OperationMethod)Enum.Parse(typeof(OperationMethod), operationMethod))
             {
                 case OperationMethod.addition:

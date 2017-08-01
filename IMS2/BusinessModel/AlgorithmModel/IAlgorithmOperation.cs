@@ -9,7 +9,7 @@ namespace IMS2.BusinessModel.AlgorithmModel
     //算法处理
     public interface IAlgorithmOperation
     {
-       decimal GetAlgorithmOperationValue(decimal operand1, decimal operand2, string operationMethod);
+       decimal? GetAlgorithmOperationValue(decimal operand1, decimal operand2, string operationMethod);
         
     }
 }

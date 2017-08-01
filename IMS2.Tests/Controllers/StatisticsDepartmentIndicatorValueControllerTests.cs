@@ -22,7 +22,14 @@ namespace IMS2.Controllers.Tests
             MockUnitOfWork.InitialDataBase();
         }
 
-
+        /// <summary>
+        /// 页面端输入
+        /// </summary>
+        [TestMethod]
+        public void TestGetDepartmentIndicatorDurationValueFromUI()
+        {
+            //页面端只输入指标提供科室和时间和时段，计算出所有的科室指标值，写入新值表中
+        }
         [TestMethod]
         public void CreateDepartmentIndicatorDurationValue()
         {

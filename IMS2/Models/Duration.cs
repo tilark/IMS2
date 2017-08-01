@@ -22,8 +22,9 @@ namespace IMS2.Models
 
         public string DurationName { get; set; }
 
+        [Required]
         [Display(Name = "级别")]
-        public int? Level { get; set; }
+        public int Level { get; set; }
         [Display(Name = "备注")]
 
         public string Remarks { get; set; }
