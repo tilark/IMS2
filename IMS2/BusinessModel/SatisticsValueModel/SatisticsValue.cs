@@ -155,7 +155,7 @@ namespace IMS2.BusinessModel.SatisticsValueModel
         {
             decimal? result = null;
             var departmentIndicatorValueRepo = new DepartmentIndicatorValueRepositoryAsync(this.unitOfWork);
-            var query = await departmentIndicatorValueRepo.GetAll(a => a.IndicatorId == indicatorID && a.DepartmentId == departmentId && a.IsLocked  && a.Time == time).FirstOrDefaultAsync();
+            var query = await departmentIndicatorValueRepo.GetAll(a => a.IndicatorId == indicatorID && a.DepartmentId == departmentId && a.IsLocked == true  && a.Time == time).FirstOrDefaultAsync();
 
            
             if (query != null)
@@ -208,6 +208,11 @@ namespace IMS2.BusinessModel.SatisticsValueModel
             //newDepartmentIndicatorDurationTime.Update(departmentIndicatorDurationTime);
             var times = new DateTime[3];
             var lowerLevelDurationId = GetLowerLevelDurationID(durationId, time, out times);
+            if(times == null || times.All(a => a.Equals(DateTime.MinValue)))
+            {
+                //如果是其他月份，直接返回Null
+                return null;
+            }
             for (int i = 0; i < times.Length; i++)
             {
                 if (times[i] != DateTime.MinValue)
@@ -253,7 +258,7 @@ namespace IMS2.BusinessModel.SatisticsValueModel
                         //全年
                         times[0] = new DateTime(time.Year, 1, 1);
                         times[1] = new DateTime(time.Year, 7, 1);
-                    }
+                    }                   
                 }
                 else if (duration.HalfYearDuration())
                 {
@@ -268,7 +273,7 @@ namespace IMS2.BusinessModel.SatisticsValueModel
                         //下半年               
                         times[0] = new DateTime(time.Year, 7, 1);
                         times[1] = new DateTime(time.Year, 10, 1);
-                    }
+                    }                   
                 }
                 else if (duration.SeasonDuration())
                 {
@@ -301,16 +306,20 @@ namespace IMS2.BusinessModel.SatisticsValueModel
                         times[2] = new DateTime(time.Year, 12, 1);
                     }
                 }
-
                else if (duration.MonthDuration())
                 {
                     times[0] = new DateTime(time.Year, time.Month, 1);
                 }
-
+                else
+                {
+                    //如果是其他月份
+                    
+                }
                 return duration.NextLevel() != 0 ? this.DurationList.Find(a => a.Level == duration.NextLevel()).DurationId : Guid.Empty;
             }
             else
             {
+               
                 return Guid.Empty;
             }
         }
