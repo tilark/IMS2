@@ -34,9 +34,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @{ int i = 1;}
+                        @{ int i = 0; }
                         @foreach (var item in Model)
                         {
+                            i++;
                             <tr>
                                 <td>@i</td>
                                 <td>@Html.DisplayFor(model => item.DepartmentName)</td>

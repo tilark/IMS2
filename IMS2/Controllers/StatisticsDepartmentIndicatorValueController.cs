@@ -284,18 +284,32 @@ namespace IMS2.Controllers
             {
                 if (item.Value != null)
                 {
-                    var temp = new DepartmentIndicatorDurationVirtualValue
+
+                    ///先判断在新值表中
+                    var query = await repo.GetAll(a => a.IndicatorId == item.IndicatorID && a.DepartmentId == item.DepartmentId && a.DurationId == item.DurationId && a.Time == item.Time).FirstOrDefaultAsync();
+                    if(query != null)
                     {
-                        DepartmentIndicatorDurationVirtualValueID = Guid.NewGuid(),
-                        DepartmentId = item.DepartmentId,
-                        IndicatorId = item.IndicatorID,
-                        DurationId = item.DurationId,
-                        Time = item.Time,
-                        Value = item.Value,
-                        CreateTime = DateTime.Now,
-                        UpdateTime = System.DateTime.Now
-                    };
-                    this.repo.Add(temp);
+                        ///如果存在，则需更新
+                        query.Value = item.Value;
+                        query.UpdateTime = DateTime.Now;
+                        repo.Update(query);
+                    }
+                    else
+                    {
+                        ///不存在，直接添加
+                        var temp = new DepartmentIndicatorDurationVirtualValue
+                        {
+                            DepartmentIndicatorDurationVirtualValueID = Guid.NewGuid(),
+                            DepartmentId = item.DepartmentId,
+                            IndicatorId = item.IndicatorID,
+                            DurationId = item.DurationId,
+                            Time = item.Time,
+                            Value = item.Value,
+                            CreateTime = DateTime.Now,
+                            UpdateTime = System.DateTime.Now
+                        };
+                        this.repo.Add(temp);                        
+                    }
                     try
                     {
                         await this.unitOfWork.SaveChangesClientWinAsync();
@@ -305,7 +319,6 @@ namespace IMS2.Controllers
                         throw;
                     }
                 }
-
             }
         }
         #endregion      
