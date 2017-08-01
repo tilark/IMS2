@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Ninject;
 using IMS2.Controllers;
 using IMS2.PublicOperations;
 using ExcelEntityOperation;
 using IMS2.RepositoryAsync;
+using IMS2.BusinessModel.SatisticsValueModel;
+using IMS2.BusinessModel.AlgorithmModel;
+using IMS2.BusinessModel.IndicatorDepartmentModel;
 
 namespace IMS2.App_Start
 {
@@ -25,6 +26,9 @@ namespace IMS2.App_Start
             this.kernel.Bind<IDomainUnitOfWork>().To<DomainUnitOfWork>();
             this.kernel.Bind<IFileUpload>().To<UploadFilesController>();
             this.kernel.Bind<IReadFromExcel>().To<ReadFromExcel>();
+            this.kernel.Bind<IAlgorithmOperation>().To<AlgorithmOperationImpl>();
+            this.kernel.Bind<ISatisticsValue>().To<SatisticsValue>();
+            this.kernel.Bind<IIndicatorDepartment>().To<IndicatorDepartmentImpl>();
 
             ////this.kernel.Bind<ITodoRepository>().To<TodoRepository1>().Named("type1");
             ////this.kernel.Bind<ITodoRepository>().To<TodoRepository2>().Named("type2");

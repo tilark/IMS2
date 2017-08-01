@@ -11,7 +11,7 @@ namespace IMS2.RepositoryAsync
     public interface IDomainUnitOfWork : IDisposable
     {
         DbContext Db { get; }
-        ImsDbContext dbContext { get; }
+        //ImsDbContext dbContext { get; }
         Task SaveChangesClientWinAsync();
         Task SaveChangesDataBaseWinAsync();
 

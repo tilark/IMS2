@@ -218,6 +218,12 @@
     <Compile Include="App_Start\NinjectDependencyResolver.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="BusinessModel\IndicatorDepartmentModel\IIndicatorDepartment.cs" />
+    <Compile Include="BusinessModel\IndicatorDepartmentModel\IndicatorDepartment.cs" />
+    <Compile Include="BusinessModel\IndicatorDepartmentModel\IndicatorDepartmentImpl.cs" />
+    <Compile Include="BusinessModel\SatisticsValueModel\ISatisticsValue.cs" />
+    <Compile Include="BusinessModel\SatisticsValueModel\SatisticsValue.cs" />
+    <Compile Include="CachedKeyEntry.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AutoGetDataSourceController.cs" />
     <Compile Include="Controllers\DataSourceSystemBaseController.cs" />
@@ -243,6 +249,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProvidingDepartmentIndicatorController.cs" />
     <Compile Include="Controllers\SearchDepartmentIndicatorController.cs" />
+    <Compile Include="Controllers\StatisticsDepartmentIndicatorValueController.cs" />
     <Compile Include="Controllers\UploadFilesController.cs" />
     <Compile Include="Controllers\VerifyDepartmentIndicatorsController.cs" />
     <Compile Include="DAL\BaseRepository.cs" />
@@ -271,12 +278,21 @@
     <Compile Include="ImsDbContextMigrations\201605220159351_DecimalTo2.Designer.cs">
       <DependentUpon>201605220159351_DecimalTo2.cs</DependentUpon>
     </Compile>
+    <Compile Include="ImsDbContextMigrations\201706090328401_AddNewDepartmentIndicatorVirtualValueTable.cs" />
+    <Compile Include="ImsDbContextMigrations\201706090328401_AddNewDepartmentIndicatorVirtualValueTable.Designer.cs">
+      <DependentUpon>201706090328401_AddNewDepartmentIndicatorVirtualValueTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImsDbContextMigrations\201707281426265_DurationLevelRequired.cs" />
+    <Compile Include="ImsDbContextMigrations\201707281426265_DurationLevelRequired.Designer.cs">
+      <DependentUpon>201707281426265_DurationLevelRequired.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImsDbContextMigrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\DataSourceSystem.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\DepartmentCategory.cs" />
     <Compile Include="Models\DepartmentCategoryMapIndicatorGroup.cs" />
+    <Compile Include="Models\DepartmentIndicatorDurationVirtualValue.cs" />
     <Compile Include="Models\DepartmentIndicatorStandard.cs" />
     <Compile Include="Models\DepartmentIndicatorValue.cs" />
     <Compile Include="Models\Duration.cs" />
@@ -288,14 +304,19 @@
     <Compile Include="Models\IndicatorGroupMapIndicator.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="PublicOperations\IFileUpload.cs" />
+    <Compile Include="BusinessModel\AlgorithmModel\AlgorithmOperationImpl.cs" />
     <Compile Include="PublicOperations\Implements\MedicalRecordStatisticalFromExcelRepo.cs" />
     <Compile Include="PublicOperations\Interfaces\FromExcelToDataBase.cs" />
+    <Compile Include="BusinessModel\AlgorithmModel\IAlgorithmOperation.cs" />
+    <Compile Include="RepositoryAsync\DepartmentIndicatorDurationVirtualValueRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\DepartmentIndicatorValueRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\DepartmentRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\DomainRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\DomainUnitOfWork.cs" />
+    <Compile Include="RepositoryAsync\DurationRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\IDomainRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\IDomainUnitOfWork.cs" />
+    <Compile Include="RepositoryAsync\IndicatorAlgorithmRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\IndicatorRepositoryAsync.cs" />
     <Compile Include="ViewModels\ImportDepartmentIndicatorViews\AnesthesiologyFromExcel.cs" />
     <Compile Include="ViewModels\ImportDepartmentIndicatorViews\ClinicFromExcel.cs" />
@@ -337,6 +358,12 @@
     <Compile Include="ViewModels\ReporterView.cs" />
     <Compile Include="ViewModels\ResetPasswordView.cs" />
     <Compile Include="ViewModels\RoleView.cs" />
+    <Compile Include="BusinessModel\SatisticsValueModel\DepartmentIndicatorDurationTime.cs" />
+    <Compile Include="ViewModels\StatisticsDepartmentIndicatorValueViews\DepartmentIndicatorDurationVirtualValueCreate.cs" />
+    <Compile Include="ViewModels\StatisticsDepartmentIndicatorValueViews\DepartmentIndicatorDurationVirtualValueEdit.cs" />
+    <Compile Include="ViewModels\StatisticsDepartmentIndicatorValueViews\DepartmentIndicatorDurationVirtualValueView.cs" />
+    <Compile Include="ViewModels\StatisticsDepartmentIndicatorValueViews\IndicatorDepartmentViewModel.cs" />
+    <Compile Include="ViewModels\StatisticsDepartmentIndicatorValueViews\SatisticsSearchCondition.cs" />
     <Compile Include="ViewModels\TimeDepartmentIDView.cs" />
     <Compile Include="ViewModels\UploadFileViews\ReadExcelMessage.cs" />
     <Compile Include="ViewModels\UploadFileViews\UploadFileView.cs" />
@@ -634,6 +661,9 @@
     <Content Include="Views\ImportDepartmentIndicators\Index.cshtml" />
     <Content Include="Views\UploadFiles\_UploadFile.cshtml" />
     <Content Include="Views\ImportDepartmentIndicators\_ShowResultReadFromExcel.cshtml" />
+    <Content Include="Views\StatisticsDepartmentIndicatorValue\Index.cshtml" />
+    <Content Include="Views\StatisticsDepartmentIndicatorValue\_List.cshtml" />
+    <Content Include="Views\StatisticsDepartmentIndicatorValue\CreateVirtualValue.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -652,6 +682,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ImsDbContextMigrations\201605220159351_DecimalTo2.resx">
       <DependentUpon>201605220159351_DecimalTo2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImsDbContextMigrations\201706090328401_AddNewDepartmentIndicatorVirtualValueTable.resx">
+      <DependentUpon>201706090328401_AddNewDepartmentIndicatorVirtualValueTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImsDbContextMigrations\201707281426265_DurationLevelRequired.resx">
+      <DependentUpon>201707281426265_DurationLevelRequired.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
