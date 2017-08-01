@@ -124,106 +124,7 @@ namespace IMS2.Controllers
         }
         #endregion
 
-        #region 创建
-        /// <summary>
-        /// 根据跨度计算出算法表中ResultID的指标值
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult Create()
-        {
-            GetDurationSelect();
-            PoPulateProvideDepartmentList();
-            return View();
-        }
-
       
-
-        /// <summary>
-        /// 根据跨度，指标，计算出该算法表中为Result的指标所对应的所有科室在该跨度下的对应值
-        /// </summary>
-        /// <param name="valueEdit"></param>
-        /// <returns>成功返回新添加的各指标列表，否则返回错误信息提示</returns>
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> _CaculateAlgorithmResult(DepartmentIndicatorDurationVirtualValueEdit valueEdit)
-        {
-            if (!IsValidEditInput(valueEdit))
-            {
-                return new HttpNotFoundResult();
-            }
-            //找到该指标对应的所有的科室
-            var indicatorDepartmentList = await this.indicatorDepartment.GetAlgorithmIndicatorDepartment();
-            //转换成DepartmentIndicatorDurationTime格式
-            var departmentIndicatorDurationTimeList = TransferToDepartmentIndicatorDurationTime(valueEdit, indicatorDepartmentList);
-
-            //计算各科室的指标、跨度、时间的值            
-            List<SatisticsIndicatorHandleMessage> handleMessage = new List<SatisticsIndicatorHandleMessage>();
-            //从数据中根据规格取值Value
-            foreach (var item in departmentIndicatorDurationTimeList)
-            {
-                try
-                {
-                    item.Value = await this.satisticsValue.GetSatisticsValue(item.IndicatorID, item.DurationId, item.DepartmentId, item.Time);
-                }
-                catch (Exception e)
-                {
-                    var error = new SatisticsIndicatorHandleMessage
-                    {
-                        IndicatorID = item.IndicatorID,
-                        DepartmentID = item.DepartmentId,
-                        DurationID = item.DurationId,
-                        Time = item.Time,
-                        ErrorMessage = e.Message
-                    };
-                    handleMessage.Add(error);
-                }
-            }
-            //写入到数据库保存
-            await SaveDepartmentIndicatorDurationVirtualValueToDatabase(departmentIndicatorDurationTimeList);
-
-            //返回各指标列表
-            ViewBag.HandleMessage = handleMessage;
-            SatisticsSearchCondition searchCondition = new SatisticsSearchCondition
-            {
-                DurationID = valueEdit.DurationId,
-                SearchTime = valueEdit.Time
-            };
-            //return await _List(searchCondition);
-            return new JsonResult();
-        }
-
-        private bool IsValidEditInput(DepartmentIndicatorDurationVirtualValueEdit valueEdit)
-        {
-            if (ModelState.IsValid)
-            {
-                return true;
-            }
-            return false;
-        }
-
-      
-
-        private List<DepartmentIndicatorDurationTime> TransferToDepartmentIndicatorDurationTime(DepartmentIndicatorDurationVirtualValueEdit valueEdit, List<IndicatorDepartment> indicatorDepartmentList)
-        {
-            var result = new List<DepartmentIndicatorDurationTime>();
-            Parallel.ForEach(indicatorDepartmentList, indicatorDepartment =>
-            {
-                Parallel.ForEach(indicatorDepartment.DepartmentIDList, departmentID =>
-                {
-                    var temp = new DepartmentIndicatorDurationTime
-                    {
-                        IndicatorID = indicatorDepartment.IndicatorID,
-                        DepartmentId = departmentID,
-                        DurationId = valueEdit.DurationId,
-                        Time = valueEdit.Time
-                    };
-                    result.Add(temp);
-                });
-            });
-            return result;
-        }
-        #endregion
-
         #region 创建新值表
         /// <summary>
         /// 
@@ -298,7 +199,6 @@ namespace IMS2.Controllers
         /// <returns></returns>
         private List<DepartmentIndicatorDurationTime> TransferToIndicatorDepartmentDurationTimeList(List<IndicatorDepartmentViewModel> indicatorDepartmentList, List<Duration> durationList, DateTime time)
         {
-            //var result = new List<DepartmentIndicatorDurationTime>();
             var result = (from i in indicatorDepartmentList.AsParallel()
                           from d in durationList.AsParallel()
                           select new DepartmentIndicatorDurationTime
@@ -308,23 +208,7 @@ namespace IMS2.Controllers
                               DurationId = d.DurationId,
                               Time = time
                           }).WithMergeOptions(ParallelMergeOptions.NotBuffered).ToList();
-            //if (indicatorDepartmentList != null && durationList != null)
-            //{
-            //    Parallel.ForEach(indicatorDepartmentList, indicatorDepartment =>
-            //    {
-            //       foreach(var duration in durationList)
-            //        {
-            //            var temp = new DepartmentIndicatorDurationTime
-            //            {
-            //                IndicatorID = indicatorDepartment.IndicatorId,
-            //                DepartmentId = indicatorDepartment.DepartmentId,
-            //                DurationId = duration.DurationId,
-            //                Time = time
-            //            };
-            //            result.Add(temp);
-            //        };
-            //    });
-            //}           
+            
             return result;
         }
 
@@ -424,140 +308,8 @@ namespace IMS2.Controllers
 
             }
         }
-        #endregion
-
-
-        /// <summary>
-        /// 计算出科室指标时段的值
-        /// </summary>
-        /// <param name="departmentIndicatorDurationTime"></param>
-        /// <returns></returns>
-        public async Task<ActionResult> CaculateDepartmentIndicatorDurationValue(DepartmentIndicatorDurationTime departmentIndicatorDurationTime)
-        {
-            //验证输入数据的有效性
-            if (IsValidInput(departmentIndicatorDurationTime))
-            {
-                //获得值
-                departmentIndicatorDurationTime.Value = await GetDepartmentIndicatorTimeValue(departmentIndicatorDurationTime);
-                //存入数据库，存入到新值表中
-                if (departmentIndicatorDurationTime.Value.HasValue)
-                {
-                    await AddToNewDepartmentIndicatorValueDataTable(departmentIndicatorDurationTime);
-                }
-            }
-            else
-            {
-                return View(departmentIndicatorDurationTime);
-            }
-
-            //返回视图
-            return View(departmentIndicatorDurationTime);
-        }
-
-        private async Task<decimal?> GetDepartmentIndicatorTimeValue(DepartmentIndicatorDurationTime departmentIndicatorDurationTime)
-        {
-            return await this.satisticsValue.GetSatisticsValue(departmentIndicatorDurationTime.IndicatorID, departmentIndicatorDurationTime.DurationId, departmentIndicatorDurationTime.DepartmentId, departmentIndicatorDurationTime.Time);
-        }
-
-        /// <summary>
-        /// 存入到新值表中
-        /// </summary>
-        /// <param name="departmentIndicatorDurationTime"></param>
-        private async Task AddToNewDepartmentIndicatorValueDataTable(DepartmentIndicatorDurationTime departmentIndicatorDurationTime)
-        {
-            //判断是否在数据库中已经存在相关项
-            var item = await FindDepartmentIndicatorDurationValue(departmentIndicatorDurationTime);
-            if (item != null)
-            {
-                //如果存在，直接更新Value和UpdateTime
-
-                await UpdateDepartmentIndicatorDurationValue(item, departmentIndicatorDurationTime.Value);
-            }
-            else
-            {
-                //如果不存在，则新建
-                await CreateNewDepartmentIndicatorDurationTime(departmentIndicatorDurationTime);
-            }
-
-        }
-
-        /// <summary>
-        /// 更新表中的值
-        /// </summary>
-        /// <param name="item"></param>
-        /// <param name="value"></param>
-        private async Task UpdateDepartmentIndicatorDurationValue(DepartmentIndicatorDurationVirtualValue item, decimal? value)
-        {
-            item.Value = value;
-            item.UpdateTime = System.DateTime.Now;
-            this.repo.Update(item);
-            try
-            {
-                await this.unitOfWork.SaveChangesClientWinAsync();
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// 从数据库中查找符合条件的departmentIndicatorDurationTime
-        /// </summary>
-        /// <param name="departmentIndicatorDurationTime"></param>
-        /// <returns>找到则返回值，否则返回null</returns>
-        private async Task<DepartmentIndicatorDurationVirtualValue> FindDepartmentIndicatorDurationValue(DepartmentIndicatorDurationTime departmentIndicatorDurationTime)
-        {
-            var query = await this.repo.GetAll(a => a.IndicatorId == departmentIndicatorDurationTime.IndicatorID && a.DurationId == departmentIndicatorDurationTime.DurationId && a.DepartmentId == departmentIndicatorDurationTime.DepartmentId && a.Time == departmentIndicatorDurationTime.Time).FirstOrDefaultAsync();
-            return query;
-        }
-
-        private async Task CreateNewDepartmentIndicatorDurationTime(DepartmentIndicatorDurationTime departmentIndicatorDurationTime)
-        {
-
-            var newDepartmentIndicatorDurationValue = new DepartmentIndicatorDurationVirtualValue
-            {
-                DepartmentIndicatorDurationVirtualValueID = System.Guid.NewGuid(),
-                IndicatorId = departmentIndicatorDurationTime.IndicatorID,
-                DepartmentId = departmentIndicatorDurationTime.DepartmentId,
-                CreateTime = System.DateTime.Now,
-                UpdateTime = System.DateTime.Now,
-                DurationId = departmentIndicatorDurationTime.DurationId,
-                Time = departmentIndicatorDurationTime.Time,
-                Value = departmentIndicatorDurationTime.Value
-            };
-            repo.Add(newDepartmentIndicatorDurationValue);
-            try
-            {
-                await this.unitOfWork.SaveChangesClientWinAsync();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// 验证用户的输入值 的有效性
-        /// </summary>
-        /// <param name="departmentIndicatorDurationTime"></param>
-        /// <returns></returns>
-        private bool IsValidInput(DepartmentIndicatorDurationTime departmentIndicatorDurationTime)
-        {
-            if (TryUpdateModel(departmentIndicatorDurationTime))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-
+        #endregion      
+      
         #region 下拉列表
         private void GetDurationSelect()
         {
@@ -578,7 +330,7 @@ namespace IMS2.Controllers
         private void PoPulateDeaprtmentList()
         {
             var departmentRepo = new DepartmentRepositoryAsync(this.unitOfWork);
-            ViewBag.DepartmentSelect = new SelectList(departmentRepo.GetAll().OrderBy(a => a.DepartmentName).Select(a => new SelectListItem { Text = a.DepartmentName, Value = a.DepartmentId.ToString() }), "Value", "Text");
+            ViewBag.DepartmentSelect = new SelectList(departmentRepo.GetAll().OrderBy(a => a.Priority).Select(a => new SelectListItem { Text = a.DepartmentName, Value = a.DepartmentId.ToString() }), "Value", "Text");
         }
         #endregion
     }

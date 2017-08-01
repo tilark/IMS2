@@ -30,10 +30,10 @@ namespace IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews
         [Display(Name = "值")]
         public decimal? Value { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:D}")]
+        [DisplayFormat(DataFormatString = "{0:G}")]
         [Display(Name = "创建时间")]
         public DateTime CreateTime { get; set; }
-        [DisplayFormat(DataFormatString = "{0:D}")]
+        [DisplayFormat(DataFormatString = "{0:G}")]
         [Display(Name = "更新时间")]
         public DateTime UpdateTime { get; set; }
     }
