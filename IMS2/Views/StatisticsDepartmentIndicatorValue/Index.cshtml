@@ -5,9 +5,14 @@
 }
 
 <h2>统计数据列表</h2>
-<p>@Html.ActionLink("创建新值表", "CreateVirtualValue", "StatisticsDepartmentIndicatorValue")</p>
+<div class="col-md-offset-5 col-md-7">
+    @Html.ActionLink("通过数据来源科室更新新值表", "CreateVirtualValueProvidingDepartment", "StatisticsDepartmentIndicatorValue", new { @class = "btn btn-primary" })
+    @Html.ActionLink("通过数据来源系统更新新值表", "CreateVirtualValueDataSourceSystem", "StatisticsDepartmentIndicatorValue", new { @class = "btn btn-primary" })
+    @Html.ActionLink("通过科室更新新值表", "CreateVirtualValueDepartment", "StatisticsDepartmentIndicatorValue", new { @class = "btn btn-primary" })
+</div>
 <fieldset class="col-md-12 panel panel-default">
     <legend class="text-primary">查找条件</legend>
+   
     @using (Ajax.BeginForm("_List", "StatisticsDepartmentIndicatorValue", new AjaxOptions() { HttpMethod = "Get", UpdateTargetId = "statistics-indicator-info-list", InsertionMode = InsertionMode.ReplaceWith ,LoadingElementId = "search-statistics-indicator-info-ajax", OnSuccess = "searchSatisticsIndicatorInfoSuccess" }))
     {
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })

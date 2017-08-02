@@ -1,0 +1,50 @@
+﻿@model IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews.DepartmentIndicatorDurationVirtualValueCreate
+@{
+    ViewBag.Title = "CreateVirtualValue";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>通过科室更新新值表</h2>
+
+@using (Html.BeginForm("CreateVirtualValueDepartment", "StatisticsDepartmentIndicatorValue"))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label class="col-md-2 label-control">科室</label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.DataSourceId, ViewBag.DepartmentSelect as SelectList, "-全选-", htmlAttributes: new { @class = "form-control multiple-select2-bind", id = "search-indicator-department-id" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.DurationId, new { @class = "col-md-2 label-control" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.DurationId, ViewBag.DurationSelect as SelectList, "-全选-", htmlAttributes: new { @class = "form-control multiple-select2-bind", id = "search-indicator-department-id" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Time, new { @class = "col-md-2 label-control" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Time, new { htmlAttributes = new { @class = "form-control datetimepicker2", id = "indicator-time-id" } })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-5 col-md-7">
+                <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#waitingModal" data-backdrop="static" data-keyboard="false">提交</button>
+                @Html.ActionLink("返回列表", "Index")
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts{
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(".multiple-select2-bind").select2();
+        });
+
+    </script>
+}

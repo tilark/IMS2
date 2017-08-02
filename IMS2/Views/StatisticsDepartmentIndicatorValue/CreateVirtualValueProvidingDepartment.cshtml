@@ -3,16 +3,16 @@
     ViewBag.Title = "CreateVirtualValue";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h2>创建新值表</h2>
+<h2>通过数据来源科室更新新值表</h2>
 
-@using (Html.BeginForm("CreateVirtualValue", "StatisticsDepartmentIndicatorValue"))
+@using (Html.BeginForm("CreateVirtualValueProvidingDepartment", "StatisticsDepartmentIndicatorValue"))
 {
     @Html.AntiForgeryToken()
     <div class="form-horizontal">
         <div class="form-group">
-            @Html.LabelFor(model => model.ProvidingDepartmentId, new { @class = "col-md-2 label-control" })
+            <label class="col-md-2 label-control">数据来源科室</label>
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.ProvidingDepartmentId, ViewBag.ProvideDepartmentSelect as SelectList, "-全选-", htmlAttributes: new { @class = "form-control multiple-select2-bind", id = "search-indicator-department-id" })
+                @Html.DropDownListFor(model => model.DataSourceId, ViewBag.ProvideDepartmentSelect as SelectList, "-全选-", htmlAttributes: new { @class = "form-control multiple-select2-bind", id = "search-indicator-department-id" })
             </div>
         </div>
         <div class="form-group">
