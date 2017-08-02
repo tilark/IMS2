@@ -305,6 +305,7 @@
     <Compile Include="PublicOperations\Implements\MedicalRecordStatisticalFromExcelRepo.cs" />
     <Compile Include="PublicOperations\Interfaces\FromExcelToDataBase.cs" />
     <Compile Include="BusinessModel\AlgorithmModel\IAlgorithmOperation.cs" />
+    <Compile Include="RepositoryAsync\DataSourceSystemRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\DepartmentIndicatorDurationVirtualValueRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\DepartmentIndicatorValueRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\DepartmentRepositoryAsync.cs" />
@@ -657,7 +658,9 @@
     <Content Include="Views\ImportDepartmentIndicators\_ShowResultReadFromExcel.cshtml" />
     <Content Include="Views\StatisticsDepartmentIndicatorValue\Index.cshtml" />
     <Content Include="Views\StatisticsDepartmentIndicatorValue\_List.cshtml" />
-    <Content Include="Views\StatisticsDepartmentIndicatorValue\CreateVirtualValue.cshtml" />
+    <Content Include="Views\StatisticsDepartmentIndicatorValue\CreateVirtualValueProvidingDepartment.cshtml" />
+    <Content Include="Views\StatisticsDepartmentIndicatorValue\CreateVirtualValueDataSourceSystem.cshtml" />
+    <Content Include="Views\StatisticsDepartmentIndicatorValue\CreateVirtualValueDepartment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
