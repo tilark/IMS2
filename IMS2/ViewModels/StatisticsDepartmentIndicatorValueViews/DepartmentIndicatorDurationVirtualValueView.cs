@@ -36,5 +36,13 @@ namespace IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews
         [DisplayFormat(DataFormatString = "{0:G}")]
         [Display(Name = "更新时间")]
         public DateTime UpdateTime { get; set; }
+
+        public string FormatValue
+        {
+            get
+            {
+                return Value.HasValue ? Value.Value.ToString("F4") : " ";
+            }
+        }
     }
 }
