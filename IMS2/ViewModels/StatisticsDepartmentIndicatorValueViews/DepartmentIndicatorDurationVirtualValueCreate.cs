@@ -52,7 +52,7 @@ namespace IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews
             //从Satistics中获得值
             if (indicatorDepartmentDurationTimeList != null && indicatorDepartmentDurationTimeList.Count > 0)
             {
-
+                //此处需优化
                 foreach (var item in indicatorDepartmentDurationTimeList)
                 {
                     try
@@ -254,7 +254,11 @@ namespace IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews
                 //从数据来源科室中获得的IndicatorId集合
                 var dataSourceSystemIndicatorList = dataSource.Indicators.Select(a => a.IndicatorId).ToList();
 
-                result = await GetIndicatorDepartmentViewModelList(dataSourceSystemIndicatorList);
+                var temp = await GetIndicatorDepartmentViewModelList(dataSourceSystemIndicatorList);
+                if(temp != null && temp.Count > 0)
+                {
+                    result.AddRange(temp);
+                }
 
             }
             return result;
@@ -278,7 +282,7 @@ namespace IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews
             var departmentRepo = new DepartmentRepositoryAsync(this.unitOfWork);
             //需获得所有科室的所管指标
             var providingDepartmentCollection = departmentRepo.GetAll().Include(a => a.ProvidingIndicators);
-            if (providingDepartmentId.HasValue)
+            if (providingDepartmentId.HasValue && !providingDepartmentId.Value.Equals(Guid.Empty))
             {
                 //如果指定了来源科室，则直接获得该科室的所管指标
                 providingDepartmentCollection = providingDepartmentCollection.Where(a => a.DepartmentId == providingDepartmentId.Value);
@@ -288,7 +292,11 @@ namespace IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews
             {
                 //从数据来源科室中获得的IndicatorId集合
                 var provideDepartmentIndicatorList = provideDepartment.ProvidingIndicators.Select(a => a.IndicatorId).ToList();
-                result = await GetIndicatorDepartmentViewModelList(provideDepartmentIndicatorList);
+                var temp = await GetIndicatorDepartmentViewModelList(provideDepartmentIndicatorList);
+                if(temp != null && temp.Count > 0)
+                {
+                    result.AddRange(temp);
+                }
             }
             return result;
         }
