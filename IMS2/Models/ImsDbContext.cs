@@ -140,6 +140,12 @@ namespace IMS2.Models
                 .HasMany(e => e.IndicatorGroupMapIndicators)
                 .WithRequired(e => e.Indicator)
                 .WillCascadeOnDelete(false);
+
+            #region 修改DepartmentIndicatorDurationVirtualValue中的Value精度
+            modelBuilder.Entity<DepartmentIndicatorDurationVirtualValue>()
+                .Property(e => e.Value)
+                .HasPrecision(18, 4);
+            #endregion
         }
     }
 }

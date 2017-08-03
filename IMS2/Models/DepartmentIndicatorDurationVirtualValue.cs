@@ -14,10 +14,13 @@ namespace IMS2.Models
     {
         public Guid DepartmentIndicatorDurationVirtualValueID { get; set; }
 
+        [Display(Name = "科室")]
         public Guid DepartmentId { get; set; }
 
+        [Display(Name = "指标")]
         public Guid IndicatorId { get; set; }
 
+        [Display(Name = "时段")]
         public Guid DurationId { get; set; }
 
 
