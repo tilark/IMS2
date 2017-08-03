@@ -14,15 +14,19 @@ namespace IMS2.BusinessModel.SatisticsValueModel
 {
     public class SatisticsValue : ISatisticsValue
     {
-        private List<Duration> DurationList { get; set; }
+        private static List<Duration> DurationList { get; set; }
         private IAlgorithmOperation algorithmOperation;
         private IDomainUnitOfWork unitOfWork;
         public SatisticsValue(IAlgorithmOperation algorithmOperation, IDomainUnitOfWork unitOfWork)
         {
             this.algorithmOperation = algorithmOperation;
             this.unitOfWork = unitOfWork;
-            var durationRepo = new DurationRepositoryAsync(this.unitOfWork);
-            this.DurationList = durationRepo.GetAll().ToList();
+            
+            if(DurationList == null)
+            {
+                var durationRepo = new DurationRepositoryAsync(this.unitOfWork);
+                DurationList = durationRepo.GetAll().ToList();
+            }
         }
         
         public async Task<decimal?> GetSatisticsValue(Guid indicatorID, Guid durationId, Guid departmentId, DateTime time)
@@ -248,7 +252,7 @@ namespace IMS2.BusinessModel.SatisticsValueModel
         private Guid GetLowerLevelDurationID(Guid durationId, DateTime time, out DateTime[] times)
         {
             times = new DateTime[3];
-            var duration = this.DurationList.FirstOrDefault(a => a.DurationId == durationId);
+            var duration = DurationList.FirstOrDefault(a => a.DurationId == durationId);
             if (duration != null)
             {
                 if (duration.IsYearDuration())
@@ -315,7 +319,7 @@ namespace IMS2.BusinessModel.SatisticsValueModel
                     //如果是其他月份
                     
                 }
-                return duration.NextLevel() != 0 ? this.DurationList.Find(a => a.Level == duration.NextLevel()).DurationId : Guid.Empty;
+                return duration.NextLevel() != 0 ? DurationList.Find(a => a.Level == duration.NextLevel()).DurationId : Guid.Empty;
             }
             else
             {
