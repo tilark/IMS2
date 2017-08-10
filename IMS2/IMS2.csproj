@@ -218,6 +218,8 @@
     <Compile Include="App_Start\NinjectDependencyResolver.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="BusinessModel\DurationTime\DurationTimeItem.cs" />
+    <Compile Include="BusinessModel\DurationTime\DurationTimeSolver.cs" />
     <Compile Include="BusinessModel\IndicatorDepartmentModel\IIndicatorDepartment.cs" />
     <Compile Include="BusinessModel\IndicatorDepartmentModel\IndicatorDepartment.cs" />
     <Compile Include="BusinessModel\IndicatorDepartmentModel\IndicatorDepartmentImpl.cs" />
