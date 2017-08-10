@@ -223,6 +223,7 @@
     <Compile Include="BusinessModel\IndicatorDepartmentModel\IIndicatorDepartment.cs" />
     <Compile Include="BusinessModel\IndicatorDepartmentModel\IndicatorDepartment.cs" />
     <Compile Include="BusinessModel\IndicatorDepartmentModel\IndicatorDepartmentImpl.cs" />
+    <Compile Include="BusinessModel\IndicatorRelativeIndicatorAlgorithmSearchingAlgorithm\IndicatorRelativeIndicatorAlgorithmSearchingAlgorithm.cs" />
     <Compile Include="BusinessModel\SatisticsValueModel\ISatisticsValue.cs" />
     <Compile Include="BusinessModel\SatisticsValueModel\SatisticsValue.cs" />
     <Compile Include="CachedKeyEntry.cs" />
