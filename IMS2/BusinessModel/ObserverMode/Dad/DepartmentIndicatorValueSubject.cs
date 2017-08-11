@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
+using IMS2.RepositoryAsync;
 namespace IMS2.BusinessModel.ObserverMode.Dad
 {
     /// <summary>
@@ -21,6 +21,10 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
     /// </example>
     public class DepartmentIndicatorValueSubject : ISubject
     {
+        public DepartmentIndicatorValueSubject()
+        {
+
+        }
         public DepartmentIndicatorValueSubject(Models.DepartmentIndicatorValue origin, RepositoryAsync.IDomainUnitOfWork unitOfWork)
         {
             this.DepartmentIndicatorValueId = origin.DepartmentIndicatorValueId;
@@ -33,8 +37,13 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
 
             this.unitOfWork = unitOfWork;
         }
+       
 
-
+        public DepartmentIndicatorValueSubject( RepositoryAsync.IDomainUnitOfWork unitOfWork)
+        {       
+            this.unitOfWork = unitOfWork;
+            this.Observers = new List<IObserver>();
+        }
 
 
 
@@ -146,9 +155,12 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
         /// </summary>
         protected void UpdateDatabase()
         {
-            var target = unitOfWork.Db.DepartmentIndicatorValues.Find(this.DepartmentIndicatorValueId);
+            var departmentIndicatorValueRepo = new DepartmentIndicatorValueRepositoryAsync(unitOfWork);
+            var target = departmentIndicatorValueRepo.Single(this.DepartmentIndicatorValueId);
             target.IsLocked = this.IsLocked;
-            unitOfWork.SaveChangesDataBaseWin();
+            target.UpdateTime = DateTime.Now;
+            departmentIndicatorValueRepo.Update(target);
+            unitOfWork.SaveChangesClientWin();
         }
     }
 }

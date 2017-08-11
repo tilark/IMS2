@@ -8,6 +8,9 @@ using IMS2.RepositoryAsync;
 using IMS2.BusinessModel.SatisticsValueModel;
 using IMS2.BusinessModel.AlgorithmModel;
 using IMS2.BusinessModel.IndicatorDepartmentModel;
+using IMS2.BusinessModel.ObserverMode;
+using IMS2.BusinessModel.ObserverMode.Dad;
+using IMS2.App_Start.NinjectProvider;
 
 namespace IMS2.App_Start
 {
@@ -30,6 +33,29 @@ namespace IMS2.App_Start
             this.kernel.Bind<ISatisticsValue>().To<SatisticsValue>();
             this.kernel.Bind<IIndicatorDepartment>().To<IndicatorDepartmentImpl>();
 
+            //绑定观察者模式
+            this.kernel.Bind<ISubject>().To<DepartmentIndicatorValueSubject>();
+            this.kernel.Bind<IObserver>().To<VirtualValueObserver>();
+            //var departmentIndicatorValueSubject = new DepartmentIndicatorValueSubject(this.kernel.Get<DomainUnitOfWork>());
+            //var virtualValueObject = new VirtualValueObserver(this.kernel.Get<DomainUnitOfWork>(), this.kernel.Get<SatisticsValue>());
+            //departmentIndicatorValueSubject.Attach(virtualValueObject);
+
+            this.kernel.Bind(typeof(DepartmentIndicatorValueSubject)).ToProvider(new DepartmentIndicatorValueSubjectProvider());
+            //this.kernel.Bind<DepartmentIndicatorValueSubject>().ToSelf().Kernel.GetService(typeof(DepartmentIndicatorValueSubjectProvider));
+            //this.kernel.Bind<DepartmentIndicatorValueSubject>().ToSelf().OnActivation<DepartmentIndicatorValueSubject>(context =>
+            //{
+            //    var departmentIndicatorValueSubject = new DepartmentIndicatorValueSubject(context..Get<DomainUnitOfWork>());
+            //    var virtualValueObject = new VirtualValueObserver(context.Kernel.Get<DomainUnitOfWork>(), context.Kernel.Get<SatisticsValue>());
+            //    departmentIndicatorValueSubject.Attach(virtualValueObject);
+            //    return departmentIndicatorValueSubject;
+            //});
+            //this.kernel.Bind<DepartmentIndicatorValueSubject>().ToMethod(context =>
+            //{
+            //    var departmentIndicatorValueSubject = new DepartmentIndicatorValueSubject(context.Kernel.Get<DomainUnitOfWork>());
+            //    var virtualValueObject = new VirtualValueObserver(context.Kernel.Get<DomainUnitOfWork>(), context.Kernel.Get<SatisticsValue>());
+            //    departmentIndicatorValueSubject.Attach(virtualValueObject);
+            //    return departmentIndicatorValueSubject;
+            //});
             ////this.kernel.Bind<ITodoRepository>().To<TodoRepository1>().Named("type1");
             ////this.kernel.Bind<ITodoRepository>().To<TodoRepository2>().Named("type2");
             ////this.kernel.Bind<IMessage>().To<Message1>().Named("message1");
@@ -37,6 +63,7 @@ namespace IMS2.App_Start
 
         public object GetService(Type serviceType)
         {
+            
             return this.kernel.TryGet(serviceType);
         }
 

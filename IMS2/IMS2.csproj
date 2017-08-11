@@ -216,6 +216,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\NinjectDependencyResolver.cs" />
+    <Compile Include="App_Start\NinjectProvider\DepartmentIndicatorValueSubjectProvider.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="BusinessModel\DurationTime\DurationTimeItem.cs" />
@@ -370,7 +371,7 @@
     <Compile Include="ViewModels\ReporterView.cs" />
     <Compile Include="ViewModels\ResetPasswordView.cs" />
     <Compile Include="ViewModels\RoleView.cs" />
-    <Compile Include="BusinessModel\SatisticsValueModel\DepartmentIndicatorDurationTime.cs" />
+    <Compile Include="BusinessModel\SatisticsValueModel\DepartmentIndicatorDurationTimeVirtualValueView.cs" />
     <Compile Include="ViewModels\StatisticsDepartmentIndicatorValueViews\DepartmentIndicatorDurationVirtualValueCreate.cs" />
     <Compile Include="ViewModels\StatisticsDepartmentIndicatorValueViews\DepartmentIndicatorDurationVirtualValueEdit.cs" />
     <Compile Include="ViewModels\StatisticsDepartmentIndicatorValueViews\DepartmentIndicatorDurationVirtualValueView.cs" />

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using IMS2.RepositoryAsync;
+using IMS2.BusinessModel.SatisticsValueModel;
 
 namespace IMS2.BusinessModel.ObserverMode.Dad
 {
@@ -18,17 +20,19 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
         /// <summary>
         /// 初始化。
         /// </summary>
-        public VirtualValueObserver(RepositoryAsync.IDomainUnitOfWork unitOfWork)
+        public VirtualValueObserver(RepositoryAsync.IDomainUnitOfWork unitOfWork, ISatisticsValue satisticsValue)
         {
             this.unitOfWork = unitOfWork;
+            this.satisticsValue = satisticsValue;
+            this.repo = new DepartmentIndicatorDurationVirtualValueRepositoryAsync(unitOfWork);
         }
 
 
 
 
-
+        private ISatisticsValue satisticsValue;
         private RepositoryAsync.IDomainUnitOfWork unitOfWork;
-
+        private DepartmentIndicatorDurationVirtualValueRepositoryAsync repo;
 
 
 
@@ -50,7 +54,7 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
         /// <see cref="基于值表变动动态更新虚拟值表机制"/>
         public void Update()
         {
-            var db = new Models.ImsDbContext();
+            //var db = new Models.ImsDbContext();
 
             var originIsLocked = (this.Subject as DepartmentIndicatorValueSubject).IsLocked;
 
@@ -63,7 +67,8 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
             var indicatorIds = resultIds.ToList();
             indicatorIds.Add(originIndicatorId);
 
-            var indicator = db.Indicators.Find(originIndicatorId);
+            var indicatorRepo = new IndicatorRepositoryAsync(unitOfWork);
+            var indicator = indicatorRepo.Single(originIndicatorId);
             var durationTimeSolver = new BusinessModel.DurationTime.DurationTimeSolver();
             var durationTimeList = durationTimeSolver.Solve(indicator.DurationId.Value, originTime);
 
@@ -95,8 +100,37 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
         /// <remarks>若对应虚拟值已存在，则更新，否则进行新增。</remarks>
         private void UpdateOrCreateVirturlValue(Guid indicatorId,Guid departmentId,Guid durationId,DateTime time)
         {
-            throw new NotImplementedException();
-            》》
+            try
+            {
+                var value = this.satisticsValue.GetSatisticsValue(indicatorId, durationId, departmentId, time).Result;
+                if (value != null)
+                {
+                    var item = new DepartmentIndicatorDurationTimeVirtualValueView
+                    {
+                        IndicatorId = indicatorId,
+                        DepartmentId = departmentId,
+                        DurationId = durationId,
+                        Time = time,
+                        Value = value.Value
+                    };
+                    try
+                    {
+                        item.UpdateOrCreateIfNotExistDepartmentIndicatorDurationVirtualValue(unitOfWork);
+                    }
+                    catch (Exception)
+                    {
+
+                        throw;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+           
+           
         }
 
         /// <summary>
@@ -109,8 +143,22 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
         /// <remarks>若对应虚拟值已存在，则删除，否则不出错。</remarks>
         private void RemoveVirturlValue(Guid indicatorId, Guid departmentId, Guid durationId, DateTime time)
         {
-            throw new NotImplementedException();
-            》》
+            var item = new DepartmentIndicatorDurationTimeVirtualValueView
+            {
+                IndicatorId = indicatorId,
+                DepartmentId = departmentId,
+                DurationId = durationId,
+                Time = time                
+            };
+            try
+            {
+                item.RemoveDepartmentIndicatorDurationVirtualValue(unitOfWork);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }
