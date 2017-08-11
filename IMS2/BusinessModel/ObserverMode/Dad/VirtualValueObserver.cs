@@ -62,14 +62,14 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
             var originIndicatorId = (this.Subject as DepartmentIndicatorValueSubject).IndicatorId;
             var originTime = (this.Subject as DepartmentIndicatorValueSubject).Time;
 
-            var indicatorRelativeIndicatorAlgorithmSearchingAlgorithm = new BusinessModel.IndicatorRelativeIndicatorAlgorithmSearchingAlgorithm.IndicatorRelativeIndicatorAlgorithmSearchingAlgorithm();
+            var indicatorRelativeIndicatorAlgorithmSearchingAlgorithm = new BusinessModel.IndicatorRelativeIndicatorAlgorithmSearchingAlgorithm.IndicatorRelativeIndicatorAlgorithmSearchingAlgorithm(unitOfWork);
             var resultIds = indicatorRelativeIndicatorAlgorithmSearchingAlgorithm.Find(originIndicatorId);
             var indicatorIds = resultIds.ToList();
             indicatorIds.Add(originIndicatorId);
 
             var indicatorRepo = new IndicatorRepositoryAsync(unitOfWork);
-            var indicator = indicatorRepo.Single(originIndicatorId);
-            var durationTimeSolver = new BusinessModel.DurationTime.DurationTimeSolver();
+            var indicator = indicatorRepo.SingleOrDefault(originIndicatorId);
+            var durationTimeSolver = new BusinessModel.DurationTime.DurationTimeSolver(unitOfWork);
             var durationTimeList = durationTimeSolver.Solve(indicator.DurationId.Value, originTime);
 
             if (originIsLocked)

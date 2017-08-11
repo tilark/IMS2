@@ -156,11 +156,15 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
         protected void UpdateDatabase()
         {
             var departmentIndicatorValueRepo = new DepartmentIndicatorValueRepositoryAsync(unitOfWork);
-            var target = departmentIndicatorValueRepo.Single(this.DepartmentIndicatorValueId);
-            target.IsLocked = this.IsLocked;
-            target.UpdateTime = DateTime.Now;
-            departmentIndicatorValueRepo.Update(target);
-            unitOfWork.SaveChangesClientWin();
+            var target = departmentIndicatorValueRepo.SingleOrDefault(this.DepartmentIndicatorValueId);
+            if(target != null)
+            {
+                target.IsLocked = this.IsLocked;
+                target.UpdateTime = DateTime.Now;
+                departmentIndicatorValueRepo.Update(target);
+                unitOfWork.SaveChangesClientWin();
+            }
+           
         }
     }
 }

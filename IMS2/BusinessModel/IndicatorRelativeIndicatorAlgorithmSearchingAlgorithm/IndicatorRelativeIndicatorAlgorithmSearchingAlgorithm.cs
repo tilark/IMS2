@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
+using IMS2.RepositoryAsync;
 namespace IMS2.BusinessModel.IndicatorRelativeIndicatorAlgorithmSearchingAlgorithm
 {
     /// <summary>
@@ -12,12 +12,13 @@ namespace IMS2.BusinessModel.IndicatorRelativeIndicatorAlgorithmSearchingAlgorit
     /// <see cref="指标关联算法查找算法"/>
     public class IndicatorRelativeIndicatorAlgorithmSearchingAlgorithm
     {
+        private IDomainUnitOfWork unitOfWork;
         /// <summary>
         /// 初始化。
         /// </summary>
-        public IndicatorRelativeIndicatorAlgorithmSearchingAlgorithm()
+        public IndicatorRelativeIndicatorAlgorithmSearchingAlgorithm(IDomainUnitOfWork unitOfWork)
         {
-
+            this.unitOfWork = unitOfWork;
         }
 
 
@@ -36,11 +37,11 @@ namespace IMS2.BusinessModel.IndicatorRelativeIndicatorAlgorithmSearchingAlgorit
             List<Guid> returnResultIds = new List<Guid>();
             List<Guid> searchResultIds = new List<Guid> { indicatorId };
 
-            var db = new Models.ImsDbContext();
-
+            //var db = new Models.ImsDbContext();
+            var repo = new IndicatorAlgorithmRepositoryAsync(this.unitOfWork);
             do
             {
-                var list = db.IndicatorAlgorithms.Where(c => searchResultIds.Contains(c.FirstOperandID) || searchResultIds.Contains(c.SecondOperandID)).ToList();
+                var list = repo.GetAll(c => searchResultIds.Contains(c.FirstOperandID) || searchResultIds.Contains(c.SecondOperandID)).ToList();
 
                 searchResultIds = list.Select(c => c.ResultId).ToList();
 

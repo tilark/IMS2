@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
+using IMS2.RepositoryAsync;
 namespace IMS2.BusinessModel.DurationTime
 {
     /// <summary>
@@ -12,12 +12,13 @@ namespace IMS2.BusinessModel.DurationTime
     /// <see cref="时段时间组合算法"/>
     public class DurationTimeSolver
     {
+        private RepositoryAsync.IDomainUnitOfWork unitOfWork;
         /// <summary>
         /// 初始化。
         /// </summary>
-        public DurationTimeSolver()
+        public DurationTimeSolver(IDomainUnitOfWork unitOfWork)
         {
-
+            this.unitOfWork = unitOfWork;
         }
 
 
@@ -36,12 +37,14 @@ namespace IMS2.BusinessModel.DurationTime
         {
             var returnList = new List<DurationTimeItem>();
 
-            var db = new Models.ImsDbContext();
+            //var db = new Models.ImsDbContext();
+            var repo = new DurationRepositoryAsync(this.unitOfWork);
+            ////var duration = db.Durations.Find(durationId);
+            var duration = repo.SingleOrDefault(durationId);
 
-            var duration = db.Durations.Find(durationId);
             if (duration == null)
                 return null;
-            var durations = db.Durations.Where(c => c.Level >= duration.Level).ToList();
+            var durations = repo.GetAll(c => c.Level >= duration.Level).ToList();
 
             DateTime tempTime;
             foreach (var itemDuration in durations)

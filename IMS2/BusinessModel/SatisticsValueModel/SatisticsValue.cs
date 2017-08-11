@@ -123,8 +123,10 @@ namespace IMS2.BusinessModel.SatisticsValueModel
             {
                 //找到时段，判断是否是同级别。
 
-                var durationRepo = new DurationRepositoryAsync(this.unitOfWork);
-                var duration = await durationRepo.GetAll(a => a.DurationId == durationId).FirstOrDefaultAsync();
+                //var durationRepo = new DurationRepositoryAsync(this.unitOfWork);
+                //var duration = await durationRepo.GetAll(a => a.DurationId == durationId).FirstOrDefaultAsync();
+                var duration = DurationList.Find(a => a.DurationId == durationId);
+
                 if (duration != null)
                 {
                     result = duration.Level - durationOfIndicator.Level;
@@ -193,8 +195,18 @@ namespace IMS2.BusinessModel.SatisticsValueModel
         private async Task<IndicatorAlgorithm> GetAlgorithm(Guid indicatorID)
         {
             var algorithmRepo = new IndicatorAlgorithmRepositoryAsync(this.unitOfWork);
-            var algorithm = await algorithmRepo.GetAll(a => a.ResultId == indicatorID).FirstOrDefaultAsync();
-            return algorithm;
+            try
+            {
+                var algorithm = await algorithmRepo.GetAll(a => a.ResultId == indicatorID).FirstOrDefaultAsync();
+
+                return algorithm;
+
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
         }
 
         /// <summary>
