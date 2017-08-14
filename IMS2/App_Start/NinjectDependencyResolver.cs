@@ -31,6 +31,7 @@ namespace IMS2.App_Start
             this.kernel.Bind<IReadFromExcel>().To<ReadFromExcel>();
             this.kernel.Bind<IAlgorithmOperation>().To<AlgorithmOperationImpl>();
             this.kernel.Bind<ISatisticsValue>().To<SatisticsValue>();
+
             this.kernel.Bind<IIndicatorDepartment>().To<IndicatorDepartmentImpl>();
 
             //绑定观察者模式

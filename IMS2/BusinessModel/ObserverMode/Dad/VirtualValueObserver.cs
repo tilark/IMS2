@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using IMS2.RepositoryAsync;
 using IMS2.BusinessModel.SatisticsValueModel;
+using IMS2.BusinessModel.AlgorithmModel;
+using IMS2.Models;
 
 namespace IMS2.BusinessModel.ObserverMode.Dad
 {
@@ -24,15 +26,20 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
         {
             this.unitOfWork = unitOfWork;
             this.satisticsValue = satisticsValue;
-            this.repo = new DepartmentIndicatorDurationVirtualValueRepositoryAsync(unitOfWork);
+            //this.satisticsValue = new SatisticsValue(new AlgorithmOperationImpl(), unitOfWork);
+            //this.repo = new DepartmentIndicatorDurationVirtualValueRepositoryAsync(unitOfWork);
         }
-
+        public VirtualValueObserver(ISatisticsValue satisticsValue)
+        {
+           
+            this.satisticsValue = satisticsValue;
+           
+        }
 
 
 
         private ISatisticsValue satisticsValue;
         private RepositoryAsync.IDomainUnitOfWork unitOfWork;
-        private DepartmentIndicatorDurationVirtualValueRepositoryAsync repo;
 
 
 
@@ -62,14 +69,22 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
             var originIndicatorId = (this.Subject as DepartmentIndicatorValueSubject).IndicatorId;
             var originTime = (this.Subject as DepartmentIndicatorValueSubject).Time;
 
-            var indicatorRelativeIndicatorAlgorithmSearchingAlgorithm = new BusinessModel.IndicatorRelativeIndicatorAlgorithmSearchingAlgorithm.IndicatorRelativeIndicatorAlgorithmSearchingAlgorithm(unitOfWork);
+            var indicatorRelativeIndicatorAlgorithmSearchingAlgorithm = new BusinessModel.IndicatorRelativeIndicatorAlgorithmSearchingAlgorithm.IndicatorRelativeIndicatorAlgorithmSearchingAlgorithm();
             var resultIds = indicatorRelativeIndicatorAlgorithmSearchingAlgorithm.Find(originIndicatorId);
             var indicatorIds = resultIds.ToList();
             indicatorIds.Add(originIndicatorId);
 
-            var indicatorRepo = new IndicatorRepositoryAsync(unitOfWork);
-            var indicator = indicatorRepo.SingleOrDefault(originIndicatorId);
-            var durationTimeSolver = new BusinessModel.DurationTime.DurationTimeSolver(unitOfWork);
+            var indicator = new Indicator();
+            using (var context = new ImsDbContext())
+            {
+                indicator = context.Indicators.Find(originIndicatorId);
+
+            }
+            if(indicator == null)
+            {
+                return;
+            }
+            var durationTimeSolver = new BusinessModel.DurationTime.DurationTimeSolver();
             var durationTimeList = durationTimeSolver.Solve(indicator.DurationId.Value, originTime);
 
             if (originIsLocked)
@@ -115,7 +130,7 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
                     };
                     try
                     {
-                        item.UpdateOrCreateIfNotExistDepartmentIndicatorDurationVirtualValue(unitOfWork);
+                        item.UpdateOrCreateIfNotExistDepartmentIndicatorDurationVirtualValue();
                     }
                     catch (Exception)
                     {
@@ -152,7 +167,7 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
             };
             try
             {
-                item.RemoveDepartmentIndicatorDurationVirtualValue(unitOfWork);
+                item.RemoveDepartmentIndicatorDurationVirtualValue();
             }
             catch (Exception)
             {

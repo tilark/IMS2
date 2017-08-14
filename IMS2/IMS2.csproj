@@ -231,6 +231,7 @@
     <Compile Include="BusinessModel\ObserverMode\ISubject.cs" />
     <Compile Include="BusinessModel\SatisticsValueModel\ISatisticsValue.cs" />
     <Compile Include="BusinessModel\SatisticsValueModel\SatisticsValue.cs" />
+    <Compile Include="BusinessModel\SatisticsValueModel\SatisticsValueUseDbContext.cs" />
     <Compile Include="CachedKeyEntry.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AutoGetDataSourceController.cs" />

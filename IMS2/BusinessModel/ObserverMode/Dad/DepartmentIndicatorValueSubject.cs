@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using IMS2.RepositoryAsync;
+using IMS2.Models;
+using System.Data.Entity.Infrastructure;
+
 namespace IMS2.BusinessModel.ObserverMode.Dad
 {
     /// <summary>
@@ -23,7 +26,7 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
     {
         public DepartmentIndicatorValueSubject()
         {
-
+            this.Observers = new List<IObserver>();
         }
         public DepartmentIndicatorValueSubject(Models.DepartmentIndicatorValue origin, RepositoryAsync.IDomainUnitOfWork unitOfWork)
         {
@@ -155,16 +158,51 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
         /// </summary>
         protected void UpdateDatabase()
         {
-            var departmentIndicatorValueRepo = new DepartmentIndicatorValueRepositoryAsync(unitOfWork);
-            var target = departmentIndicatorValueRepo.SingleOrDefault(this.DepartmentIndicatorValueId);
-            if(target != null)
+            using (var context = new ImsDbContext())
             {
-                target.IsLocked = this.IsLocked;
-                target.UpdateTime = DateTime.Now;
-                departmentIndicatorValueRepo.Update(target);
-                unitOfWork.SaveChangesClientWin();
+                var target = context.DepartmentIndicatorValues.Find(this.DepartmentIndicatorValueId);
+                if (target != null)
+                {
+                    target.IsLocked = this.IsLocked;
+                    target.UpdateTime = DateTime.Now;
+                    context.DepartmentIndicatorValues.Attach(target);
+
+                    context.Entry(target).State = System.Data.Entity.EntityState.Modified;
+
+
+                    #region Client win
+                    bool saveFailed;
+                    do
+                    {
+                        saveFailed = false;
+                        try
+                        {
+                            context.SaveChanges();
+                        }
+                        catch (DbUpdateConcurrencyException ex)
+                        {
+                            saveFailed = true;
+
+                            // Update original values from the database 
+                            var entry = ex.Entries.Single();
+                            entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                        }
+
+                    } while (saveFailed);
+                    #endregion
+                }
             }
-           
+               
+            //var departmentIndicatorValueRepo = new DepartmentIndicatorValueRepositoryAsync(unitOfWork);
+            //var target = departmentIndicatorValueRepo.SingleOrDefault(this.DepartmentIndicatorValueId);
+            //if(target != null)
+            //{
+            //    target.IsLocked = this.IsLocked;
+            //    target.UpdateTime = DateTime.Now;
+            //    departmentIndicatorValueRepo.Update(target);
+            //    unitOfWork.SaveChangesClientWin();
+            //}
+
         }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using IMS2.RepositoryAsync;
+using IMS2.Models;
+
 namespace IMS2.BusinessModel.IndicatorRelativeIndicatorAlgorithmSearchingAlgorithm
 {
     /// <summary>
@@ -20,7 +22,10 @@ namespace IMS2.BusinessModel.IndicatorRelativeIndicatorAlgorithmSearchingAlgorit
         {
             this.unitOfWork = unitOfWork;
         }
+        public IndicatorRelativeIndicatorAlgorithmSearchingAlgorithm()
+        {
 
+        }
 
 
 
@@ -38,20 +43,23 @@ namespace IMS2.BusinessModel.IndicatorRelativeIndicatorAlgorithmSearchingAlgorit
             List<Guid> searchResultIds = new List<Guid> { indicatorId };
 
             //var db = new Models.ImsDbContext();
-            var repo = new IndicatorAlgorithmRepositoryAsync(this.unitOfWork);
-            do
+            //var repo = new IndicatorAlgorithmRepositoryAsync(this.unitOfWork);
+            using(var context = new ImsDbContext())
             {
-                var list = repo.GetAll(c => searchResultIds.Contains(c.FirstOperandID) || searchResultIds.Contains(c.SecondOperandID)).ToList();
-
-                searchResultIds = list.Select(c => c.ResultId).ToList();
-
-                if (searchResultIds.Count() > 0)
+                do
                 {
-                    returnResultIds = returnResultIds.Union(searchResultIds).ToList();
-                }
-                else
-                    break;
-            } while (true);
+                    var list = context.IndicatorAlgorithms.Where(c => searchResultIds.Contains(c.FirstOperandID) || searchResultIds.Contains(c.SecondOperandID)).ToList();
+
+                    searchResultIds = list.Select(c => c.ResultId).ToList();
+
+                    if (searchResultIds.Count() > 0)
+                    {
+                        returnResultIds = returnResultIds.Union(searchResultIds).ToList();
+                    }
+                    else
+                        break;
+                } while (true);
+            }          
 
             return returnResultIds;
         }

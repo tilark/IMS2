@@ -17,13 +17,17 @@ namespace IMS2.Controllers
     public class VerifyDepartmentIndicatorsController : Controller
     {
         //private ImsDbContext db = new ImsDbContext();
-        private IDomainUnitOfWork unitOfWork;
-        private DepartmentIndicatorValueRepositoryAsync repo;
+        //private IDomainUnitOfWork unitOfWork;
+        //private DepartmentIndicatorValueRepositoryAsync repo;
         private IKernel kernel;
-        public VerifyDepartmentIndicatorsController(IDomainUnitOfWork unitOfWork, IKernel kernel)
+        //public VerifyDepartmentIndicatorsController(IDomainUnitOfWork unitOfWork, IKernel kernel)
+        //{
+        //    this.unitOfWork = unitOfWork;
+        //    this.repo = new DepartmentIndicatorValueRepositoryAsync(this.unitOfWork);
+        //    this.kernel = kernel;
+        //}
+        public VerifyDepartmentIndicatorsController(IKernel kernel)
         {
-            this.unitOfWork = unitOfWork;
-            this.repo = new DepartmentIndicatorValueRepositoryAsync(this.unitOfWork);
             this.kernel = kernel;
         }
         // GET: VerifyDepartmentIndicators
@@ -134,10 +138,15 @@ namespace IMS2.Controllers
         [Authorize(Roles = "审核全院指标值, Administrators")]
 
         [HttpPost]
+
         public async Task<ActionResult> _VerifyLocked(bool isLock, Guid id)
         {
-            var departmentIndicatorValueLocked = await this.repo.SingleAsync(id);
-            if (departmentIndicatorValueLocked.Value.HasValue)
+            var departmentIndicatorValueLocked = new DepartmentIndicatorValue() ;
+            using(var context = new ImsDbContext())
+            {
+                departmentIndicatorValueLocked = await context.DepartmentIndicatorValues.FindAsync(id);
+            }
+            if (departmentIndicatorValueLocked != null && departmentIndicatorValueLocked.Value.HasValue)
             {
 
                 try
@@ -161,9 +170,36 @@ namespace IMS2.Controllers
             }
 
         }
-       
+        //public async Task<ActionResult> _VerifyLocked(bool isLock, Guid id)
+        //{
+        //    var departmentIndicatorValueLocked = await this.repo.SingleAsync(id);
+        //    if (departmentIndicatorValueLocked.Value.HasValue)
+        //    {
+
+        //        try
+        //        {
+
+        //            HandleLockDepartmentIndicatorValue(departmentIndicatorValueLocked.DepartmentIndicatorValueId, departmentIndicatorValueLocked.IndicatorId, departmentIndicatorValueLocked.DepartmentId, departmentIndicatorValueLocked.Time, isLock);
+
+
+        //            return Json(new { success = true });
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return Json(new { success = false });
+
+        //            //throw;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return Json(new { success = false });
+        //    }
+
+        //}
+
         #endregion
-      
+
 
 
         #region Private Method
@@ -221,27 +257,59 @@ namespace IMS2.Controllers
         private async Task<List<DepartmentIndicatorValue>> GetIndicatorValueList(VerifySearchCondition searchCondition)
         {
             //var departmentIndicatorValues = db.DepartmentIndicatorValues.Include(d => d.Department).Include(d => d.DepartmentIndicatorStandard).Include(d => d.Indicator.Duration);
-            var departmentIndicatorValues = this.repo.GetAll().Include(d => d.Department).Include(d => d.DepartmentIndicatorStandard).Include(d => d.Indicator.Duration);
-            if (searchCondition.DepartmentId.HasValue)
+            using(var context = new ImsDbContext())
             {
-                departmentIndicatorValues = departmentIndicatorValues.Where(d => d.DepartmentId == searchCondition.DepartmentId);
-            }
-            switch (searchCondition.LockStatus)
-            {
+                var departmentIndicatorValues = context.DepartmentIndicatorValues.Include(d => d.Department).Include(d => d.DepartmentIndicatorStandard).Include(d => d.Indicator.Duration);
+                if (searchCondition.DepartmentId.HasValue)
+                {
+                    departmentIndicatorValues = departmentIndicatorValues.Where(d => d.DepartmentId == searchCondition.DepartmentId);
+                }
+                switch (searchCondition.LockStatus)
+                {
 
-                case LockStatus.Locked:
-                    departmentIndicatorValues = departmentIndicatorValues.Where(a => a.IsLocked == true);
-                    break;
-                case LockStatus.UnLock:
-                    departmentIndicatorValues = departmentIndicatorValues.Where(a => a.IsLocked == false);
-                    break;
-                case LockStatus.All:
-                    break;
-            }
-            departmentIndicatorValues = departmentIndicatorValues.Where(d => d.Time.Year >= searchCondition.SearchStartTime.Year && d.Time.Month >= searchCondition.SearchStartTime.Month && d.Time.Year <= searchCondition.SearchEndTime.Year && d.Time.Month <= searchCondition.SearchEndTime.Month);
+                    case LockStatus.Locked:
+                        departmentIndicatorValues = departmentIndicatorValues.Where(a => a.IsLocked == true);
+                        break;
+                    case LockStatus.UnLock:
+                        departmentIndicatorValues = departmentIndicatorValues.Where(a => a.IsLocked == false);
+                        break;
+                    case LockStatus.All:
+                        break;
+                }
+                departmentIndicatorValues = departmentIndicatorValues.Where(d => d.Time.Year >= searchCondition.SearchStartTime.Year && d.Time.Month >= searchCondition.SearchStartTime.Month && d.Time.Year <= searchCondition.SearchEndTime.Year && d.Time.Month <= searchCondition.SearchEndTime.Month);
 
-            return await departmentIndicatorValues.OrderBy(d => d.Indicator.Priority).ToListAsync();
+                return await departmentIndicatorValues.OrderBy(d => d.Indicator.Priority).ToListAsync();
+            }
+           
         }
+
+        #region unitOfWork GetIndicatorValueList
+        //private async Task<List<DepartmentIndicatorValue>> GetIndicatorValueList(VerifySearchCondition searchCondition)
+        //{
+        //    //var departmentIndicatorValues = db.DepartmentIndicatorValues.Include(d => d.Department).Include(d => d.DepartmentIndicatorStandard).Include(d => d.Indicator.Duration);
+        //    var departmentIndicatorValues = this.repo.GetAll().Include(d => d.Department).Include(d => d.DepartmentIndicatorStandard).Include(d => d.Indicator.Duration);
+        //    if (searchCondition.DepartmentId.HasValue)
+        //    {
+        //        departmentIndicatorValues = departmentIndicatorValues.Where(d => d.DepartmentId == searchCondition.DepartmentId);
+        //    }
+        //    switch (searchCondition.LockStatus)
+        //    {
+
+        //        case LockStatus.Locked:
+        //            departmentIndicatorValues = departmentIndicatorValues.Where(a => a.IsLocked == true);
+        //            break;
+        //        case LockStatus.UnLock:
+        //            departmentIndicatorValues = departmentIndicatorValues.Where(a => a.IsLocked == false);
+        //            break;
+        //        case LockStatus.All:
+        //            break;
+        //    }
+        //    departmentIndicatorValues = departmentIndicatorValues.Where(d => d.Time.Year >= searchCondition.SearchStartTime.Year && d.Time.Month >= searchCondition.SearchStartTime.Month && d.Time.Year <= searchCondition.SearchEndTime.Year && d.Time.Month <= searchCondition.SearchEndTime.Month);
+
+        //    return await departmentIndicatorValues.OrderBy(d => d.Indicator.Priority).ToListAsync();
+        //}
+        #endregion
+
         #endregion
         #region 科室列表
         private void PoluateDepartmentSelect()
@@ -249,20 +317,35 @@ namespace IMS2.Controllers
             ViewBag.DepartmentSelect = GetDepartmentSingleSelectList();
 
         }
+
+
+        #region unitOfWork 
+        //public SelectList GetDepartmentSingleSelectList()
+        //{
+        //    var httpRuntimeCache = HttpRuntime.Cache;
+        //    if (httpRuntimeCache != null && httpRuntimeCache["DepartmentSingleSelectID"] != null)
+        //    {
+        //        return httpRuntimeCache["DepartmentSingleSelectID"] as SelectList;
+        //    }
+        //    else
+        //    {
+        //        var departmentRepo = new DepartmentRepositoryAsync(this.unitOfWork);
+        //        var result = new SelectList(departmentRepo.GetAll().Select(a => new SelectListItem { Value = a.DepartmentId.ToString(), Text = a.DepartmentName }).ToList(), "Value", "Text");
+        //        httpRuntimeCache.Insert("DepartmentSingleSelectID", result);
+        //        return result;
+        //    }
+        //}
+        #endregion
         public SelectList GetDepartmentSingleSelectList()
         {
-            var httpRuntimeCache = HttpRuntime.Cache;
-            if (httpRuntimeCache != null && httpRuntimeCache["DepartmentSingleSelectID"] != null)
+           using (var context = new ImsDbContext())
             {
-                return httpRuntimeCache["DepartmentSingleSelectID"] as SelectList;
-            }
-            else
-            {
-                var departmentRepo = new DepartmentRepositoryAsync(this.unitOfWork);
-                var result = new SelectList(departmentRepo.GetAll().Select(a => new SelectListItem { Value = a.DepartmentId.ToString(), Text = a.DepartmentName }).ToList(), "Value", "Text");
-                httpRuntimeCache.Insert("DepartmentSingleSelectID", result);
+                var departmentRepo = context.Departments.ToList();
+                var result = new SelectList(departmentRepo.AsParallel().Select(a => new SelectListItem { Value = a.DepartmentId.ToString(), Text = a.DepartmentName }).ToList(), "Value", "Text");
                 return result;
             }
+              
+          
         }
         #endregion
 

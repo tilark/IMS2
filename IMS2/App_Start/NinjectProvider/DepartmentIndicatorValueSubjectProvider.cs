@@ -13,11 +13,21 @@ namespace IMS2.App_Start.NinjectProvider
 {
     public class DepartmentIndicatorValueSubjectProvider : Provider<DepartmentIndicatorValueSubject>
     {
+        //protected override DepartmentIndicatorValueSubject CreateInstance(IContext context)
+        //{
+        //    var departmentIndicatorValueSubject = new DepartmentIndicatorValueSubject(context.Kernel.Get<IDomainUnitOfWork>());
+        //    var unitOfWork = context.Kernel.Get<IDomainUnitOfWork>();
+        //    SatisticsValueUseDbContext satisticsValue = new SatisticsValueUseDbContext(context.Kernel.Get<IAlgorithmOperation>());
+        //    var virtualValueObject = new VirtualValueObserver(unitOfWork, satisticsValue);
+        //    departmentIndicatorValueSubject.Attach(virtualValueObject);
+        //    return departmentIndicatorValueSubject;
+        //}
+
         protected override DepartmentIndicatorValueSubject CreateInstance(IContext context)
         {
-            var departmentIndicatorValueSubject = new DepartmentIndicatorValueSubject(context.Kernel.Get<IDomainUnitOfWork>());
-            SatisticsValue satisticsValue = new SatisticsValue(context.Kernel.Get<IAlgorithmOperation>(), context.Kernel.Get<IDomainUnitOfWork>());
-            var virtualValueObject = new VirtualValueObserver(context.Kernel.Get<IDomainUnitOfWork>(), satisticsValue);
+            var departmentIndicatorValueSubject = new DepartmentIndicatorValueSubject();
+            SatisticsValueUseDbContext satisticsValue = new SatisticsValueUseDbContext(context.Kernel.Get<IAlgorithmOperation>());
+            var virtualValueObject = new VirtualValueObserver( satisticsValue);
             departmentIndicatorValueSubject.Attach(virtualValueObject);
             return departmentIndicatorValueSubject;
         }

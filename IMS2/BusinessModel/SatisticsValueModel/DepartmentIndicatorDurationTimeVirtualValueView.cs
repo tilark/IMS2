@@ -3,6 +3,7 @@ using IMS2.RepositoryAsync;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web;
 
@@ -46,6 +47,81 @@ namespace IMS2.BusinessModel.SatisticsValueModel
         /// 如果存在则更新虚拟值表，不存在则创建一个新的虚拟值表
         /// </summary>
         /// <param name="unitOfWork"></param>
+        /// 
+        public void UpdateOrCreateIfNotExistDepartmentIndicatorDurationVirtualValue()
+        {
+            if (this.Value != null)
+            {
+                using(var context = new ImsDbContext())
+                {
+                    var query = context.DepartmentIndicatorDurationVirtualValues.Where(a => a.IndicatorId == IndicatorId && a.DepartmentId == DepartmentId && a.DurationId == DurationId && a.Time == Time).FirstOrDefault();
+                    if (query == null)
+                    {
+                        //新建
+                        var departmentIndicatorDurationVirtualValue = new DepartmentIndicatorDurationVirtualValue
+                        {
+                            DepartmentIndicatorDurationVirtualValueID = Guid.NewGuid(),
+                            DepartmentId = DepartmentId,
+                            IndicatorId = IndicatorId,
+                            DurationId = DurationId,
+                            Time = Time,
+                            Value = Value,
+                            CreateTime = DateTime.Now,
+                            UpdateTime = System.DateTime.Now
+                        };
+                        context.DepartmentIndicatorDurationVirtualValues.Add(departmentIndicatorDurationVirtualValue);
+                        #region Client win
+                        bool saveFailed;
+                        do
+                        {
+                            saveFailed = false;
+                            try
+                            {
+                                context.SaveChanges();
+                            }
+                            catch (DbUpdateConcurrencyException ex)
+                            {
+                                saveFailed = true;
+
+                                // Update original values from the database 
+                                var entry = ex.Entries.Single();
+                                entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                            }
+
+                        } while (saveFailed);
+                        #endregion
+                    }
+                    else
+                    {
+                        //更新
+                        query.Value = Value;
+                        query.UpdateTime = DateTime.Now;
+                        context.DepartmentIndicatorDurationVirtualValues.Attach(query);
+                        #region Client win
+                        bool saveFailed;
+                        do
+                        {
+                            saveFailed = false;
+                            try
+                            {
+                                context.SaveChanges();
+                            }
+                            catch (DbUpdateConcurrencyException ex)
+                            {
+                                saveFailed = true;
+
+                                // Update original values from the database 
+                                var entry = ex.Entries.Single();
+                                entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                            }
+
+                        } while (saveFailed);
+                        #endregion
+                    }
+                }
+               
+            }
+        }
         public void UpdateOrCreateIfNotExistDepartmentIndicatorDurationVirtualValue(IDomainUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
@@ -131,6 +207,40 @@ namespace IMS2.BusinessModel.SatisticsValueModel
                     throw;
                 }
             }
+        }
+
+
+        public void RemoveDepartmentIndicatorDurationVirtualValue()
+        {
+            using(var context = new ImsDbContext())
+            {
+                var query = context.DepartmentIndicatorDurationVirtualValues.Where(a => a.IndicatorId == IndicatorId && a.DepartmentId == DepartmentId && a.DurationId == DurationId && a.Time == Time).FirstOrDefault();
+                if (query != null)
+                {
+                    context.DepartmentIndicatorDurationVirtualValues.Remove(query);
+                    #region Client win
+                    bool saveFailed;
+                    do
+                    {
+                        saveFailed = false;
+                        try
+                        {
+                            context.SaveChanges();
+                        }
+                        catch (DbUpdateConcurrencyException ex)
+                        {
+                            saveFailed = true;
+
+                            // Update original values from the database 
+                            var entry = ex.Entries.Single();
+                            entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                        }
+
+                    } while (saveFailed);
+                    #endregion
+                }
+            }
+           
         }
         #endregion
         #endregion

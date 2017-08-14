@@ -197,7 +197,10 @@ namespace IMS2.BusinessModel.SatisticsValueModel
             var algorithmRepo = new IndicatorAlgorithmRepositoryAsync(this.unitOfWork);
             try
             {
-                var algorithm = await algorithmRepo.GetAll(a => a.ResultId == indicatorID).FirstOrDefaultAsync();
+                //var algorithmList = await algorithmRepo.GetAllAsync();
+
+                //var algorithm = algorithmList.Where(a => a.ResultId == indicatorID).FirstOrDefault();
+                var algorithm = await algorithmRepo.GetAll(a => a.ResultId == indicatorID).AsNoTracking().FirstOrDefaultAsync();
 
                 return algorithm;
 

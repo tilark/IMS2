@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using IMS2.RepositoryAsync;
+using IMS2.Models;
+
 namespace IMS2.BusinessModel.DurationTime
 {
     /// <summary>
@@ -21,6 +23,10 @@ namespace IMS2.BusinessModel.DurationTime
             this.unitOfWork = unitOfWork;
         }
 
+        public DurationTimeSolver()
+        {
+
+        }
 
 
 
@@ -36,15 +42,19 @@ namespace IMS2.BusinessModel.DurationTime
         public List<DurationTimeItem> Solve(Guid durationId, DateTime time)
         {
             var returnList = new List<DurationTimeItem>();
-
+            var durations = new List<Duration>();
             //var db = new Models.ImsDbContext();
-            var repo = new DurationRepositoryAsync(this.unitOfWork);
+            //var repo = new DurationRepositoryAsync(this.unitOfWork);
             ////var duration = db.Durations.Find(durationId);
-            var duration = repo.SingleOrDefault(durationId);
+            using (var context = new ImsDbContext())
+            {
+                var duration = context.Durations.Find(durationId);
 
-            if (duration == null)
-                return null;
-            var durations = repo.GetAll(c => c.Level >= duration.Level).ToList();
+                if (duration == null)
+                    return null;
+                durations = context.Durations.Where(c => c.Level >= duration.Level).ToList();
+            }
+           
 
             DateTime tempTime;
             foreach (var itemDuration in durations)
