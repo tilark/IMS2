@@ -276,7 +276,7 @@ namespace IMS2.BusinessModel.SatisticsValueModel
                 {
                     using (var context = new ImsDbContext())
                     {
-                        var nextLevelDuration = context.Durations.Where(a => a.Level == duration.NextLevel()).FirstOrDefault();
+                        var nextLevelDuration = context.Durations.ToList().Where(a => a.Level == duration.NextLevel()).FirstOrDefault();
                         result = nextLevelDuration != null ? nextLevelDuration.DurationId : Guid.Empty;
                     }
                 }                           
