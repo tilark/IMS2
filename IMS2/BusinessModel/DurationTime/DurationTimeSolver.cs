@@ -91,7 +91,7 @@ namespace IMS2.BusinessModel.DurationTime
                     default:
                         return null;
                 }
-                returnList.Add(new DurationTimeItem { DurationId = durationId, Time = tempTime });
+                returnList.Add(new DurationTimeItem { DurationId = itemDuration.DurationId, Time = tempTime });
             }
 
             return returnList;
