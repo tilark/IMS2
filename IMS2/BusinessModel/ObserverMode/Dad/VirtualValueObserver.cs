@@ -113,11 +113,14 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
         /// <param name="durationId">时段ID。</param>
         /// <param name="time">时间。</param>
         /// <remarks>若对应虚拟值已存在，则更新，否则进行新增。</remarks>
-        private void UpdateOrCreateVirturlValue(Guid indicatorId,Guid departmentId,Guid durationId,DateTime time)
+        private async void UpdateOrCreateVirturlValue(Guid indicatorId, Guid departmentId, Guid durationId, DateTime time)
         {
             try
             {
-                var value = this.satisticsValue.GetSatisticsValue(indicatorId, durationId, departmentId, time).Result;
+                //var value = this.satisticsValue.GetSatisticsValue(indicatorId, durationId, departmentId, time).Result;
+
+                var value = await this.satisticsValue.GetSatisticsValue(indicatorId, durationId, departmentId, time);
+                
                 if (value != null)
                 {
                     var item = new DepartmentIndicatorDurationTimeVirtualValueView
