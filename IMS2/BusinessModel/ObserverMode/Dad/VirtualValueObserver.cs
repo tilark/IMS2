@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+
 using IMS2.RepositoryAsync;
 using IMS2.BusinessModel.SatisticsValueModel;
 using IMS2.BusinessModel.AlgorithmModel;
@@ -29,17 +30,22 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
             //this.satisticsValue = new SatisticsValue(new AlgorithmOperationImpl(), unitOfWork);
             //this.repo = new DepartmentIndicatorDurationVirtualValueRepositoryAsync(unitOfWork);
         }
+
+        /// <summary>
+        /// 初始化。
+        /// </summary>
         public VirtualValueObserver(ISatisticsValue satisticsValue)
         {
-           
             this.satisticsValue = satisticsValue;
-           
         }
 
 
 
+
+
         private ISatisticsValue satisticsValue;
-        private RepositoryAsync.IDomainUnitOfWork unitOfWork;
+        private IDomainUnitOfWork unitOfWork;
+
 
 
 
@@ -78,9 +84,8 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
             using (var context = new ImsDbContext())
             {
                 indicator = context.Indicators.Find(originIndicatorId);
-
             }
-            if(indicator == null)
+            if (indicator == null)
             {
                 return;
             }
@@ -120,7 +125,7 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
                 //var value = this.satisticsValue.GetSatisticsValue(indicatorId, durationId, departmentId, time).Result;
 
                 var value = await this.satisticsValue.GetSatisticsValue(indicatorId, durationId, departmentId, time);
-                
+
                 if (value != null)
                 {
                     var item = new DepartmentIndicatorDurationTimeVirtualValueView
@@ -137,18 +142,14 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
                     }
                     catch (Exception)
                     {
-
                         throw;
                     }
                 }
             }
             catch (Exception)
             {
-
                 throw;
             }
-           
-           
         }
 
         /// <summary>
@@ -166,7 +167,7 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
                 IndicatorId = indicatorId,
                 DepartmentId = departmentId,
                 DurationId = durationId,
-                Time = time                
+                Time = time
             };
             try
             {
@@ -174,7 +175,6 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
