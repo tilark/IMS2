@@ -97,6 +97,8 @@ namespace IMS2.BusinessModel.SatisticsValueModel
                         query.Value = Value;
                         query.UpdateTime = DateTime.Now;
                         context.DepartmentIndicatorDurationVirtualValues.Attach(query);
+                        context.Entry(query).State = System.Data.Entity.EntityState.Modified;
+
                         #region Client win
                         bool saveFailed;
                         do
