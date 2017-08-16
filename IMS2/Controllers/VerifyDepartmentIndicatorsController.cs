@@ -54,7 +54,7 @@ namespace IMS2.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.NonAuthoritativeInformation);
             }
         }
-      
+
         #region 一键审核
 
         [Authorize(Roles = "审核全院指标值, Administrators")]
@@ -74,7 +74,7 @@ namespace IMS2.Controllers
             }
             return Json(new { updateNumber = departmentIndicatorValues.Where(a => a.Value.HasValue).Count() });
         }
-       
+
         #endregion
 
         #region 一键取消审核
@@ -123,7 +123,7 @@ namespace IMS2.Controllers
             return results;
         }
 
-       
+
 
 
         #endregion
@@ -139,64 +139,37 @@ namespace IMS2.Controllers
 
         [HttpPost]
 
-        public async Task<ActionResult> _VerifyLocked(bool isLock, Guid id)
+        public async Task<ActionResult> _VerifyLocked(bool isLock, Guid? id)
         {
-            var departmentIndicatorValueLocked = new DepartmentIndicatorValue() ;
-            using(var context = new ImsDbContext())
+            if (!id.HasValue)
             {
-                departmentIndicatorValueLocked = await context.DepartmentIndicatorValues.FindAsync(id);
+                return Json(new { success = false, lockstatus = isLock });
             }
-            if (departmentIndicatorValueLocked != null && departmentIndicatorValueLocked.Value.HasValue)
-            {
+            var departmentIndicatorValueLocked = new DepartmentIndicatorValue();
 
+          return await Task.Run(async () =>
+            {
                 try
                 {
-
-                    HandleLockDepartmentIndicatorValue(departmentIndicatorValueLocked.DepartmentIndicatorValueId, departmentIndicatorValueLocked.IndicatorId, departmentIndicatorValueLocked.DepartmentId, departmentIndicatorValueLocked.Time, isLock);
-
-
-                    return Json(new { success = true });
+                    using (var context = new ImsDbContext())
+                    {
+                        departmentIndicatorValueLocked = await context.DepartmentIndicatorValues.FindAsync(id);
+                    }
+                    if (departmentIndicatorValueLocked != null && departmentIndicatorValueLocked.Value.HasValue)
+                    {
+                        HandleLockDepartmentIndicatorValue(departmentIndicatorValueLocked.DepartmentIndicatorValueId, departmentIndicatorValueLocked.IndicatorId, departmentIndicatorValueLocked.DepartmentId, departmentIndicatorValueLocked.Time, isLock);
+                        return Json(new { success = true, lockstatus = isLock });
+                    }
                 }
                 catch (Exception)
                 {
-                    return Json(new { success = false });
 
-                    //throw;
+
                 }
-            }
-            else
-            {
-                return Json(new { success = false });
-            }
-
+                return Json(new { success = false, lockstatus = !isLock });
+            });
         }
-        //public async Task<ActionResult> _VerifyLocked(bool isLock, Guid id)
-        //{
-        //    var departmentIndicatorValueLocked = await this.repo.SingleAsync(id);
-        //    if (departmentIndicatorValueLocked.Value.HasValue)
-        //    {
 
-        //        try
-        //        {
-
-        //            HandleLockDepartmentIndicatorValue(departmentIndicatorValueLocked.DepartmentIndicatorValueId, departmentIndicatorValueLocked.IndicatorId, departmentIndicatorValueLocked.DepartmentId, departmentIndicatorValueLocked.Time, isLock);
-
-
-        //            return Json(new { success = true });
-        //        }
-        //        catch (Exception)
-        //        {
-        //            return Json(new { success = false });
-
-        //            //throw;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return Json(new { success = false });
-        //    }
-
-        //}
 
         #endregion
 
@@ -257,7 +230,7 @@ namespace IMS2.Controllers
         private async Task<List<DepartmentIndicatorValue>> GetIndicatorValueList(VerifySearchCondition searchCondition)
         {
             //var departmentIndicatorValues = db.DepartmentIndicatorValues.Include(d => d.Department).Include(d => d.DepartmentIndicatorStandard).Include(d => d.Indicator.Duration);
-            using(var context = new ImsDbContext())
+            using (var context = new ImsDbContext())
             {
                 var departmentIndicatorValues = context.DepartmentIndicatorValues.Include(d => d.Department).Include(d => d.DepartmentIndicatorStandard).Include(d => d.Indicator.Duration);
                 if (searchCondition.DepartmentId.HasValue)
@@ -280,7 +253,7 @@ namespace IMS2.Controllers
 
                 return await departmentIndicatorValues.OrderBy(d => d.Indicator.Priority).ToListAsync();
             }
-           
+
         }
 
         #region unitOfWork GetIndicatorValueList
@@ -338,14 +311,14 @@ namespace IMS2.Controllers
         #endregion
         public SelectList GetDepartmentSingleSelectList()
         {
-           using (var context = new ImsDbContext())
+            using (var context = new ImsDbContext())
             {
                 var departmentRepo = context.Departments.ToList();
                 var result = new SelectList(departmentRepo.AsParallel().Select(a => new SelectListItem { Value = a.DepartmentId.ToString(), Text = a.DepartmentName }).ToList(), "Value", "Text");
                 return result;
             }
-              
-          
+
+
         }
         #endregion
 

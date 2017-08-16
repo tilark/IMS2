@@ -40,10 +40,10 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
 
             this.unitOfWork = unitOfWork;
         }
-       
 
-        public DepartmentIndicatorValueSubject( RepositoryAsync.IDomainUnitOfWork unitOfWork)
-        {       
+
+        public DepartmentIndicatorValueSubject(RepositoryAsync.IDomainUnitOfWork unitOfWork)
+        {
             this.unitOfWork = unitOfWork;
             this.Observers = new List<IObserver>();
         }
@@ -163,7 +163,18 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
                 var target = context.DepartmentIndicatorValues.Find(this.DepartmentIndicatorValueId);
                 if (target != null)
                 {
+
                     target.IsLocked = this.IsLocked;
+                    //如果原值表中的Value为null，则设为false，不能审核。如果不为null，则按IsLocked操作
+                    if (target.Value == null)
+                    {
+                        target.IsLocked = false;
+                    }
+                    else
+                    {
+                        target.IsLocked = this.IsLocked;
+                    }
+
                     target.UpdateTime = DateTime.Now;
                     context.DepartmentIndicatorValues.Attach(target);
 
@@ -192,7 +203,7 @@ namespace IMS2.BusinessModel.ObserverMode.Dad
                     #endregion
                 }
             }
-               
+
             //var departmentIndicatorValueRepo = new DepartmentIndicatorValueRepositoryAsync(unitOfWork);
             //var target = departmentIndicatorValueRepo.SingleOrDefault(this.DepartmentIndicatorValueId);
             //if(target != null)

@@ -48,12 +48,34 @@ function verifyIndicatorInfoSuccess(data, status, jqXHR) {
 function bindVerifyIndicatorValueChecked() {
     $("#verify-indicator-list-table").on("click", "input[type=checkbox]", function () {
         //console.log($(this).is("input:checked") + $(this).data("id"));
+        //有一个显示正在运行的标志
+        
+        
         var postData = {};
         postData.isLock = $(this).is("input:checked");
         postData.id = $(this).data("id");
+
+        var verifyInput = $(this);
+        var loading = $(this).parent().find(".lockstatus").first();
+        loading.html($('<img src="../Images/ajax-loader.gif" />'));
         //利用ajax更新
-        $.post("VerifyDepartmentIndicators/_VerifyLocked", postData, function (data) {
-        });
+        var jqxhrVerifyPost = $.post("VerifyDepartmentIndicators/_VerifyLocked", postData, function (data, textStatus) {          
+            ////根据返回的状态码设置标志
+          
+            if (data.success) {
+                //成功，设置成功标志
+                loading.html($('<span class="glyphicon glyphicon-ok bg-success"></span>'));                
+            }
+            else {
+            //失败，设置失败标志，并置input为相应的状态
+
+                loading.html($('<span class="glyphicon glyphicon-remove bg-danger"></span>'));
+            }
+            //$(this).val(data.lockstatus);
+        })            
+            .fail(function (data, status) {
+                alert('error');
+            });
     });
 }
 //--verify end
@@ -63,7 +85,7 @@ function bindUploadFileSubmit() {
     $("#upload-file-submit-id").on("click", function () {
         UpdateBeginAlert();
     });
-  
+
 }
 //选取设备时，修改该行的背景色
 function imsSelectBeginPrev(element) {
@@ -159,8 +181,8 @@ function UpdateBeginAlert() {
     console.log("enter beginalert");
     swal({
         title: "正在处理中!",
-        text: "请稍后……",       
-        type: "success",   
+        text: "请稍后……",
+        type: "success",
         showConfirmButton: false
     });
 }
@@ -194,5 +216,5 @@ function setDataTable(element) {
                 }
             });
     }
-   
+
 }
