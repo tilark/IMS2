@@ -29,138 +29,138 @@ namespace IMS2.Tests.BusinessModel.SatisticsModels
 
             //    //获得基本操作数的值
 
-            var test1 = new DepartmentIndicatorDurationTime
+            var test1 = new DepartmentIndicatorDurationTimeVirtualValueView
             {
                 DepartmentId = MockUnitOfWork.DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = MockUnitOfWork.DurationList.Find(a => a.DurationName == "月").DurationId,
-                IndicatorID = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "Y").IndicatorId,
+                IndicatorId = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "Y").IndicatorId,
                 Time = MockUnitOfWork.yearTime[0]
             };
-            var test2 = new DepartmentIndicatorDurationTime
+            var test2 = new DepartmentIndicatorDurationTimeVirtualValueView
             {
                 DepartmentId = MockUnitOfWork.DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = MockUnitOfWork.DurationList.Find(a => a.DurationName == "月").DurationId,
-                IndicatorID = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "Z").IndicatorId,
+                IndicatorId = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "Z").IndicatorId,
                 Time = MockUnitOfWork.yearTime[0]
             };
             //测试基本跨度月的当月计算值X=Y/Z
-            var test3 = new DepartmentIndicatorDurationTime
+            var test3 = new DepartmentIndicatorDurationTimeVirtualValueView
             {
                 DepartmentId = MockUnitOfWork.DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = MockUnitOfWork.DurationList.Find(a => a.DurationName == "月").DurationId,
-                IndicatorID = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "X").IndicatorId,
+                IndicatorId = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "X").IndicatorId,
                 Time = MockUnitOfWork.yearTime[0]
             };
             //测试季的Y的总值
-            var test4 = new DepartmentIndicatorDurationTime
+            var test4 = new DepartmentIndicatorDurationTimeVirtualValueView
             {
                 DepartmentId = MockUnitOfWork.DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = MockUnitOfWork.DurationList.Find(a => a.DurationName == "季").DurationId,
-                IndicatorID = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "Y").IndicatorId,
+                IndicatorId = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "Y").IndicatorId,
                 Time = MockUnitOfWork.yearTime[0]
             };
             //测试季的X的总值 X=Y/Z
-            var test5 = new DepartmentIndicatorDurationTime
+            var test5 = new DepartmentIndicatorDurationTimeVirtualValueView
             {
                 DepartmentId = MockUnitOfWork.DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = MockUnitOfWork.DurationList.Find(a => a.DurationName == "季").DurationId,
-                IndicatorID = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "X").IndicatorId,
+                IndicatorId = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "X").IndicatorId,
                 Time = MockUnitOfWork.yearTime[0]
             };
             //测试单月的乘法 A = Y*Z
-            var test6 = new DepartmentIndicatorDurationTime
+            var test6 = new DepartmentIndicatorDurationTimeVirtualValueView
             {
                 DepartmentId = MockUnitOfWork.DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = MockUnitOfWork.DurationList.Find(a => a.DurationName == "月").DurationId,
-                IndicatorID = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "A").IndicatorId,
+                IndicatorId = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "A").IndicatorId,
                 Time = MockUnitOfWork.yearTime[0]
             };
             //测试第一季度的乘法 A = Y*Z
-            var test7 = new DepartmentIndicatorDurationTime
+            var test7 = new DepartmentIndicatorDurationTimeVirtualValueView
             {
                 DepartmentId = MockUnitOfWork.DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = MockUnitOfWork.DurationList.Find(a => a.DurationName == "季").DurationId,
-                IndicatorID = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "A").IndicatorId,
+                IndicatorId = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "A").IndicatorId,
                 Time = MockUnitOfWork.yearTime[0]
             };
 
             //测试上半年的乘法 A = Y * Z
-            var test8 = new DepartmentIndicatorDurationTime
+            var test8 = new DepartmentIndicatorDurationTimeVirtualValueView
             {
                 DepartmentId = MockUnitOfWork.DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = MockUnitOfWork.DurationList.Find(a => a.DurationName == "半年").DurationId,
-                IndicatorID = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "A").IndicatorId,
+                IndicatorId = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "A").IndicatorId,
                 Time = MockUnitOfWork.yearTime[0]
             };
             //测试全年的乘法 A = Y * Z
-            var test9 = new DepartmentIndicatorDurationTime
+            var test9 = new DepartmentIndicatorDurationTimeVirtualValueView
             {
                 DepartmentId = MockUnitOfWork.DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = MockUnitOfWork.DurationList.Find(a => a.DurationName == "年").DurationId,
-                IndicatorID = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "A").IndicatorId,
+                IndicatorId = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "A").IndicatorId,
                 Time = MockUnitOfWork.yearTime[0]
             };
 
             //测试全年的除法 X = Y/Z
-            var test10 = new DepartmentIndicatorDurationTime
+            var test10 = new DepartmentIndicatorDurationTimeVirtualValueView
             {
                 DepartmentId = MockUnitOfWork.DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = MockUnitOfWork.DurationList.Find(a => a.DurationName == "年").DurationId,
-                IndicatorID = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "X").IndicatorId,
+                IndicatorId = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "X").IndicatorId,
                 Time = MockUnitOfWork.yearTime[0]
             };
 
             //求基本月的B B=A/Z
-            var test11 = new DepartmentIndicatorDurationTime
+            var test11 = new DepartmentIndicatorDurationTimeVirtualValueView
             {
                 DepartmentId = MockUnitOfWork.DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = MockUnitOfWork.DurationList.Find(a => a.DurationName == "月").DurationId,
-                IndicatorID = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "B").IndicatorId,
+                IndicatorId = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "B").IndicatorId,
                 Time = MockUnitOfWork.yearTime[0]
             };
 
             //求基本月的C C=A * Z
-            var test12 = new DepartmentIndicatorDurationTime
+            var test12 = new DepartmentIndicatorDurationTimeVirtualValueView
             {
                 DepartmentId = MockUnitOfWork.DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = MockUnitOfWork.DurationList.Find(a => a.DurationName == "月").DurationId,
-                IndicatorID = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "C").IndicatorId,
+                IndicatorId = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "C").IndicatorId,
                 Time = MockUnitOfWork.yearTime[0]
             };
 
             //求第二季度B B=A/Z
-            var test13 = new DepartmentIndicatorDurationTime
+            var test13 = new DepartmentIndicatorDurationTimeVirtualValueView
             {
                 DepartmentId = MockUnitOfWork.DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = MockUnitOfWork.DurationList.Find(a => a.DurationName == "季").DurationId,
-                IndicatorID = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "B").IndicatorId,
+                IndicatorId = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "B").IndicatorId,
                 Time = MockUnitOfWork.yearTime[3]
             };
             //求第二季度C C=A*Z
-            var test14 = new DepartmentIndicatorDurationTime
+            var test14 = new DepartmentIndicatorDurationTimeVirtualValueView
             {
                 DepartmentId = MockUnitOfWork.DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = MockUnitOfWork.DurationList.Find(a => a.DurationName == "季").DurationId,
-                IndicatorID = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "C").IndicatorId,
+                IndicatorId = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "C").IndicatorId,
                 Time = MockUnitOfWork.yearTime[3]
             };
             //求下半年B B=A/Z
-            var test15 = new DepartmentIndicatorDurationTime
+            var test15 = new DepartmentIndicatorDurationTimeVirtualValueView
             {
                 DepartmentId = MockUnitOfWork.DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = MockUnitOfWork.DurationList.Find(a => a.DurationName == "半年").DurationId,
-                IndicatorID = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "B").IndicatorId,
+                IndicatorId = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "B").IndicatorId,
                 Time = MockUnitOfWork.yearTime[6]
             };
             //求下半年C C=A*Z
-            var test16 = new DepartmentIndicatorDurationTime
+            var test16 = new DepartmentIndicatorDurationTimeVirtualValueView
             {
                 DepartmentId = MockUnitOfWork.DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = MockUnitOfWork.DurationList.Find(a => a.DurationName == "半年").DurationId,
-                IndicatorID = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "C").IndicatorId,
+                IndicatorId = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "C").IndicatorId,
                 Time = MockUnitOfWork.yearTime[6]
             };
-            var value1 = await satistics.GetSatisticsValue(test1.IndicatorID, test1.DurationId, test1.DepartmentId, test1.Time);
+            var value1 = await satistics.GetSatisticsValue(test1.IndicatorId, test1.DurationId, test1.DepartmentId, test1.Time);
             //var value2 = await satistics.GetSatisticsValue(test2);
             //var value3 = await satistics.GetSatisticsValue(test3);
             //var value4 = await satistics.GetSatisticsValue(test4);

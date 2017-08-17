@@ -36,11 +36,11 @@ namespace IMS2.Controllers.Tests
             var unitOfWork = MockUnitOfWork.SetupUnitOfWork();
             var controller = new StatisticsDepartmentIndicatorValueController(unitOfWork.Object, new SatisticsValue(new AlgorithmOperationImpl(), unitOfWork.Object), new IndicatorDepartmentImpl(unitOfWork.Object));
             //测试创建Y的基本月的数据
-            var test1 = new DepartmentIndicatorDurationTime
+            var test1 = new DepartmentIndicatorDurationTimeVirtualValueView
             {
                 DepartmentId = MockUnitOfWork.DepartmentList.Find(a => a.DepartmentName == "科室1").DepartmentId,
                 DurationId = MockUnitOfWork.DurationList.Find(a => a.DurationName == "月").DurationId,
-                IndicatorID = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "Y").IndicatorId,
+                IndicatorId = MockUnitOfWork.IndicatorList.Find(a => a.IndicatorName == "Y").IndicatorId,
                 Time = MockUnitOfWork.yearTime[0]
             };
 

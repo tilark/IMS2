@@ -57,7 +57,7 @@ namespace IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews
                 {
                     try
                     {
-                        item.Value = await satisticsValue.GetSatisticsValue(item.IndicatorID, item.DurationId, item.DepartmentId, item.Time);
+                        item.Value = await satisticsValue.GetSatisticsValue(item.IndicatorId, item.DurationId, item.DepartmentId, item.Time);
                     }
                     catch (NullReferenceException)
                     {
@@ -94,13 +94,13 @@ namespace IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews
         /// </summary>
         /// <param name="departmentDurationValue"></param>
         /// <returns></returns>
-        private async Task SaveDepartmentIndicatorDurationVirtualValueToDatabase(List<DepartmentIndicatorDurationTime> departmentDurationValue)
+        private async Task SaveDepartmentIndicatorDurationVirtualValueToDatabase(List<DepartmentIndicatorDurationTimeVirtualValueView> departmentDurationValue)
         {
             var repo = new DepartmentIndicatorDurationVirtualValueRepositoryAsync(unitOfWork);
             foreach (var item in departmentDurationValue.AsParallel().Where(a => a.Value != null).ToList())
             {
                 ///先判断在新值表中
-                var query = await repo.GetAll(a => a.IndicatorId == item.IndicatorID && a.DepartmentId == item.DepartmentId && a.DurationId == item.DurationId && a.Time == item.Time).FirstOrDefaultAsync();
+                var query = await repo.GetAll(a => a.IndicatorId == item.IndicatorId && a.DepartmentId == item.DepartmentId && a.DurationId == item.DurationId && a.Time == item.Time).FirstOrDefaultAsync();
                 if (query != null)
                 {
                     ///如果存在，则需更新
@@ -115,7 +115,7 @@ namespace IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews
                     {
                         DepartmentIndicatorDurationVirtualValueID = Guid.NewGuid(),
                         DepartmentId = item.DepartmentId,
-                        IndicatorId = item.IndicatorID,
+                        IndicatorId = item.IndicatorId,
                         DurationId = item.DurationId,
                         Time = item.Time,
                         Value = item.Value,
@@ -142,13 +142,13 @@ namespace IMS2.ViewModels.StatisticsDepartmentIndicatorValueViews
         /// <param name="durationList"></param>
         /// <param name="time"></param>
         /// <returns></returns>
-        private List<DepartmentIndicatorDurationTime> TransferToIndicatorDepartmentDurationTimeList(List<IndicatorDepartmentViewModel> indicatorDepartmentList, List<Duration> durationList, DateTime time)
+        private List<DepartmentIndicatorDurationTimeVirtualValueView> TransferToIndicatorDepartmentDurationTimeList(List<IndicatorDepartmentViewModel> indicatorDepartmentList, List<Duration> durationList, DateTime time)
         {
             var result = (from i in indicatorDepartmentList.AsParallel()
                           from d in durationList.AsParallel()
-                          select new DepartmentIndicatorDurationTime
+                          select new DepartmentIndicatorDurationTimeVirtualValueView
                           {
-                              IndicatorID = i.IndicatorId,
+                              IndicatorId = i.IndicatorId,
                               DepartmentId = i.DepartmentId,
                               DurationId = d.DurationId,
                               Time = time

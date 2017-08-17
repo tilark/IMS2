@@ -38,10 +38,10 @@ namespace IMS2.RepositoryAsync
 
             if (predicate != null)
             {
-                return await this.dbSet.Where(predicate).ToListAsync();
+                return await this.dbSet.AsNoTracking().Where(predicate).ToListAsync();
             }
-
-            return await this.dbSet.ToListAsync();
+            var result = await this.dbSet.AsNoTracking().ToListAsync();
+            return result;
         }
 
         public async Task<bool> IsExistsAsync(Expression<Func<T, bool>> predicate = null)
@@ -51,7 +51,7 @@ namespace IMS2.RepositoryAsync
             {
                 return result;
             }
-            var query = await this.dbSet.Where(predicate).FirstOrDefaultAsync();
+            var query = await this.dbSet.AsNoTracking().Where(predicate).FirstOrDefaultAsync();
             result = query == null ? false : true;
             return result;
         }
@@ -88,7 +88,7 @@ namespace IMS2.RepositoryAsync
         {
             if (predicate != null)
             {
-                return this.dbSet.Where(predicate);
+                return this.dbSet.AsNoTracking().Where(predicate);
             }
 
             return this.dbSet;

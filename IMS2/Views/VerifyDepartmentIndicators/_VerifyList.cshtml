@@ -100,7 +100,8 @@
                         {
                             @*@Html.CheckBox(String.Format("departmentIndicatorValue[{0}].IsLocked", i), item.IsLocked ? true : false, new { data_id = item.DepartmentIndicatorValueId })*@
                         string isChecked = item.IsLocked ? "checked" : " ";
-                        <input type="checkbox" @isChecked data-id=@item.DepartmentIndicatorValueId />
+                        <input type="checkbox" @isChecked data-id=@(item.DepartmentIndicatorValueId) />
+                        <span class="lockstatus"></span>
                         }
                         else
                         {
