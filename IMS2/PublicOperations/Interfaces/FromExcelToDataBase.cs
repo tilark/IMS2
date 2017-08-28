@@ -62,13 +62,14 @@ namespace IMS2.PublicOperations.Interfaces
                         if (decimal.TryParse((string)itemValue, out value))
                         {
                             //解析成功，从数据库中查找到对应的DepartmentID，IndicatorID,写入DepartmentIndicatorValue中
-
+                            //有值的数据总项数量
+                            result.DataTotalCount++;
                             //根据科室名找到DepartmentID
                             var departmentID = GetDepartmentID(item.Key);
                             if (departmentID.Equals(System.Guid.Empty))
                             {
                                 result.ReadFailedCount++;
-                                errorMessage.Append(String.Format("未找到科室<{0}>的对应项，请检查数据是否有误!\n", item.Key));
+                                errorMessage.Append(String.Format("未找到科室<{0}>的对应项!\n", item.Key));
                                 continue;
                             }
 
@@ -78,7 +79,7 @@ namespace IMS2.PublicOperations.Interfaces
                             if (indicatorID.Equals(System.Guid.Empty))
                             {
                                 result.ReadFailedCount++;
-                                errorMessage.Append(String.Format("未找到项目名称<{0}>的对应项，请检查数据是否有误!\n", indicatorName));
+                                errorMessage.Append(String.Format("未找到项目名称<{0}>的对应项!\n", indicatorName));
                                 continue;
                             }
                             //写入到数据库中
@@ -104,7 +105,7 @@ namespace IMS2.PublicOperations.Interfaces
             return result;
         }
 
-        private bool SaveToDataBase(Guid departmentID, Guid indicatorID, decimal value, object reporterDate, out string saveErrorMessage)
+        private bool SaveToDataBase(Guid departmentID, Guid indicatorID, decimal value, DateTime reporterDate, out string saveErrorMessage)
         {
             bool result = false;
             saveErrorMessage = String.Empty;
@@ -129,17 +130,26 @@ namespace IMS2.PublicOperations.Interfaces
             {
                 if (!query.IsLocked)
                 {
-                    query.Value = value;
-                    repo.Update(query);
-                    try
+                    //值不相同才需要更新
+                    if(query.Value != value)
                     {
-                        this.unitOfWork.SaveChangesClientWin();
-                        result = true;
+                        query.Value = value;
+                        query.UpdateTime = DateTime.Now;
+                        repo.Update(query);
+                        try
+                        {
+                            this.unitOfWork.SaveChangesClientWin();
+                            result = true;
+                        }
+                        catch (Exception)
+                        {
+                            result = false;
+                            saveErrorMessage = "保存数据失败\n";
+                        }
                     }
-                    catch (Exception)
+                    else
                     {
-                        result = false;
-                        saveErrorMessage = "保存数据失败\n";
+                        result = true;
                     }
                 }
                 else

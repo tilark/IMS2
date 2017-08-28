@@ -13,12 +13,14 @@ namespace IMS2.ViewModels.UploadFileViews
             this.TotalCount = 0;
             this.ReadSuccessCount = 0;
             this.ReadFailedCount = 0;
-
+            this.DataTotalCount = 0;
         }
-        [Display(Name = "数据条目总数")]
+        [Display(Name = "Excel总行数")]
 
         public long TotalCount { get; set; }
 
+        [Display(Name = "数据项总数")]
+        public long DataTotalCount { get; set; }
         [Display(Name = "成功条目")]
         public long ReadSuccessCount { get; set; }
 
@@ -35,7 +37,7 @@ namespace IMS2.ViewModels.UploadFileViews
         {
             get
             {
-                return String.Format("读取Excel总行数：{0}，成功读取数据{1}项，失败读取{2}项", this.TotalCount, this.ReadSuccessCount, this.ReadFailedCount);
+                return String.Format("读取Excel总行数：{0}，数据总项数量有{1}项，成功读取数据{2}项，失败读取{3}项", this.TotalCount,this.DataTotalCount, this.ReadSuccessCount, this.ReadFailedCount);
             }
         }
     }

@@ -26,7 +26,7 @@ namespace IMS2.App_Start
         private void AddBindings()
         {
             
-            this.kernel.Bind<IDomainUnitOfWork>().To<DomainUnitOfWork>().InSingletonScope();
+            this.kernel.Bind<IDomainUnitOfWork>().To<DomainUnitOfWork>();
             this.kernel.Bind<IFileUpload>().To<UploadFilesController>();
             this.kernel.Bind<IReadFromExcel>().To<ReadFromExcel>();
             this.kernel.Bind<IAlgorithmOperation>().To<AlgorithmOperationImpl>();
