@@ -189,8 +189,16 @@
     <value>总费用</value>
     <comment>财务部</comment>
   </data>
+  <data name="FinanceData3" xml:space="preserve">
+    <value>专科及门急诊总费用</value>
+    <comment>财务部</comment>
+  </data>
+  <data name="FinanceData4" xml:space="preserve">
+    <value>专科及门急诊药品费用</value>
+    <comment>财务部</comment>
+  </data>
   <data name="InfectionManagementData1" xml:space="preserve">
-    <value>医院感染新发病人数</value>
+    <value>[YG-1-1]医院感染新发人数</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData10" xml:space="preserve">
@@ -214,7 +222,7 @@
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData15" xml:space="preserve">
-    <value>I类切口手术部位感染例数</value>
+    <value>[YG-11-1]I类切口手术部位感染例数</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData16" xml:space="preserve">
@@ -234,7 +242,7 @@
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData2" xml:space="preserve">
-    <value>医院感染总例次</value>
+    <value>[YG-3-1]医院感染总例次</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData20" xml:space="preserve">
@@ -254,7 +262,7 @@
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData3" xml:space="preserve">
-    <value>医院感染漏报例次</value>
+    <value>[YG-4-1]医院感染漏报例次</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData4" xml:space="preserve">

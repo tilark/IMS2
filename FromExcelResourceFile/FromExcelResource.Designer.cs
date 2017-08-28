@@ -223,7 +223,25 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 医院感染新发病人数 的本地化字符串。
+        ///   查找类似 专科及门急诊总费用 的本地化字符串。
+        /// </summary>
+        public static string FinanceData3 {
+            get {
+                return ResourceManager.GetString("FinanceData3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 专科及门急诊药品费用 的本地化字符串。
+        /// </summary>
+        public static string FinanceData4 {
+            get {
+                return ResourceManager.GetString("FinanceData4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 [YG-1-1]医院感染新发人数 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData1 {
             get {
@@ -277,7 +295,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 I类切口手术部位感染例数 的本地化字符串。
+        ///   查找类似 [YG-11-1]I类切口手术部位感染例数 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData15 {
             get {
@@ -322,7 +340,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 医院感染总例次 的本地化字符串。
+        ///   查找类似 [YG-3-1]医院感染总例次 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData2 {
             get {
@@ -367,7 +385,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 医院感染漏报例次 的本地化字符串。
+        ///   查找类似 [YG-4-1]医院感染漏报例次 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData3 {
             get {
