@@ -21,5 +21,15 @@ namespace IMS2.ViewModels.ImportDepartmentIndicatorViews
         [Display(ResourceType = typeof(FromExcelResource), Name = "FinanceData2")]
         [Required]
         public virtual string Data2 { get; set; }
+
+        //[Display(Name = "专科及门急诊总费用")]
+        [Display(ResourceType = typeof(FromExcelResource), Name = "FinanceData3")]
+        [Required]
+        public virtual string Data3 { get; set; }
+
+        //[Display(Name = "专科及门急诊药品费用")]
+        [Display(ResourceType = typeof(FromExcelResource), Name = "FinanceData4")]
+        [Required]
+        public virtual string Data4 { get; set; }
     }
 }
