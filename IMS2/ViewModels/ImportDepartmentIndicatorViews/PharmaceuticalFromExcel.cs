@@ -51,5 +51,15 @@ namespace IMS2.ViewModels.ImportDepartmentIndicatorViews
         [Display(ResourceType = typeof(FromExcelResource), Name = "PharmaceuticalData8")]
         [Required]
         public virtual string Data8 { get; set; }
+
+        //[Display(Name = "科室住院人天数【药学】")]
+        [Display(ResourceType = typeof(FromExcelResource), Name = "PharmaceuticalData9")]
+        [Required]
+        public virtual string Data9 { get; set; }
+
+        //[Display(Name = "住院科室总人次【药学】")]
+        [Display(ResourceType = typeof(FromExcelResource), Name = "PharmaceuticalData10")]
+        [Required]
+        public virtual string Data10 { get; set; }
     }
 }
