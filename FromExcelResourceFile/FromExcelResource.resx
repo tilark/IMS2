@@ -345,8 +345,12 @@
     <value>住院病人抗菌药物使用人数</value>
     <comment>药学部</comment>
   </data>
+  <data name="PharmaceuticalData10" xml:space="preserve">
+    <value>住院科室总人次【药学】</value>
+    <comment>药学部</comment>
+  </data>
   <data name="PharmaceuticalData2" xml:space="preserve">
-    <value>抗菌药物消耗量</value>
+    <value>[YX-20-1]住院患者抗菌药物消耗量（累计DDD数）</value>
     <comment>药学部</comment>
   </data>
   <data name="PharmaceuticalData3" xml:space="preserve">
@@ -366,11 +370,15 @@
     <comment>药学部</comment>
   </data>
   <data name="PharmaceuticalData7" xml:space="preserve">
-    <value>门诊使用抗菌药物人数</value>
+    <value>[YX-1-1]门诊患者使用抗菌药物人次</value>
     <comment>药学部</comment>
   </data>
   <data name="PharmaceuticalData8" xml:space="preserve">
-    <value>急诊使用抗菌药物人数</value>
+    <value>[YX-11-1]急诊患者使用抗菌药物人次</value>
+    <comment>药学部</comment>
+  </data>
+  <data name="PharmaceuticalData9" xml:space="preserve">
+    <value>科室住院人天数【药学】</value>
     <comment>药学部</comment>
   </data>
   <data name="RadiologyData1" xml:space="preserve">

@@ -574,7 +574,16 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 抗菌药物消耗量 的本地化字符串。
+        ///   查找类似 住院科室总人次【药学】 的本地化字符串。
+        /// </summary>
+        public static string PharmaceuticalData10 {
+            get {
+                return ResourceManager.GetString("PharmaceuticalData10", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 [YX-20-1]住院患者抗菌药物消耗量（累计DDD数） 的本地化字符串。
         /// </summary>
         public static string PharmaceuticalData2 {
             get {
@@ -619,7 +628,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 门诊使用抗菌药物人数 的本地化字符串。
+        ///   查找类似 [YX-1-1]门诊患者使用抗菌药物人次 的本地化字符串。
         /// </summary>
         public static string PharmaceuticalData7 {
             get {
@@ -628,11 +637,20 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 急诊使用抗菌药物人数 的本地化字符串。
+        ///   查找类似 [YX-11-1]急诊患者使用抗菌药物人次 的本地化字符串。
         /// </summary>
         public static string PharmaceuticalData8 {
             get {
                 return ResourceManager.GetString("PharmaceuticalData8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 科室住院人天数【药学】 的本地化字符串。
+        /// </summary>
+        public static string PharmaceuticalData9 {
+            get {
+                return ResourceManager.GetString("PharmaceuticalData9", resourceCulture);
             }
         }
         
