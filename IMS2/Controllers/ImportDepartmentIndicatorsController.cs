@@ -46,10 +46,10 @@ namespace IMS2.Controllers
         /// <param name="files"></param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]      
+        [ValidateAntiForgeryToken]
         public ActionResult _MedicalRecordStatistical(UploadFileView uploadFileView, IEnumerable<HttpPostedFileBase> files)
         {
-            
+
             if (!IsMatchedFileFormat(files))
             {
                 return Json(new { success = false, errorMessage = "File is of wrong format." });
@@ -65,7 +65,7 @@ namespace IMS2.Controllers
             filePath = HttpContext.Server.MapPath(filePath);
 
             //uploadFileView.StandardrizeReporterDate();          
-           
+
             try
             {
                 var viewModel = new FromExcelToDataBase<MedicalRecordStatisticalFromExcel>(uploadFileView.ReporterDate, this.unitOfWork, this.readFromExcel).WriteDataToDataBase(filePath, "", "B2", 1, 1);
@@ -89,9 +89,9 @@ namespace IMS2.Controllers
         public ActionResult _PathologyStatistical(UploadFileView uploadFileView, IEnumerable<HttpPostedFileBase> files)
         {
             var filePath = GetFilePathOrDefault(files);
-            if(filePath == null)
+            if (filePath == null)
             {
-                 return Json(new { success = false, errorMessage = "File is of wrong format." });
+                return Json(new { success = false, errorMessage = "File is of wrong format." });
             }
 
             try
@@ -271,7 +271,7 @@ namespace IMS2.Controllers
                 return Json(new { success = false, errorMessage = "File is of wrong format." });
             }
 
-             
+
 
             try
             {
@@ -299,7 +299,7 @@ namespace IMS2.Controllers
                 return Json(new { success = false, errorMessage = "File is of wrong format." });
             }
 
-             
+
 
             try
             {
@@ -327,7 +327,7 @@ namespace IMS2.Controllers
                 return Json(new { success = false, errorMessage = "File is of wrong format." });
             }
 
-             
+
 
             try
             {
