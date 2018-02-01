@@ -202,19 +202,19 @@
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData10" xml:space="preserve">
-    <value>正确的洗手人数【抽查】</value>
+    <value>[YG-8-2]正确的洗手人数</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData11" xml:space="preserve">
-    <value>洗手总人数【抽查】</value>
+    <value>[YG-8-1]洗手总人数</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData12" xml:space="preserve">
-    <value>实际实施手卫生次数</value>
+    <value>[YG-9-2]实际实施手卫生次数</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData13" xml:space="preserve">
-    <value>应实施手卫生次数</value>
+    <value>[YG-9-1]应实施手卫生次数</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData14" xml:space="preserve">
@@ -226,19 +226,19 @@
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData16" xml:space="preserve">
-    <value>血管内导管相关血流感染发病例数</value>
+    <value>[YG-13-2]血管内导管相关血流感染发病例数</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData17" xml:space="preserve">
-    <value>血管内导管留置总天数</value>
+    <value>[YG-13-1]血管内导管留置总天数</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData18" xml:space="preserve">
-    <value>呼吸机相关肺炎发病例数</value>
+    <value>[YG-14-2]呼吸机相关肺炎发病例数</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData19" xml:space="preserve">
-    <value>呼吸机使用总天数</value>
+    <value>[YG-14-1]呼吸机使用总天数</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData2" xml:space="preserve">
@@ -246,11 +246,11 @@
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData20" xml:space="preserve">
-    <value>导尿管相关泌尿系感染发病例数</value>
+    <value>[YG-15-2]导尿管相关泌尿系感染发病例数</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData21" xml:space="preserve">
-    <value>导尿管使用总天数</value>
+    <value>[YG-15-1]导尿管使用总天数</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData22" xml:space="preserve">
@@ -266,27 +266,27 @@
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData4" xml:space="preserve">
-    <value>使用非限制级抗菌药物前病原学送检例数</value>
+    <value>[YG-5-2]使用非限制级抗菌药物前病原学送检例数</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData5" xml:space="preserve">
-    <value>使用非限制级抗菌药物总例数</value>
+    <value>[YG-5-1]使用非限制级抗菌药物总例数</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData6" xml:space="preserve">
-    <value>使用限制级抗菌药物前病原学送检例数</value>
+    <value>[YG-6-2]使用限制级抗菌药物前病原学送检例数</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData7" xml:space="preserve">
-    <value>使用限制级抗菌药物总例数</value>
+    <value>[YG-6-1]使用限制级抗菌药物总例数</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData8" xml:space="preserve">
-    <value>使用特殊级抗菌药物前病原学送检例数</value>
+    <value>[YG-7-2]使用特殊级抗菌药物前病原学送检例数</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="InfectionManagementData9" xml:space="preserve">
-    <value>使用特殊级抗菌药物总例数</value>
+    <value>[YG-7-1]使用特殊级抗菌药物总例数</value>
     <comment>感染管理部门</comment>
   </data>
   <data name="MaterialsStatisticalData1" xml:space="preserve">

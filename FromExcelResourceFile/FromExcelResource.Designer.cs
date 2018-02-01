@@ -250,7 +250,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 正确的洗手人数【抽查】 的本地化字符串。
+        ///   查找类似 [YG-8-2]正确的洗手人数 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData10 {
             get {
@@ -259,7 +259,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 洗手总人数【抽查】 的本地化字符串。
+        ///   查找类似 [YG-8-1]洗手总人数 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData11 {
             get {
@@ -268,7 +268,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 实际实施手卫生次数 的本地化字符串。
+        ///   查找类似 [YG-9-2]实际实施手卫生次数 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData12 {
             get {
@@ -277,7 +277,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 应实施手卫生次数 的本地化字符串。
+        ///   查找类似 [YG-9-1]应实施手卫生次数 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData13 {
             get {
@@ -304,7 +304,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 血管内导管相关血流感染发病例数 的本地化字符串。
+        ///   查找类似 [YG-13-2]血管内导管相关血流感染发病例数 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData16 {
             get {
@@ -313,7 +313,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 血管内导管留置总天数 的本地化字符串。
+        ///   查找类似 [YG-13-1]血管内导管留置总天数 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData17 {
             get {
@@ -322,7 +322,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 呼吸机相关肺炎发病例数 的本地化字符串。
+        ///   查找类似 [YG-14-2]呼吸机相关肺炎发病例数 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData18 {
             get {
@@ -331,7 +331,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 呼吸机使用总天数 的本地化字符串。
+        ///   查找类似 [YG-14-1]呼吸机使用总天数 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData19 {
             get {
@@ -349,7 +349,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 导尿管相关泌尿系感染发病例数 的本地化字符串。
+        ///   查找类似 [YG-15-2]导尿管相关泌尿系感染发病例数 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData20 {
             get {
@@ -358,7 +358,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 导尿管使用总天数 的本地化字符串。
+        ///   查找类似 [YG-15-1]导尿管使用总天数 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData21 {
             get {
@@ -394,7 +394,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 使用非限制级抗菌药物前病原学送检例数 的本地化字符串。
+        ///   查找类似 [YG-5-2]使用非限制级抗菌药物前病原学送检例数 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData4 {
             get {
@@ -403,7 +403,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 使用非限制级抗菌药物总例数 的本地化字符串。
+        ///   查找类似 [YG-5-1]使用非限制级抗菌药物总例数 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData5 {
             get {
@@ -412,7 +412,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 使用限制级抗菌药物前病原学送检例数 的本地化字符串。
+        ///   查找类似 [YG-6-2]使用限制级抗菌药物前病原学送检例数 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData6 {
             get {
@@ -421,7 +421,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 使用限制级抗菌药物总例数 的本地化字符串。
+        ///   查找类似 [YG-6-1]使用限制级抗菌药物总例数 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData7 {
             get {
@@ -430,7 +430,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 使用特殊级抗菌药物前病原学送检例数 的本地化字符串。
+        ///   查找类似 [YG-7-2]使用特殊级抗菌药物前病原学送检例数 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData8 {
             get {
@@ -439,7 +439,7 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
-        ///   查找类似 使用特殊级抗菌药物总例数 的本地化字符串。
+        ///   查找类似 [YG-7-1]使用特殊级抗菌药物总例数 的本地化字符串。
         /// </summary>
         public static string InfectionManagementData9 {
             get {
