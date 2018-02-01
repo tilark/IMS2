@@ -371,6 +371,36 @@ namespace IMS2.Controllers
         }
 
         #endregion
+
+        #region 输血科
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult _BloodTransfusionStatistical(UploadFileView uploadFileView, IEnumerable<HttpPostedFileBase> files)
+        {
+            var filePath = GetFilePathOrDefault(files);
+            if (filePath == null)
+            {
+                return Json(new { success = false, errorMessage = "File is of wrong format." });
+            }
+
+
+
+            try
+            {
+                var viewModel = new FromExcelToDataBase<BloodTransfusion>(uploadFileView.ReporterDate, this.unitOfWork, this.readFromExcel).WriteDataToDataBase(filePath, "", "B2", 1, 1);
+
+                return PartialView("_ShowResultReadFromExcel", viewModel);
+            }
+            catch (Exception ex)
+            {
+
+                return Json(new { success = false, errorMessage = ex.Message });
+            }
+        }
+
+        #endregion
+
         #region 判断文件路径
         /// <summary>
         /// 获得上传文件的路径名称，如果文件不存在则返回null

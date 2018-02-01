@@ -30,6 +30,8 @@
     @Ajax.ActionLink("药学部", "_UploadFile", "UploadFiles", new { actionName = "_PharmaceuticalStatistical", controllerName = "ImportDepartmentIndicators", importExcelName = "药学部" }, new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, LoadingElementId = "import-ajax", UpdateTargetId = "import-excel-id", OnSuccess = "bindUploadFileSubmit" }, new { @class = "btn btn-primary" })
     @Ajax.ActionLink("物资办", "_UploadFile", "UploadFiles", new { actionName = "_MaterialsStatistical", controllerName = "ImportDepartmentIndicators", importExcelName = "物资办" }, new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, LoadingElementId = "import-ajax", UpdateTargetId = "import-excel-id", OnSuccess = "bindUploadFileSubmit" }, new { @class = "btn btn-primary" })
 
+    @Ajax.ActionLink("输血科", "_UploadFile", "UploadFiles", new { actionName = "_BloodTransfusionStatistical", controllerName = "ImportDepartmentIndicators", importExcelName = "输血科" }, new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, LoadingElementId = "import-ajax", UpdateTargetId = "import-excel-id", OnSuccess = "bindUploadFileSubmit" }, new { @class = "btn btn-primary" })
+
 </div>
 <div class="col-md-12" id="import-excel-id"></div>
 <div>

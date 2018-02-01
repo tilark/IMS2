@@ -333,6 +333,7 @@
     <Compile Include="RepositoryAsync\IndicatorAlgorithmRepositoryAsync.cs" />
     <Compile Include="RepositoryAsync\IndicatorRepositoryAsync.cs" />
     <Compile Include="ViewModels\ImportDepartmentIndicatorViews\AnesthesiologyFromExcel.cs" />
+    <Compile Include="ViewModels\ImportDepartmentIndicatorViews\BloodTransfusion.cs" />
     <Compile Include="ViewModels\ImportDepartmentIndicatorViews\ClinicFromExcel.cs" />
     <Compile Include="ViewModels\ImportDepartmentIndicatorViews\ExamineFromExcel.cs" />
     <Compile Include="ViewModels\ImportDepartmentIndicatorViews\FinanceFromExcel.cs" />

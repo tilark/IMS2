@@ -151,6 +151,42 @@ namespace FromExcelResourceFile {
         }
         
         /// <summary>
+        ///   查找类似 [SX-1-1]红细胞用量 的本地化字符串。
+        /// </summary>
+        public static string BloodTransfusion1 {
+            get {
+                return ResourceManager.GetString("BloodTransfusion1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 [SX-2-1]血浆用量 的本地化字符串。
+        /// </summary>
+        public static string BloodTransfusion2 {
+            get {
+                return ResourceManager.GetString("BloodTransfusion2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 [SX-3-1]冷沉淀用量 的本地化字符串。
+        /// </summary>
+        public static string BloodTransfusion3 {
+            get {
+                return ResourceManager.GetString("BloodTransfusion3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 [SX-4-1]血小板用量 的本地化字符串。
+        /// </summary>
+        public static string BloodTransfusion4 {
+            get {
+                return ResourceManager.GetString("BloodTransfusion4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 预约诊疗总人次 的本地化字符串。
         /// </summary>
         public static string ClinicData1 {

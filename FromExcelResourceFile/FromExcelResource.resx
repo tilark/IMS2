@@ -157,6 +157,22 @@
     <value>椎管内麻醉总例数</value>
     <comment>麻醉科</comment>
   </data>
+  <data name="BloodTransfusion1" xml:space="preserve">
+    <value>[SX-1-1]红细胞用量</value>
+    <comment>输血科</comment>
+  </data>
+  <data name="BloodTransfusion2" xml:space="preserve">
+    <value>[SX-2-1]血浆用量</value>
+    <comment>输血科</comment>
+  </data>
+  <data name="BloodTransfusion3" xml:space="preserve">
+    <value>[SX-3-1]冷沉淀用量</value>
+    <comment>输血科</comment>
+  </data>
+  <data name="BloodTransfusion4" xml:space="preserve">
+    <value>[SX-4-1]血小板用量</value>
+    <comment>输血科</comment>
+  </data>
   <data name="ClinicData1" xml:space="preserve">
     <value>预约诊疗总人次</value>
     <comment>门诊部</comment>
